@@ -515,7 +515,7 @@ final class TestplanInstaller(
     testModulesFiles ++ testplanFile
   }
 
-  private def validateUniqueTestCaseNames(testplan: TestPlan): Unit = {
+  private def validateUniqueTestCaseNames(testplan: TestPlan): Unit = ??? /* {
     val testCaseColumn = testplan.headers.indexOf(TestCases.toString)
     val duplicateTestNames = testplan.values
       .groupBy(t => t(testCaseColumn))
@@ -530,6 +530,6 @@ final class TestplanInstaller(
            |Please make sure the test group names in the .testplan.json file are not the same.""".stripMargin
       throw new IllegalStateException(msg)
     }
-  }
+  } */
 
 }
