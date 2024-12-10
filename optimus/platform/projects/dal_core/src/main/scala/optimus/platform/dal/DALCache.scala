@@ -369,7 +369,7 @@ class DALCacheImpl(
     }
   }
 
-  private def decodeResults(file: File): Seq[Result] = {
+  private def decodeResults(file: File): Seq[Result] = ??? /* {
     val dis = new DataInputStream(new BufferedInputStream(new FileInputStream(file)))
     val tryResult = Try {
       val size = dis.readInt()
@@ -404,7 +404,7 @@ class DALCacheImpl(
     }
     dis.close()
     tryResult.get
-  }
+  } */
 
   private def encodePersistentEntity(pe: PersistentEntity): (String, Map[String, Any]) = {
     val se = pe.serialized
