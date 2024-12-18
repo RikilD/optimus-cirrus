@@ -9,11 +9,11 @@ import sbtprotobuf.ProtobufPlugin.autoImport._
 object DHT {
   private val projectsDir = file("optimus/dht/projects")
 
-//  lazy val client3 = Project("dhtClient3", projectsDir / "client3")
-//    .settings(libraryDependencies ++= Seq(guiceAssistedInject, nettyResolverDNS))
-//    .dependsOn(digest, common3)
-//
-//  val digest = Project("dhtDigest", projectsDir / "digest")
+  lazy val client3 = Project("dhtClient3", projectsDir / "client3")
+    .settings(libraryDependencies ++= Seq(guiceAssistedInject, nettyResolverDNS))
+    .dependsOn(digest, common3)
+
+  val digest = Project("dhtDigest", projectsDir / "digest")
 
   lazy val common3 = Project("dhtCommon3", projectsDir / "common3")
     .enablePlugins(ProtobufPlugin)
