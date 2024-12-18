@@ -51,14 +51,14 @@ object Platform {
 //  lazy val priqlDalPersistence = Project("platformPriqlDalPersistence", projectsDir / "priql_dal_persistence")
 //    .settings(scalacOptions ++= ScalacOptions.common)
 //    .dependsOn(priqlDal)
-//
-//  lazy val priqlDal = Project("platformPriqlDal", projectsDir / "priql_dal")
-//    .enablePlugins(ProtobufPlugin)
-//    .settings(
-//      ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
-//      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros
-//    )
-//    .dependsOn(dalClient, dalCore, entityPlugin, entityPluginJar % "plugin", priql)
+
+  lazy val priqlDal = Project("platformPriqlDal", projectsDir / "priql_dal")
+    .enablePlugins(ProtobufPlugin)
+    .settings(
+      ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros
+    )
+    .dependsOn(dalClient, dalCore, entityPlugin, entityPluginJar % "plugin", priql)
 
   lazy val priql = Project("platformPriql", projectsDir / "priql")
     .enablePlugins(ProtobufPlugin)
