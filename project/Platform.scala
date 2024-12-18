@@ -87,11 +87,12 @@ object Platform {
 //		tls,
 		versioningRuntime,
 	)
-//
-//  lazy val versioningRuntime = Project("platformVersioningRuntime", projectsDir / "versioning_runtime")
-//    .settings(scalacOptions ++= ScalacOptions.common)
-//    .dependsOn(dalCore, entityPlugin, entityPluginJar % "plugin", core)
-//
+
+
+  lazy val versioningRuntime = Project("platformVersioningRuntime", projectsDir / "versioning_runtime")
+    .settings(scalacOptions ++= ScalacOptions.common)
+    .dependsOn(dalCore, entityPlugin, entityPluginJar % "plugin", core)
+
 //  /* lazy val msNetSSL = Project("platformMSNetSSL", projectsDir / "msnet-ssl")
 //    .dependsOn(missing) */
 //
