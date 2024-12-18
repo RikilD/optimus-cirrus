@@ -184,30 +184,30 @@ object Platform {
 //
 //  lazy val entityAgentExt = Project("platformEntityAgentExt", projectsDir / "entityagent-ext")
 //
-//  // fat jar version of entityPlugin, to be consumed as a compiler plugin
-//  lazy val entityPluginJar = Project("platformEntityPluginJar", projectsDir / "entityplugin-jar")
-//    .settings(
-//      exportJars := true,
-//      Compile / packageBin := (entityPlugin / assembly).value,
-//    )
-//
-//  lazy val entityPlugin = Project("platformEntityPlugin", projectsDir / "entityplugin")
-//    .settings(
-//      loomSettings,
-//      scalacOptions ++= Seq("-language:postfixOps"),
-//      libraryDependencies ++= Seq(scalaCompiler, typesafeConfig),
-//      assembly / assemblyOption ~= { _.withIncludeScala(false) },
-//      assemblyMergeStrategy := {
-//        case "scalac-plugin.xml" => MergeStrategy.preferProject
-//        case other => assemblyMergeStrategy.value(other)
-//      }
-//    )
-//    .dependsOn(
-//      scalaCompat,
-//      stagingPlugin,
-//      stagingPluginJar % "plugin"
-//    )
-//
+  // fat jar version of entityPlugin, to be consumed as a compiler plugin
+  lazy val entityPluginJar = Project("platformEntityPluginJar", projectsDir / "entityplugin-jar")
+    .settings(
+      exportJars := true,
+      Compile / packageBin := (entityPlugin / assembly).value,
+    )
+
+  lazy val entityPlugin = Project("platformEntityPlugin", projectsDir / "entityplugin")
+    .settings(
+      loomSettings,
+      scalacOptions ++= Seq("-language:postfixOps"),
+      libraryDependencies ++= Seq(scalaCompiler, typesafeConfig),
+      assembly / assemblyOption ~= { _.withIncludeScala(false) },
+      assemblyMergeStrategy := {
+        case "scalac-plugin.xml" => MergeStrategy.preferProject
+        case other => assemblyMergeStrategy.value(other)
+      }
+    )
+    .dependsOn(
+      scalaCompat,
+      stagingPlugin,
+      stagingPluginJar % "plugin"
+    )
+
 //  lazy val breadcrumbs = Project("platformBreadcrumbs", projectsDir / "breadcrumbs")
 //    .settings(
 //      scalacOptions ++= ScalacOptions.common,
@@ -256,24 +256,24 @@ object Platform {
       libraryDependencies ++= Seq(
         scalaCollectionCompat,
         scalaCompiler,
-        scalaParallelCollections,
+//        scalaParallelCollections,
 //        scalaXml
       )
     )
 //
-//  // fat jar version of entityPlugin, to be consumed as a compiler plugin
-//  lazy val stagingPluginJar = Project("platformStagingPluginJar", projectsDir / "stagingplugin-jar")
-//    .settings(
-//      exportJars := true,
-//      Compile / packageBin := (stagingPlugin / assembly).value,
-//    )
-//
-//  lazy val stagingPlugin = Project("platformStagingPlugin", projectsDir / "stagingplugin")
-//    .settings(
-//      libraryDependencies ++= Seq(scalaCompiler),
-//      assembly / assemblyOption ~= { _.withIncludeScala(false) }
-//    )
-//    .dependsOn(alarms, scalaCompat, sprayJson)
+  // fat jar version of entityPlugin, to be consumed as a compiler plugin
+  lazy val stagingPluginJar = Project("platformStagingPluginJar", projectsDir / "stagingplugin-jar")
+    .settings(
+      exportJars := true,
+      Compile / packageBin := (stagingPlugin / assembly).value,
+    )
+
+  lazy val stagingPlugin = Project("platformStagingPlugin", projectsDir / "stagingplugin")
+    .settings(
+      libraryDependencies ++= Seq(scalaCompiler),
+      assembly / assemblyOption ~= { _.withIncludeScala(false) }
+    )
+    .dependsOn(alarms, scalaCompat, sprayJson)
 //
 //  lazy val coreMacro = Project("platformCoreMacro", projectsDir / "core_macro")
 //    .settings(
@@ -282,12 +282,12 @@ object Platform {
 //    )
 //    .dependsOn(alarms)
 //
-//  lazy val alarms = Project("platformAlarms", projectsDir / "alarms")
-//    .settings(
-//      exportJars := true,
-//      libraryDependencies ++= Seq(scalaCompiler)
-//    )
-//
+  lazy val alarms = Project("platformAlarms", projectsDir / "alarms")
+    .settings(
+      exportJars := true,
+      libraryDependencies ++= Seq(scalaCompiler)
+    )
+
   lazy val annotations = Project("platformAnnotations", projectsDir / "annotations")
 
   lazy val sprayJson = Project("platformSprayJson", projectsDir / "spray_json")
