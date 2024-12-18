@@ -121,33 +121,32 @@ object Platform {
 //      missing,
 //      Silverking.silverking
 //    )
-//
-//  lazy val core = Project("platformCore", projectsDir / "core")
-//    .settings(
-//      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
-//      libraryDependencies ++= Seq(
-//        asyncProfilerLoaderAll,
-//        commonsMath3,
-//        eaioUUID,
-//        fastUtil,
-//        jodaTime,
-//        Dependencies.sprayJson,
-//        typesafeConfig
-//      )
-//    )
-//    .dependsOn(
-//      annotations,
-//      breadcrumbs,
-//      coreConfig,
-//      debugger,
-//      entityAgent,
-//      GSF.breadcrumbs,
-//      inputs,
-//      instrumentation,
-//      missing,
-//      sprayJson,
-//      stagingPluginJar % "plugin"
-//    )
+
+  lazy val core = Project("platformCore", projectsDir / "core")
+    .settings(
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
+      libraryDependencies ++= Seq(
+        commonsMath3,
+        eaioUUID,
+        fastUtil,
+		jnaPlatform,
+        jodaTime,
+        typesafeConfig,
+      )
+    )
+    .dependsOn(
+      annotations,
+      breadcrumbs,
+      coreConfig,
+      debugger,
+      entityAgent,
+      GSF.breadcrumbs,
+      inputs,
+      instrumentation,
+      missing,
+      sprayJson,
+      stagingPluginJar % "plugin"
+    )
 
   lazy val debugger = Project("platformDebugger", projectsDir / "debugger")
     .settings(libraryDependencies ++= Seq(jacksonDatabind, jacksonModuleScala, junit % Test))
