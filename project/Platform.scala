@@ -148,10 +148,10 @@ object Platform {
 //      sprayJson,
 //      stagingPluginJar % "plugin"
 //    )
-//
-//  lazy val debugger = Project("platformDebugger", projectsDir / "debugger")
-//    .settings(libraryDependencies ++= Seq(jacksonDatabind, jacksonModuleScala, junit % Test))
-//
+
+  lazy val debugger = Project("platformDebugger", projectsDir / "debugger")
+    .settings(libraryDependencies ++= Seq(jacksonDatabind, jacksonModuleScala, junit % Test))
+
 //  lazy val instrumentation = Project("platformInstrumentation", projectsDir / "instrumentation")
 //    .settings(
 //      scalacOptions ++= ScalacOptions.common,
