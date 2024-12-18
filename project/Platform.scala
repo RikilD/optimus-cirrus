@@ -174,16 +174,16 @@ object Platform {
 
 //  lazy val coreConfig = Project("platformCoreConfig", projectsDir / "core_config")
 //    .dependsOn(breadcrumbs, utils)
-//
-//  lazy val entityAgent = Project("platformEntityAgent", projectsDir / "entityagent")
-//    .settings(
-//      loomSettings,
-//      libraryDependencies ++= Seq(asm, asmCommons, asmTree, asmUtil)
-//    )
-//    .dependsOn(entityAgentExt)
-//
-//  lazy val entityAgentExt = Project("platformEntityAgentExt", projectsDir / "entityagent-ext")
-//
+
+  lazy val entityAgent = Project("platformEntityAgent", projectsDir / "entityagent")
+    .settings(
+      loomSettings,
+      libraryDependencies ++= Seq(asm, asmCommons, asmTree, asmUtil)
+    )
+    .dependsOn(entityAgentExt)
+
+  lazy val entityAgentExt = Project("platformEntityAgentExt", projectsDir / "entityagent-ext")
+
   // fat jar version of entityPlugin, to be consumed as a compiler plugin
   lazy val entityPluginJar = Project("platformEntityPluginJar", projectsDir / "entityplugin-jar")
     .settings(
