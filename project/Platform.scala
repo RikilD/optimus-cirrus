@@ -116,18 +116,18 @@ object Platform {
 		),
 	  )
 
-//  lazy val dalEnvironment = Project("platformDalEnvironment", projectsDir / "dal_environment")
-//    .settings(
-//      scalacOptions ++= ScalacOptions.common,
-//      libraryDependencies ++= Seq(curatorFramework, guava, typesafeConfig)
-//    )
-//    .dependsOn(
-//      breadcrumbs,
-//      coreConfig,
-//      coreMacro,
-//      missing,
-//      Silverking.silverking
-//    )
+  lazy val dalEnvironment = Project("platformDalEnvironment", projectsDir / "dal_environment")
+    .settings(
+      scalacOptions ++= ScalacOptions.common,
+      libraryDependencies ++= Seq(curatorFramework, guava, typesafeConfig)
+    )
+    .dependsOn(
+      breadcrumbs,
+      coreConfig,
+      coreMacro,
+      missing,
+      Silverking.silverking
+    )
 
   lazy val core = Project("platformCore", projectsDir / "core")
     .settings(
