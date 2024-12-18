@@ -28,6 +28,7 @@ object Dependencies {
   val asmTree = "org.ow2.asm" % "asm-tree" % asmVersion
   val asmUtil = "org.ow2.asm" % "asm-util" % asmVersion
   val asyncProfilerLoaderAll = "me.bechberger" % "ap-loader-all" % "3.0-9"
+  val avroCompiler = "org.apache.avro" % "avro-compiler" % "1.10.2"
   val awsSdk = "com.amazonaws" % "aws-java-sdk" % "1.12.779"
   val base64 = "net.iharder" % "base64" % "2.3.9"
   val bsp4j = "ch.epfl.scala" % "bsp4j" % "2.1.0"
@@ -37,7 +38,7 @@ object Dependencies {
   val commonsIO = "commons-io" % "commons-io" % "2.16.1"
   val commonsLang3 = "org.apache.commons" % "commons-lang3" % "3.10"
   val commonsMath3 = "org.apache.commons" % "commons-math3" % "3.6.1"
-  val coursierUtil = "io.get-coursier" %% "coursier-util" % "2.0.16"
+  val coursier = "io.get-coursier" %% "coursier" % "2.0.16"
   val curatorRecipes = "org.apache.curator" % "curator-recipes" % curatorVersion
   val curatorFramework = "org.apache.curator" % "curator-framework" % curatorVersion
   val cxfTools = "org.apache.cxf" % "cxf-tools-common" % cxfVersion
@@ -87,7 +88,7 @@ object Dependencies {
   val scalaParserCombinators = "org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0"
   val scalaReflect = "org.scala-lang" % "scala-reflect" % scala2Version
   val scalaxb = "org.scalaxb" %% "scalaxb" % "1.9.1"
-  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
+  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "2.0.1"
   val slf4j = "org.slf4j" % "slf4j-api" % "1.7.29"
   val snakeYaml = "org.yaml" % "snakeyaml" % "1.27"
   val sprayJson = "io.spray" %% "spray-json" % "1.3.6"

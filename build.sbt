@@ -10,7 +10,7 @@ import optimus.Stratosphere
 ThisBuild / scalaVersion := Dependencies.scala2Version
 
 val buildToolApp = BuildTool.app
-//val buildToolRest = BuildTool.rest
+val buildToolRest = BuildTool.rest
 val buildToolRunConf = BuildTool.runConf
 val builtToolFormat = BuildTool.format
 val buildToolCore = BuildTool.core
