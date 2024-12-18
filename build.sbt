@@ -19,7 +19,7 @@ val buildToolCore = BuildTool.core
 //val dhtDigest = DHT.digest
 //val dhtCommon3 = DHT.common3
 
-//val gsfBreadcrumbs = GSF.breadcrumbs
+val gsfBreadcrumbs = GSF.breadcrumbs
 
 //val platformTalks = Platform.talks
 //val platform = Platform.platform
