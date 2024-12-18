@@ -274,14 +274,14 @@ object Platform {
       assembly / assemblyOption ~= { _.withIncludeScala(false) }
     )
     .dependsOn(alarms, scalaCompat, sprayJson)
-//
-//  lazy val coreMacro = Project("platformCoreMacro", projectsDir / "core_macro")
-//    .settings(
-//      scalacOptions ++= Seq("-language:experimental.macros"),
-//      libraryDependencies ++= Seq(logbackClassic, logbackCore, scalaReflect, slf4j)
-//    )
-//    .dependsOn(alarms)
-//
+
+  lazy val coreMacro = Project("platformCoreMacro", projectsDir / "core_macro")
+    .settings(
+      scalacOptions ++= Seq("-language:experimental.macros"),
+      libraryDependencies ++= Seq(logbackClassic, logbackCore, scalaReflect, slf4j)
+    )
+    .dependsOn(alarms)
+
   lazy val alarms = Project("platformAlarms", projectsDir / "alarms")
     .settings(
       exportJars := true,
