@@ -76,10 +76,17 @@ object Platform {
 //      entityPluginJar % "plugin",
 //      scalaCompat
 //    )
-//
-//  lazy val dalClient = Project("platformDalClient", projectsDir / "dal_client")
-//    .settings(scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros)
-//    .dependsOn(core, dalCore, entityPlugin, entityPluginJar % "plugin", tls, versioningRuntime)
+
+  lazy val dalClient = Project("platformDalClient", projectsDir / "dal_client")
+    .settings(scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.entityPlugin)
+    .dependsOn(
+		core,
+		dalCore,
+		entityPlugin,
+		entityPluginJar % "plugin",
+//		tls,
+		versioningRuntime,
+	)
 //
 //  lazy val versioningRuntime = Project("platformVersioningRuntime", projectsDir / "versioning_runtime")
 //    .settings(scalacOptions ++= ScalacOptions.common)
@@ -93,8 +100,10 @@ object Platform {
 //    .dependsOn(missing, utils)
 
   lazy val dalCore = Project("platformDalCore", projectsDir / "dal_core")
-    .settings(
-      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
+	  .enablePlugins(ProtobufPlugin)
+	  .settings(
+		  ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
+		  scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
       libraryDependencies ++= Seq(guice, logbackClassic, slf4j, springContext)
     )
     .dependsOn(

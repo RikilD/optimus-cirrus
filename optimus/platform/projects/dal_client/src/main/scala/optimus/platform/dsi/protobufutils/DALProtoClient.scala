@@ -28,7 +28,7 @@ import optimus.platform.dal.ClientRequestLimiter
 import optimus.platform.dal.config.DalAsyncBatchingConfig
 import optimus.platform.dal.config.DalAsyncConfig
 import optimus.dal.ssl.DalSSLConfig
-import optimus.platform.tls.SslConfigurationManager
+//import optimus.platform.tls.SslConfigurationManager
 import optimus.dsi.base.UriSchemeChecker
 import optimus.dsi.partitioning.Partition
 import optimus.platform.EvaluationContext
