@@ -20,9 +20,12 @@ object BuildTool {
         jsonSchema2Pojo,
         scalaxb,
         scalaXml,
-        zinc
+        zinc,
       ),
-		libraryDependencySchemes += "org.scala-lang.modules" %% "scala-parser-combinators" % VersionScheme.Always,
+		libraryDependencySchemes ++= Seq(
+			"org.scala-lang.modules" %% "scala-parser-combinators" % VersionScheme.Always,
+			"org.scala-lang.modules" %% "scala-java8-compat" % VersionScheme.Always,
+		),
 	)
     .dependsOn(
       format,
