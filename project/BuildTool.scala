@@ -43,13 +43,13 @@ object BuildTool {
 //    .settings(libraryDependencies ++= Seq(args4j))
 //    .dependsOn(Platform.platform)
 
-//  lazy val runConf = Project("buildToolRunConf", projectsDir / "runconf")
-//    .settings(
-//      scalacOptions ++= ScalacOptions.common,
-//      libraryDependencies ++= Seq(slf4j, typesafeConfig)
-//    )
-//    .dependsOn(core, Platform.scalaCompat/*, Platform.utils*/)
-//
+  lazy val runConf = Project("buildToolRunConf", projectsDir / "runconf")
+    .settings(
+      scalacOptions ++= ScalacOptions.common,
+      libraryDependencies ++= Seq(slf4j, typesafeConfig)
+    )
+    .dependsOn(core, Platform.scalaCompat, Platform.utils)
+
   lazy val format = Project("buildToolFormat", projectsDir / "format")
     .settings(
       scalacOptions ++= ScalacOptions.common,
