@@ -91,21 +91,21 @@ object Platform {
 //  lazy val tls = Project("platformTls", projectsDir / "tls")
 //    .settings(libraryDependencies ++= Seq(guava, nettyHandler, typesafeConfig))
 //    .dependsOn(missing, utils)
-//
-//  lazy val dalCore = Project("platformDalCore", projectsDir / "dal_core")
-//    .settings(
-//      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
-//      libraryDependencies ++= Seq(guice, logbackClassic, slf4j, springContext)
-//    )
-//    .dependsOn(
-//      breadcrumbs,
-//      collections,
-//      core,
-//      coreConfig,
-//      dalEnvironment,
-//      entityAgent,
-//      Silverking.silverking
-//    )
+
+  lazy val dalCore = Project("platformDalCore", projectsDir / "dal_core")
+    .settings(
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
+      libraryDependencies ++= Seq(guice, logbackClassic, slf4j, springContext)
+    )
+    .dependsOn(
+      breadcrumbs,
+      collections,
+      core,
+      coreConfig,
+      dalEnvironment,
+      entityAgent,
+      Silverking.silverking
+    )
 
   lazy val collections = Project("platformCollections", projectsDir / "collections")
 	  .settings(
