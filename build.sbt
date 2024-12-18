@@ -22,7 +22,7 @@ val buildToolCore = BuildTool.core
 val gsfBreadcrumbs = GSF.breadcrumbs
 
 //val platformTalks = Platform.talks
-//val platform = Platform.platform
+val platform = Platform.platform
 //val platformGitUtils = Platform.gitUtils
 //val platformBitBucketUtils = Platform.bitBucketUtils
 //val platformRestUtils = Platform.restUtils
