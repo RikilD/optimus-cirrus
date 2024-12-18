@@ -169,9 +169,9 @@ object Platform {
 //      utils,
 //      stagingPluginJar % "plugin"
 //    )
-//
-//  lazy val inputs = Project("platformInputs", projectsDir / "inputs")
-//
+
+  lazy val inputs = Project("platformInputs", projectsDir / "inputs")
+
 //  lazy val coreConfig = Project("platformCoreConfig", projectsDir / "core_config")
 //    .dependsOn(breadcrumbs, utils)
 //
