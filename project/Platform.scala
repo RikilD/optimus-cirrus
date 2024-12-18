@@ -208,25 +208,25 @@ object Platform {
       stagingPluginJar % "plugin"
     )
 
-//  lazy val breadcrumbs = Project("platformBreadcrumbs", projectsDir / "breadcrumbs")
-//    .settings(
-//      scalacOptions ++= ScalacOptions.common,
-//      libraryDependencies ++= Seq(
-//        archaiusCore,
-//        base64,
-//        httpClient,
-//        jacksonDatabind,
-//        jacksonModuleScala,
-//        kafkaClients,
-//        scalaCollectionCompat,
-//        snakeYaml,
-//        Dependencies.sprayJson,
-//      )
-//    )
-//    .dependsOn(missing, utils)
-//
-//  lazy val missing = Project("platformMissing", projectsDir / "missing")
-//    .settings(libraryDependencies ++= Seq(curatorFramework, slf4j))
+  lazy val breadcrumbs = Project("platformBreadcrumbs", projectsDir / "breadcrumbs")
+    .settings(
+      scalacOptions ++= ScalacOptions.common,
+      libraryDependencies ++= Seq(
+        archaiusCore,
+        base64,
+        httpClient,
+        jacksonDatabind,
+        jacksonModuleScala,
+        kafkaClients,
+        scalaCollectionCompat,
+        snakeYaml,
+        Dependencies.sprayJson,
+      )
+    )
+    .dependsOn(missing, utils)
+
+  lazy val missing = Project("platformMissing", projectsDir / "missing")
+    .settings(libraryDependencies ++= Seq(curatorFramework, slf4j))
 
   lazy val utils = Project("platformUtils", projectsDir / "utils")
     .settings(
