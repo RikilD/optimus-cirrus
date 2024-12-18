@@ -11,8 +11,9 @@ object BuildTool {
     .settings(
       scalacOptions ++= ScalacOptions.common,
       libraryDependencies ++= Seq(
+		avroCompiler,
         bsp4j,
-		  coursierUtil,
+		  coursier,
         cxfTools,
         cxfToolsWsdlto,
         jgit,
@@ -25,11 +26,12 @@ object BuildTool {
 		libraryDependencySchemes ++= Seq(
 			"org.scala-lang.modules" %% "scala-parser-combinators" % VersionScheme.Always,
 			"org.scala-lang.modules" %% "scala-java8-compat" % VersionScheme.Always,
+			"org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
 		),
 	)
     .dependsOn(
       format,
-//      rest,
+      rest,
       runConf,
       DHT.client3,
 //      Platform.entityPlugin,
@@ -39,9 +41,9 @@ object BuildTool {
       Stratosphere.common,
     )
 
-//  lazy val rest = Project("buildToolRest", projectsDir / "rest")
-//    .settings(libraryDependencies ++= Seq(args4j))
-//    .dependsOn(Platform.platform)
+  lazy val rest = Project("buildToolRest", projectsDir / "rest")
+    .settings(libraryDependencies ++= Seq(args4j))
+    .dependsOn(Platform.platform)
 
   lazy val runConf = Project("buildToolRunConf", projectsDir / "runconf")
     .settings(
