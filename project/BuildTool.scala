@@ -34,7 +34,7 @@ object BuildTool {
 //      DHT.client3,
 //      Platform.entityPlugin,
       Platform.entityPluginJar % "plugin",
-//      Platform.gitUtils,
+      Platform.gitUtils,
       Platform.platform,
       Stratosphere.common,
     )
