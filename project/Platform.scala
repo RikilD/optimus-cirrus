@@ -59,23 +59,23 @@ object Platform {
 //      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros
 //    )
 //    .dependsOn(dalClient, dalCore, entityPlugin, entityPluginJar % "plugin", priql)
-//
-//  lazy val priql = Project("platformPriql", projectsDir / "priql")
-//    .enablePlugins(ProtobufPlugin)
-//    .settings(
-//      ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
-//      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ Seq("-P:entity:enableStaging:true"),
-//      libraryDependencies ++= Seq(poi, scalaParserCombinator),
-//    )
-//    .dependsOn(
-//      alarms,
-//      core,
-//      coreMacro,
-//      collections,
-//      entityPlugin,
-//      entityPluginJar % "plugin",
-//      scalaCompat
-//    )
+
+  lazy val priql = Project("platformPriql", projectsDir / "priql")
+    .enablePlugins(ProtobufPlugin)
+    .settings(
+      ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ Seq("-P:entity:enableStaging:true"),
+      libraryDependencies ++= Seq(poi, scalaParserCombinators),
+    )
+    .dependsOn(
+      alarms,
+      core,
+      coreMacro,
+      collections,
+      entityPlugin,
+      entityPluginJar % "plugin",
+      scalaCompat
+    )
 
   lazy val dalClient = Project("platformDalClient", projectsDir / "dal_client")
     .settings(scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.entityPlugin)
