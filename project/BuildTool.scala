@@ -70,8 +70,10 @@ object BuildTool {
 		jacksonModuleScala,
         scalaParserCombinators,
         sprayJson,
-        typesafeConfig
-      ),
+        typesafeConfig,
+		  scalaCollectionCompat,
+		  scalaReflect,
+	  ),
 		libraryDependencySchemes += "org.scala-lang.modules" %% "scala-parser-combinators" % VersionScheme.Always,
     )
 }
