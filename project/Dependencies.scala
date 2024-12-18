@@ -11,7 +11,7 @@ object Dependencies {
   val guiceVersion = "7.0.0"
   val httpComponentsVersion = "4.5.13"
   val jacksonVersion = "2.10.1"
-  val kafkaVersion = "3.9.0"
+  val kafkaVersion = "3.6.2"
   val logbackVersion = "1.5.12"
   val nettyVersion = "4.1.115.Final"
   val scala2Version = "2.12.20"
@@ -96,5 +96,5 @@ object Dependencies {
   val typesafeConfig = "com.typesafe" % "config" % "1.4.1"
   val zooKeeper = "org.apache.zookeeper" % "zookeeper" % "3.9.3"
   val zinc = "org.scala-sbt" %% "zinc" % "1.10.4"
-  val zstdJni = "com.github.luben" % "zstd-jni" % "1.5.6-8"
+  val zstdJni = "com.github.luben" % "zstd-jni" % "1.5.5-6"
 }
