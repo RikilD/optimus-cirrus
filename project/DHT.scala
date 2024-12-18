@@ -14,25 +14,25 @@ object DHT {
 //    .dependsOn(digest, common3)
 //
 //  val digest = Project("dhtDigest", projectsDir / "digest")
-//
-//  lazy val common3 = Project("dhtCommon3", projectsDir / "common3")
-//    .enablePlugins(ProtobufPlugin)
-//    .settings(
-//      ProtobufConfig / sourceDirectory := (Compile / sourceDirectory).value / "proto",
-//      libraryDependencies ++= Seq(
-//        commonsLang3,
-//        guava,
-//        guice,
-//        hdrHistogram,
-//        jakartaInject,
-//        jcTools,
-//        nettyBuffer,
-//        nettyHandler,
-//        slf4j,
-//        snakeYaml,
-//        typesafeConfig,
-//        zooKeeper,
-//      )
-//    )
-//    .dependsOn(Platform.missing)
+
+  lazy val common3 = Project("dhtCommon3", projectsDir / "common3")
+    .enablePlugins(ProtobufPlugin)
+    .settings(
+      ProtobufConfig / sourceDirectory := (Compile / sourceDirectory).value / "proto",
+      libraryDependencies ++= Seq(
+        commonsLang3,
+        guava,
+        guice,
+        hdrHistogram,
+        jakartaInject,
+        jcTools,
+        nettyBuffer,
+        nettyHandler,
+        slf4j,
+        snakeYaml,
+        typesafeConfig,
+        zooKeeper,
+      )
+    )
+    .dependsOn(Platform.missing)
 }

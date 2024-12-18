@@ -17,7 +17,7 @@ val buildToolCore = BuildTool.core
 
 //val dhtClient3 = DHT.client3
 //val dhtDigest = DHT.digest
-//val dhtCommon3 = DHT.common3
+val dhtCommon3 = DHT.common3
 
 val gsfBreadcrumbs = GSF.breadcrumbs
 
