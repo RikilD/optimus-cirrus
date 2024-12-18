@@ -152,23 +152,23 @@ object Platform {
   lazy val debugger = Project("platformDebugger", projectsDir / "debugger")
     .settings(libraryDependencies ++= Seq(jacksonDatabind, jacksonModuleScala, junit % Test))
 
-//  lazy val instrumentation = Project("platformInstrumentation", projectsDir / "instrumentation")
-//    .settings(
-//      scalacOptions ++= ScalacOptions.common,
-//      libraryDependencies ++= Seq(
-//        asyncProfilerLoaderAll,
-//        httpClient,
-//        httpMime,
-//        kafka,
-//        springWeb
-//      )
-//    )
-//    .dependsOn(
-//      breadcrumbs,
-//      entityAgent,
-//      utils,
-//      stagingPluginJar % "plugin"
-//    )
+  lazy val instrumentation = Project("platformInstrumentation", projectsDir / "instrumentation")
+    .settings(
+      scalacOptions ++= ScalacOptions.common,
+      libraryDependencies ++= Seq(
+        asyncProfilerLoaderAll,
+        httpClient,
+        httpMime,
+        kafka,
+        springWeb
+      )
+    )
+    .dependsOn(
+      breadcrumbs,
+      entityAgent,
+      utils,
+      stagingPluginJar % "plugin"
+    )
 
   lazy val inputs = Project("platformInputs", projectsDir / "inputs")
 
