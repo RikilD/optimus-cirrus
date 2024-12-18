@@ -30,9 +30,9 @@ object BuildTool {
 //      runConf,
 //      DHT.client3,
 //      Platform.entityPlugin,
-//      Platform.entityPluginJar % "plugin",
+      Platform.entityPluginJar % "plugin",
 //      Platform.gitUtils,
-//      Platform.platform,
+      Platform.platform,
 //      Stratosphere.common,
     )
 
