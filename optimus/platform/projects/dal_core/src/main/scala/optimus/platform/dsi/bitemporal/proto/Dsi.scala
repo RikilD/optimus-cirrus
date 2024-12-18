@@ -15,6 +15,7 @@ object Dsi {
     def isInitialized(): Boolean = ???
   }
 
+  class ClientSessionInfoProto extends MessageLiteImpl
   class TemporalityProto extends MessageLiteImpl
   class PrcClientSessionInfoProto extends MessageLiteImpl
   class ContextProto extends MessageLiteImpl

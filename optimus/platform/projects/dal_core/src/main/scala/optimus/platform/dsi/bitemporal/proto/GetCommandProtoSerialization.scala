@@ -1585,7 +1585,7 @@ object ClientSessionInfoSerializer
     with RolesetSerialization {
 
   override def deserialize(proto: ClientSessionInfoProto): ClientSessionInfo = {
-    ClientSessionInfo(
+    ???/*ClientSessionInfo(
       proto.getRealId,
       Option(proto.getEffectiveId).filter(_.nonEmpty),
       fromProto(proto.getRolesetMode),
@@ -1594,11 +1594,11 @@ object ClientSessionInfoSerializer
       if (proto.hasOnBehalfSessionToken) Some(proto.getOnBehalfSessionToken.toByteArray.toVector) else None,
       ClientAppIdentifierSerializer.deserialize(proto.getApplicationIdentifier),
       ClientMachineIdentifierSerializer.deserialize(proto.getClientMachineIdentifierProto)
-    )
+    )*/
   }
 
   override def serialize(cmd: ClientSessionInfo): ClientSessionInfoProto = {
-    val b = ClientSessionInfoProto.newBuilder
+    ???/*val b = ClientSessionInfoProto.newBuilder
       .setRealId(cmd.realId)
     cmd.effectiveId.foreach(b.setEffectiveId(_))
     b.setRolesetMode(toProto(cmd.rolesetMode))
@@ -1607,7 +1607,7 @@ object ClientSessionInfoSerializer
     cmd.onBehalfSessionToken.foreach(t => b.setOnBehalfSessionToken(ByteString.copyFrom(t.toArray)))
     b.setApplicationIdentifier(ClientAppIdentifierSerializer.serialize(cmd.applicationIdentifier))
     b.setClientMachineIdentifierProto(ClientMachineIdentifierSerializer.serialize(cmd.clientMachineIdentifier))
-    b.build
+    b.build*/
   }
 }
 
