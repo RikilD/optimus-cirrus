@@ -204,7 +204,7 @@ trait EntitySerialization extends StorableSerializer {
       }
     }
 
-    val cmRef = cmid.map(cmid => CmReference.apply(cmid.asBytes))
+    val cmRef = cmid.map(cmid => CmReference.apply(cmid.asBytes()))
 
     val ses = versionedProperties.map { case (slot, props) =>
       require(
