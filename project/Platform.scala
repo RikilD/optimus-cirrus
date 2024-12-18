@@ -15,38 +15,38 @@ object Platform {
 
 //  lazy val talks = Project("platformTalks", projectsDir / "talks")
 //    .dependsOn(platform, entityPlugin, entityPluginJar % "plugin")
-//
-//  lazy val platform = Project("platform", projectsDir / "platform")
-//    .settings(
-//      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.dynamics ++ Seq("-P:entity:enableStaging:true"),
-//      libraryDependencies ++= Seq(freemarker, jacksonDatatypeJSR310, javaxMail)
-//    )
-//    .dependsOn(
-//      core,
-//      dalClient,
-//      entityPlugin,
-//      entityPluginJar % "plugin",
-//      priql,
-//      priqlDal,
-//      priqlDalPersistence
-//    )
-//
-//  lazy val gitUtils = Project("platformGitUtils", projectsDir / "git-utils")
-//    .settings(libraryDependencies ++= Seq(scalaCollectionCompat, slf4j))
-//
-//  lazy val bitBucketUtils = Project("platformBitBucketUtils", projectsDir / "bitbucket-utils")
-//    .settings(
-//      libraryDependencies ++= Seq(
-//        akkaHttpCore,
-//        akkaHttpSprayJson,
-//        Dependencies.sprayJson,
-//        typesafeConfig
-//      )
-//    )
-//    .dependsOn(restUtils)
-//
-//  lazy val restUtils = Project("platformRestUtils", projectsDir / "rest-utils")
-//    .settings(libraryDependencies ++= Seq(Dependencies.sprayJson))
+
+  lazy val platform = Project("platform", projectsDir / "platform")
+    .settings(
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.dynamics ++ Seq("-P:entity:enableStaging:true"),
+      libraryDependencies ++= Seq(freemarker, jacksonDatatypeJSR310, javaxMail)
+    )
+    .dependsOn(
+      core,
+      dalClient,
+      entityPlugin,
+      entityPluginJar % "plugin",
+      priql,
+      priqlDal,
+      priqlDalPersistence
+    )
+
+  lazy val gitUtils = Project("platformGitUtils", projectsDir / "git-utils")
+    .settings(libraryDependencies ++= Seq(scalaCollectionCompat, slf4j))
+
+  lazy val bitBucketUtils = Project("platformBitBucketUtils", projectsDir / "bitbucket-utils")
+    .settings(
+      libraryDependencies ++= Seq(
+        akkaHttpCore,
+        akkaHttpSprayJson,
+        Dependencies.sprayJson,
+        typesafeConfig
+      )
+    )
+    .dependsOn(restUtils)
+
+  lazy val restUtils = Project("platformRestUtils", projectsDir / "rest-utils")
+    .settings(libraryDependencies ++= Seq(Dependencies.sprayJson))
 
   lazy val priqlDalPersistence = Project("platformPriqlDalPersistence", projectsDir / "priql_dal_persistence")
     .settings(scalacOptions ++= ScalacOptions.common)
