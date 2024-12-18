@@ -56,7 +56,7 @@ val platformAlarms = Platform.alarms
 val platformAnnotations = Platform.annotations
 val platformSprayJson = Platform.sprayJson
 
-//val silverking = Silverking.silverking
+val silverking = Silverking.silverking
 val silverkingUtils = Silverking.utils
 
 //val stratosphereBootstrap = Stratosphere.bootstrap
