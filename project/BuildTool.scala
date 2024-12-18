@@ -26,8 +26,8 @@ object BuildTool {
 	)
     .dependsOn(
       format,
-      rest,
-      runConf,
+//      rest,
+//      runConf,
 //      DHT.client3,
 //      Platform.entityPlugin,
 //      Platform.entityPluginJar % "plugin",
@@ -36,32 +36,32 @@ object BuildTool {
 //      Stratosphere.common,
     )
 
-  lazy val rest = Project("buildToolRest", projectsDir / "rest")
-    .settings(libraryDependencies ++= Seq(args4j))
+//  lazy val rest = Project("buildToolRest", projectsDir / "rest")
+//    .settings(libraryDependencies ++= Seq(args4j))
 //    .dependsOn(Platform.platform)
 
-  lazy val runConf = Project("buildToolRunConf", projectsDir / "runconf")
-    .settings(
-      scalacOptions ++= ScalacOptions.common,
-      libraryDependencies ++= Seq(slf4j, typesafeConfig)
-    )
-    .dependsOn(core, Platform.scalaCompat/*, Platform.utils*/)
-
+//  lazy val runConf = Project("buildToolRunConf", projectsDir / "runconf")
+//    .settings(
+//      scalacOptions ++= ScalacOptions.common,
+//      libraryDependencies ++= Seq(slf4j, typesafeConfig)
+//    )
+//    .dependsOn(core, Platform.scalaCompat/*, Platform.utils*/)
+//
   lazy val format = Project("buildToolFormat", projectsDir / "format")
     .settings(
       scalacOptions ++= ScalacOptions.common,
       libraryDependencies ++= Seq(
         args4j,
-        jacksonDatabind,
+		jgit,
+		jibCore,
+		typesafeConfig,
+		zstdJni,
         jacksonModuleScala,
-        jibCore,
-        scalaCollectionCompat,
-        slf4j,
+		  //"ossscala.scala",
         sprayJson,
-        zstdJni
       )
     )
-    .dependsOn(core, Platform.annotations, Platform.scalaCompat)
+    .dependsOn(core, Platform.annotations)
 
   lazy val core = Project("buildToolCore", projectsDir / "core")
     .settings(
@@ -74,5 +74,4 @@ object BuildTool {
       ),
 		libraryDependencySchemes += "org.scala-lang.modules" %% "scala-parser-combinators" % VersionScheme.Always,
     )
-    .dependsOn(Platform.sprayJson)
 }

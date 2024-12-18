@@ -14,7 +14,7 @@ object Dependencies {
   val kafkaVersion = "3.9.0"
   val logbackVersion = "1.5.12"
   val nettyVersion = "4.1.115.Final"
-  val scala2Version = "2.13.15"
+  val scala2Version = "2.12.20"
   val springVersion = "5.3.33"
 
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
@@ -83,7 +83,7 @@ object Dependencies {
   val poi = "org.apache.poi" % "poi" % "5.3.0"
   val scalaCollectionCompat = "org.scala-lang.modules" %% "scala-collection-compat" % "2.12.0"
   val scalaCompiler = "org.scala-lang" % "scala-compiler" % scala2Version
-  val scalaParallelCollections = "org.scala-lang.modules" %% "scala-parallel-collections" % "0.2.0"
+//  val scalaParallelCollections = "org.scala-lang.modules" %% "scala-parallel-collections" % "0.2.0"
   val scalaParserCombinators = "org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0"
   val scalaReflect = "org.scala-lang" % "scala-reflect" % scala2Version
   val scalaxb = "org.scalaxb" %% "scalaxb" % "1.9.1"

@@ -10,8 +10,8 @@ import optimus.Stratosphere
 ThisBuild / scalaVersion := Dependencies.scala2Version
 
 val buildToolApp = BuildTool.app
-val buildToolRest = BuildTool.rest
-val buildToolRunConf = BuildTool.runConf
+//val buildToolRest = BuildTool.rest
+//val buildToolRunConf = BuildTool.runConf
 val builtToolFormat = BuildTool.format
 val buildToolCore = BuildTool.core
 
@@ -43,16 +43,16 @@ val buildToolCore = BuildTool.core
 //val platformCoreConfig = Platform.coreConfig
 //val platformEntityAgent = Platform.entityAgent
 //val platformEntityAgentExt = Platform.entityAgentExt
-//val platformEntityPlugin = Platform.entityPlugin
-//val platformEntityPluginJar = Platform.entityPluginJar
+val platformEntityPlugin = Platform.entityPlugin
+val platformEntityPluginJar = Platform.entityPluginJar
 //val platformBreadcrumbs = Platform.breadcrumbs
 //val platformMissing = Platform.missing
 //val platformUtils = Platform.utils
 val platformScalaCompat = Platform.scalaCompat
-//val platformStagingPlugin = Platform.stagingPlugin
-//val platformStagingPluingJar = Platform.stagingPluginJar
+val platformStagingPlugin = Platform.stagingPlugin
+val platformStagingPluingJar = Platform.stagingPluginJar
 //val platformCoreMacro = Platform.coreMacro
-//val platformAlarms = Platform.alarms
+val platformAlarms = Platform.alarms
 val platformAnnotations = Platform.annotations
 val platformSprayJson = Platform.sprayJson
 
