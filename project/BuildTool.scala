@@ -30,8 +30,8 @@ object BuildTool {
     .dependsOn(
       format,
 //      rest,
-//      runConf,
-//      DHT.client3,
+      runConf,
+      DHT.client3,
 //      Platform.entityPlugin,
       Platform.entityPluginJar % "plugin",
       Platform.gitUtils,
