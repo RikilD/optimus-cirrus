@@ -227,29 +227,29 @@ object Platform {
 //
 //  lazy val missing = Project("platformMissing", projectsDir / "missing")
 //    .settings(libraryDependencies ++= Seq(curatorFramework, slf4j))
-//
-//  lazy val utils = Project("platformUtils", projectsDir / "utils")
-//    .settings(
-//      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
-//      libraryDependencies ++= Seq(
-//        args4j,
-//        caffeine,
-//        commonsIO,
-//        curatorRecipes,
-//        curatorFramework,
-//        guava,
-//        hkdf,
-//        javaxActivation,
-//        javaxMail,
-//        jettison,
-//        logbackClassic,
-//        openCSV,
-//        slf4j,
-//        zooKeeper,
-//        zstdJni
-//      )
-//    )
-//    .dependsOn(coreMacro, scalaCompat, stagingPlugin)
+
+  lazy val utils = Project("platformUtils", projectsDir / "utils")
+    .settings(
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
+      libraryDependencies ++= Seq(
+        args4j,
+        caffeine,
+        commonsIO,
+        curatorRecipes,
+        curatorFramework,
+        guava,
+        hkdf,
+        javaxActivation,
+        javaxMail,
+        jettison,
+        logbackClassic,
+        openCSV,
+        slf4j,
+        zooKeeper,
+        zstdJni
+      )
+    )
+    .dependsOn(coreMacro, scalaCompat, stagingPlugin)
 
   lazy val scalaCompat = Project("platformScalaCompat", projectsDir / "scala_compat")
     .settings(
