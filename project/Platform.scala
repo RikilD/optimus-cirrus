@@ -47,10 +47,10 @@ object Platform {
 //
 //  lazy val restUtils = Project("platformRestUtils", projectsDir / "rest-utils")
 //    .settings(libraryDependencies ++= Seq(Dependencies.sprayJson))
-//
-//  lazy val priqlDalPersistence = Project("platformPriqlDalPersistence", projectsDir / "priql_dal_persistence")
-//    .settings(scalacOptions ++= ScalacOptions.common)
-//    .dependsOn(priqlDal)
+
+  lazy val priqlDalPersistence = Project("platformPriqlDalPersistence", projectsDir / "priql_dal_persistence")
+    .settings(scalacOptions ++= ScalacOptions.common)
+    .dependsOn(priqlDal)
 
   lazy val priqlDal = Project("platformPriqlDal", projectsDir / "priql_dal")
     .enablePlugins(ProtobufPlugin)
