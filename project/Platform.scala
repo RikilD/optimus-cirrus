@@ -172,8 +172,8 @@ object Platform {
 
   lazy val inputs = Project("platformInputs", projectsDir / "inputs")
 
-//  lazy val coreConfig = Project("platformCoreConfig", projectsDir / "core_config")
-//    .dependsOn(breadcrumbs, utils)
+  lazy val coreConfig = Project("platformCoreConfig", projectsDir / "core_config")
+    .dependsOn(breadcrumbs, utils)
 
   lazy val entityAgent = Project("platformEntityAgent", projectsDir / "entityagent")
     .settings(
