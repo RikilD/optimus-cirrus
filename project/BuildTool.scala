@@ -33,7 +33,7 @@ object BuildTool {
       Platform.entityPluginJar % "plugin",
 //      Platform.gitUtils,
       Platform.platform,
-//      Stratosphere.common,
+      Stratosphere.common,
     )
 
 //  lazy val rest = Project("buildToolRest", projectsDir / "rest")
