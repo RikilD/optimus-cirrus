@@ -106,9 +106,16 @@ object Platform {
 //      entityAgent,
 //      Silverking.silverking
 //    )
-//
-//  lazy val collections = Project("platformCollections", projectsDir / "collections")
-//
+
+  lazy val collections = Project("platformCollections", projectsDir / "collections")
+	  .settings(
+		scalacOptions ++= ScalacOptions.common,
+		libraryDependencies ++= Seq(
+			slf4j,
+			scalaCollectionCompat,
+		),
+	  )
+
 //  lazy val dalEnvironment = Project("platformDalEnvironment", projectsDir / "dal_environment")
 //    .settings(
 //      scalacOptions ++= ScalacOptions.common,
