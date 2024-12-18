@@ -57,7 +57,7 @@ val platformAnnotations = Platform.annotations
 val platformSprayJson = Platform.sprayJson
 
 //val silverking = Silverking.silverking
-//val silverkingUtils = Silverking.utils
+val silverkingUtils = Silverking.utils
 
 //val stratosphereBootstrap = Stratosphere.bootstrap
 //val stratosphereCommon = Stratosphere.common

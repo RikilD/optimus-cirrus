@@ -24,7 +24,7 @@ object Silverking {
 //      )
 //    )
 //    .dependsOn(Platform.breadcrumbs, utils)
-//
-//  lazy val utils = Project("silverkingUtils", projectsDir / "silverking_utils")
-//    .settings(libraryDependencies ++= Seq(guava, slf4j))
+
+  lazy val utils = Project("silverkingUtils", projectsDir / "silverking_utils")
+    .settings(libraryDependencies ++= Seq(guava, slf4j))
 }
