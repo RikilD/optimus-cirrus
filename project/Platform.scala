@@ -78,7 +78,7 @@ object Platform {
     )
 
   lazy val dalClient = Project("platformDalClient", projectsDir / "dal_client")
-    .settings(scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.entityPlugin)
+    .settings(scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros)
     .dependsOn(
 		core,
 		dalCore,
@@ -193,10 +193,23 @@ object Platform {
 
   lazy val entityAgent = Project("platformEntityAgent", projectsDir / "entityagent")
     .settings(
-      loomSettings,
+      loomSettings ++ Seq(
+		  assemblyMergeStrategy := {
+			  case /*x if x.endsWith(*/"module-info.class"/*)*/ => MergeStrategy.discard
+			  case other => assemblyMergeStrategy.value(other)
+		  }
+	  ),
       libraryDependencies ++= Seq(asm, asmCommons, asmTree, asmUtil)
     )
     .dependsOn(entityAgentExt)
+
+	// fat jar version of entityPlugin, to be consumed as a compiler plugin
+	lazy val entityAgentJar = Project("platformEntityAgentJar", projectsDir / "entityagent-jar")
+		.settings(
+			exportJars := true,
+			Compile / packageBin := (entityAgent / assembly).value,
+			Compile / packageBin / packageOptions += Package.ManifestAttributes("Premain-Class" -> "optimus.EntityAgent"),
+		)
 
   lazy val entityAgentExt = Project("platformEntityAgentExt", projectsDir / "entityagent-ext")
 

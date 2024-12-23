@@ -7,9 +7,11 @@ import optimus.Platform
 import optimus.Silverking
 import optimus.Stratosphere
 
+//javacOptions ++= Seq("-source", "17", "-target", "17")
 ThisBuild / scalaVersion := Dependencies.scala2Version
 
 val buildToolApp = BuildTool.app
+val buildToolAppJar = BuildTool.appJar
 val buildToolRest = BuildTool.rest
 val buildToolRunConf = BuildTool.runConf
 val builtToolFormat = BuildTool.format
@@ -42,6 +44,7 @@ val platformInstrumentation = Platform.instrumentation
 val platformInputs = Platform.inputs
 val platformCoreConfig = Platform.coreConfig
 val platformEntityAgent = Platform.entityAgent
+val platformEntityAgentJar = Platform.entityAgentJar
 val platformEntityAgentExt = Platform.entityAgentExt
 val platformEntityPlugin = Platform.entityPlugin
 val platformEntityPluginJar = Platform.entityPluginJar

@@ -1,15 +1,26 @@
 package optimus
 
-import optimus.Dependencies._
-import sbt._
-import sbt.Keys._
+import optimus.Dependencies.*
+import sbt.*
+import sbt.Keys.*
+import sbtassembly.AssemblyPlugin.autoImport._
 
 object BuildTool {
   private val projectsDir = file("optimus/buildtool/projects")
 
+  lazy val appJar = Project("buildToolAppJar", projectsDir / "app-jar")
+	  .settings(
+		exportJars := true,
+		  Compile / packageBin := (app / assembly).value,
+	  )
+
   lazy val app = Project("buildToolApp", projectsDir / "app")
     .settings(
       scalacOptions ++= ScalacOptions.common,
+		assemblyMergeStrategy := {
+			case x if x.endsWith(".SF") || x.endsWith(".DSA") || x.endsWith(".RSA") => MergeStrategy.discard
+				case x =>  MergeStrategy.first
+		},
       libraryDependencies ++= Seq(
 		avroCompiler,
         bsp4j,
@@ -19,6 +30,8 @@ object BuildTool {
         jgit,
         jmustache,
         jsonSchema2Pojo,
+        jsoniterScalaCore,
+        jsoniterScalaMacros,
         scalaxb,
         scalaXml,
         zinc,
@@ -63,6 +76,9 @@ object BuildTool {
 		zstdJni,
         jacksonModuleScala,
 		  //"ossscala.scala",
+        jsoniterScalaCore,
+        jsoniterScalaMacros,
+        openCSV,
         sprayJson,
       )
     )
@@ -73,6 +89,8 @@ object BuildTool {
       libraryDependencies ++= Seq(
 		jacksonDatabind,
 		jacksonModuleScala,
+        jsoniterScalaCore,
+        jsoniterScalaMacros,
         scalaParserCombinators,
         sprayJson,
         typesafeConfig,
