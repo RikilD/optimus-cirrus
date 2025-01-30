@@ -208,7 +208,10 @@ object Platform {
 		.settings(
 			exportJars := true,
 			Compile / packageBin := (entityAgent / assembly).value,
-			Compile / packageBin / packageOptions += Package.ManifestAttributes("Premain-Class" -> "optimus.EntityAgent"),
+			Compile / packageBin / packageOptions += Package.ManifestAttributes(
+				"Premain-Class" -> "optimus.EntityAgent", 
+				"Can-Retransform-Classes" -> "true", 
+				"Can-Set-Native-Method-Prefix" -> "true"),
 		)
 
   lazy val entityAgentExt = Project("platformEntityAgentExt", projectsDir / "entityagent-ext")

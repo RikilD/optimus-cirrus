@@ -1,0 +1,2 @@
+#!/bin/sh
+jdb -Doptimus.logging.checkAsync=false -Dlogback.configurationFile=./optimus/platform/projects/entityplugin/src/main/resources/logback.xml -R--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED -R--add-exports=java.management/sun.management=ALL-UNNAMED -Xmx1g -R-javaagent:./optimus/platform/projects/entityagent-jar/target/scala-2.12/platformEntityAgentJar-assembly-0.1.0-SNAPSHOT.jar -classpath ./optimus/buildtool/projects/app-jar/target/scala-2.12/buildToolAppJar-assembly-0.1.0-SNAPSHOT.jar optimus.buildtool.OptimusBuildTool  -e none
