@@ -11,16 +11,11 @@
 -->
 <configuration>
   <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
-  <appender name="SYNC_STDERR" class="ch.qos.logback.core.ConsoleAppender">
+  <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
     <target>System.out</target>
     <encoder>
       <pattern>%level %logger{36} - %msg%n</pattern>
     </encoder>
-  </appender>
-  <appender name="STDERR" class="msjava.logbackutils.async.AsyncAppender">
-    <dispatcher class="msjava.logbackutils.async.AsyncDispatcherQueueImpl"/>
-    <callerDataInfo>false</callerDataInfo>
-    <appender-ref ref="SYNC_STDERR" />
   </appender>
 
   <root level="DEBUG">

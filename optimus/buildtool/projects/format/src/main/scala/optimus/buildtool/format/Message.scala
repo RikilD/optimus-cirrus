@@ -32,6 +32,7 @@ final case class Warning(msg: String, file: ObtFile, line: Int = 0) extends Mess
   override val isError: Boolean = false
 }
 final case class Error(msg: String, file: ObtFile, line: Int = 0) extends Message {
+  println(msg + " at " + file)
   def failure: Failure = Failure(Seq(this))
   override val isError: Boolean = true
 }
