@@ -9,5 +9,5 @@
 // limitations under the License.
 all.javac.release = 11
 
-main.compile.libs += ossscala.scala.tools
-test.compile.libs += ossjava.junit
+main {} # .compile.libs += scala.tools
+#test.compile.libs += junit.juni

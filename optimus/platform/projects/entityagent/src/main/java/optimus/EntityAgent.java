@@ -254,7 +254,7 @@ public class EntityAgent {
     // searched for.
 
     var allowCorePatches = false;
-    try {
+    /*try {
       var cn = "optimus.DoNotUseMeOutsideEntityAgent";
       var extJar = Class.forName(cn).getProtectionDomain().getCodeSource().getLocation().getPath();
       instrumentation.appendToBootstrapClassLoaderSearch(new JarFile(extJar));
@@ -273,7 +273,7 @@ public class EntityAgent {
         logMsg("Added " + extJar + " from directory to bootstrap path");
         allowCorePatches = true;
       }
-    }
+    }*/
     if (!allowCorePatches) logMsg("Cannot patch core classes.");
 
     System.setProperty("ENTITY_AGENT_VERSION", VERSION_STRING);

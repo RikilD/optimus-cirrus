@@ -1,0 +1,14 @@
+all {
+  sources = [java, scala, "scala-2.12"]
+  resources = [resources]
+  javac {
+    options = []
+    release = 20
+  }
+
+  
+}
+
+main {
+  root = "src/main"
+}

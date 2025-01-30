@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.{ArrayList => JavaArrayList}
 import java.util.{List => JavaList}
 import java.util.{UUID => JUUID}
-import msjava.base.util.uuid.{MSUuid => UUID}
 import optimus.breadcrumbs.crumbs.Crumb.RuntimeSource
 import optimus.breadcrumbs.crumbs.Properties
 import optimus.breadcrumbs.crumbs.PropertiesCrumb
@@ -59,7 +58,7 @@ final class ChainedID private[breadcrumbs] (val repr: String, val depth: Int, va
   }
 
   private[optimus] def this(repr: String, depth: Int, level: Int) =
-    this(repr, depth, level, if (depth == 0) repr else (new UUID).toString)
+    this(repr, depth, level, if (depth == 0) repr else JUUID.randomUUID().toString)
   @transient private lazy val id = new AtomicInteger(0)
   private[optimus] def this(addr: InetAddress) = this(addr.getCanonicalHostName, 0, ChainedID.level)
   private[optimus] def this(j: JUUID) = this(j.toString, 0, ChainedID.level)
@@ -127,7 +126,7 @@ object ChainedID {
   }
 
   private[optimus] val root = {
-    val cid: ChainedID = new ChainedID(prefix + (new UUID).toString, 0, level)
+    val cid: ChainedID = new ChainedID(prefix + JUUID.randomUUID().toString, 0, level)
     // Logged at error to get around logging filters that get setup in various ways.  This is not an actual
     // error of course but we need to do it this way
     log.error(s"root chainedId: $cid (this is not an actual error!)")
