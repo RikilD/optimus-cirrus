@@ -1,0 +1,6 @@
+dependencies {
+  scala-collection-compat {
+    noAfs = true
+    maven."org.scala-lang.modules"."scala-collection-compat_2.12".version = 2.6.0
+  }
+}
