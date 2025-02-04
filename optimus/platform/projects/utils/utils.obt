@@ -7,7 +7,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = 11
+all.javac.release = 21
 
 main {
   hasMacros = true
@@ -22,39 +22,42 @@ main {
       optimus.platform.stagingplugin,
     ]
     libs = [
-      com.ms.infra.rr.kerberos
-      fsf.zookeeper,
-      netty-afscompat.handler,
-      ossjava.args4j,
-      ossjava.caffeine,
-      ossjava.commons-io,
-      ossjava.commons-text,
-      ossjava.curator,
-      ossjava.guava,
-      ossjava.hkdf,
-      ossjava.jakarta.activation,
-      ossjava.javax.mail,
-      ossjava.jettison,
-      ossjava.logback,
-      ossjava.opencsv,
-      ossjava.slf4j,
-      ossjava.zstd-jni
+      args4j.args4j,
+      at.favre.lib.hkdf,
+      ch.qos.logback.logback-classic,
+      com.github.ben-manes.caffeine.caffeine,
+      com.github.luben.zstd-jni
+      com.google.guava.guava,
+//      com.ms.infra.rr.kerberos,
+//      com.ms.spgbc.cslshared.optimus-optimus_jsr310-date-time,
+      com.opencsv.opencsv,
+      com.sun.mail.javax.mail,
+      commons-io.commons-io,
+      io.netty.netty-all,
+      org.apache.commons.commons-text,
+      org.apache.curator.curator-client,
+      org.apache.curator.curator-framework,
+      org.apache.curator.curator-recipes,
+      org.apache.zookeeper.zookeeper,
+      org.codehaus.jettison.jettison,
+      org.slf4j.slf4j-api
+      scala-xml,
     ]
   }
-  compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.mbeans
-  runtime.libs += msjava.jprofiler
-  installIvy = true
+//  compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.mbeans
+//  runtime.libs += msjava.jprofiler
 }
 
-test {
-  hasMacros = true // We need that for now due to limitation of stratosphere
-  compile {
-    libs = [
-      msjava.jprofiler,
-      ossjava.junit,
-      ossscala.scalactic,
-      ossscala.scalatest,
-      ossscala.scalatestplus-junit-4-12,
-    ]
-  }
-}
+//test {
+//  hasMacros = true // We need that for now due to limitation of stratosphere
+//  compile {
+//    modules += optimus.platform.utils
+//    libs = [
+//      msjava.jprofiler,
+//      ossjava.junit,
+//      ossscala.scalactic,
+//      ossscala.scalatest,
+//      ossscala.scalatestplus-junit-4-12,
+//    ]
+//  }
+//}

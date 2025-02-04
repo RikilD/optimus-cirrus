@@ -25,10 +25,10 @@ alarms { owner = x, group = y }
 annotations { owner = x, group = y }
 #bitbucket-utils { owner = x, group = y }
 #breadcrumbs { owner = x, group = y }
-#collections { owner = x, group = y }
+collections { owner = x, group = y }
 #core { owner = x, group = y }
 #core_config { owner = x, group = y }
-#core_macro { owner = x, group = y }
+core_macro { owner = x, group = y }
 #dal_client { owner = x, group = y }
 #dal_core { owner = x, group = y }
 #dal_environment { owner = x, group = y }
@@ -46,11 +46,11 @@ annotations { owner = x, group = y }
 #rest-utils { owner = x, group = y }
 scala_compat { owner = x, group = y }
 #security_akka_http-client { owner = x, group = y }
-#spray_json { owner = x, group = y }
-#stagingplugin { owner = x, group = y }
+spray_json { owner = x, group = y }
+stagingplugin { owner = x, group = y }
 #talks { owner = x, group = y }
 #tls { owner = x, group = y }
-#utils { owner = x, group = y }
+utils { owner = x, group = y }
 #versioning_runtime { owner = x, group = y }
 }
 
