@@ -15,6 +15,7 @@
 .idea
 /.shelf/
 docs/css/overridesIJ23.css
+*.iml
 
 # VSCode
 *.code-workspace

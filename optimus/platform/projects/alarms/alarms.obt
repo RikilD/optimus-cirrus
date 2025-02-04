@@ -10,4 +10,4 @@
 all.javac.release = 11
 
 main {} # .compile.libs += scala.tools
-#test.compile.libs += junit.juni
+#test.compile.libs += junit.junit

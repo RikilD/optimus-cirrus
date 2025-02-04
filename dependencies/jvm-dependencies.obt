@@ -1,6 +1,79 @@
 dependencies {
+  args4j {
+    noAfs = true
+    maven.args4j.args4j.version = 2.0.29
+  }
+  caffeine {
+    noAfs = true
+    maven."com.github.ben-manes.caffeine".caffeine.version = 2.8.5
+  }
+  commons-io {
+    noAfs = true
+    maven.commons-io.commons-io.version = 2.16.1
+  }
+  commons-text {
+    noAfs = true
+    maven."org.apache.commons".commons-text.version = 1.11.0
+  }
+  curator-client {
+    noAfs = true
+    maven."org.apache.curator".curator-client.version = 5.4.0
+  }
+  curator-framework {
+    noAfs = true
+    maven."org.apache.curator".curator-framework.version = 5.4.0
+  }
+  curator-recipes {
+    noAfs = true
+    maven."org.apache.curator".curator-recipes.version = 5.4.0
+  }
+  guava {
+    noAfs = true
+    maven."com.google.guava".guava.version = 31.1-jre
+  }
+  hkdf {
+    noAfs = true
+    maven."at.favre.lib".hkdf.version = 1.1.0
+  }
+  jettison {
+    noAfs = true
+    maven."org.codehaus.jettison".jettison.version = 1.5.4
+  }
+  logback-classic {
+    noAfs = true
+    maven."ch.qos.logback".logback-classic.version = 1.2.9
+  }
+  mail {
+    noAfs = true
+    maven."com.sun.mail"."javax.mail".version = 1.4.5
+  }
+  netty-all {
+    noAfs = true
+    maven."io.netty".netty-all.version = 4.1.60.Final
+  }
+  opencsv {
+    noAfs = true
+    maven."com.opencsv".opencsv.version = 5.0
+  }
   scala-collection-compat {
     noAfs = true
     maven."org.scala-lang.modules"."scala-collection-compat_2.12".version = 2.6.0
+  }
+  scala-xml {
+    noAfs = true
+    scala = true
+    maven."org.scala-lang.modules"."scala-xml".version = 1.0.6
+  }
+  slf4j {
+    noAfs = true
+    maven."org.slf4j"."slf4j-api".version = 1.7.29
+  }
+  zookeeper {
+    noAfs = true
+    maven."org.apache.zookeeper".zookeeper.version = 3.8.1
+  }
+  zstd-jni {
+    noAfs = true
+    maven."com.github.luben".zstd-jni.version = 1.5.5-11
   }
 }
