@@ -17,19 +17,8 @@ main {
       optimus.platform.alarms
     ]
     libs = [
-      ossjava.logback,
-      ossjava.logback.classic,
-      ossjava.slf4j,
-      ossscala.scala
-    ]
-  }
-  installIvy = true
-}
-
-test {
-  compile {
-    libs = [
-      ossjava.junit
+      ch.qos.logback.logback-classic,
+      org.slf4j.slf4j-api
     ]
   }
 }

@@ -16,6 +16,7 @@
 /.shelf/
 docs/css/overridesIJ23.css
 *.run.xml
+*.iml
 
 # IntelliJ IDEA - markdown generated
 /.generated/

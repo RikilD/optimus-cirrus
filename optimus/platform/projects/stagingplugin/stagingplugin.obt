@@ -17,3 +17,14 @@ main {
   ]
   installIvy = true
 }
+
+//test {
+//  compile.modules = [
+//    optimus.platform.compiler-test-utils
+//    optimus.platform.utils
+//  ]
+//  compile.libs = [
+//    ossjava.junit
+//    ossscala.scala-collection-compat
+//  ]
+//}
