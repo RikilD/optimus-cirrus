@@ -16,8 +16,8 @@ main.compile {
     optimus.platform.utils
   ]
   libs = [
-    msjava.base,
-    ossjava.protobuf-java,
-    ossjava.slf4j
+    // msjava.base,
+    protobuf-java,
+    slf4j
   ]
 }

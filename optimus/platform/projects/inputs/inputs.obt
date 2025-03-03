@@ -8,7 +8,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 main.compile = {}
-test.compile.libs += ossjava.junit
+//test.compile.libs += junit
 
 // inputs is used by interop which is used by Java 8 clients
-all.javac.release = 8
+// all.javac.release = 8

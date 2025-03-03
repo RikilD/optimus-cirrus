@@ -16,8 +16,8 @@ main {
     ]
 
     libs = [
-      ossjava.args4j,
-      ossjava.slf4j
+      args4j,
+      slf4j
     ]
   }
 }

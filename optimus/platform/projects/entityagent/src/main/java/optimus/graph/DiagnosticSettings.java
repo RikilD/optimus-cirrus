@@ -126,7 +126,7 @@ public class DiagnosticSettings {
       enableRTVerifier && getBoolProperty("optimus.rt.verifier.accumulate.violations", false);
 
   public static final boolean loomTransformations =
-      getBoolProperty("optimus.loom.transformations", LoomDefaults.enabled);
+      getBoolProperty("optimus.loom.transformations", false);
 
   public static final int loomCompilerLevel = getIntProperty("optimus.loom.compiler.level", 0);
 

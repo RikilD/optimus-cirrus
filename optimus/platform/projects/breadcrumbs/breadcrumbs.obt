@@ -7,7 +7,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = 11
+// all.javac.release = 11
 
 main {
   hasMacros = true
@@ -16,68 +16,69 @@ main {
     modules = [
       // core_macro dependency is to enable rewrite of log.debug with a macro
       optimus.platform.core_macro,
+      optimus.platform.missing
       optimus.platform.utils
     ]
     libs = [
-      fsf.zookeeper,
-      msjava.base,
-      msjava.zkapi,
-      ossjava.archaius-core,
-      ossjava.args4j,
-      ossjava.curator,
-      ossjava.guava,
-      ossjava.httpcomponents-client,
-      ossjava.httpcomponents-core,
-      ossjava.iharder-base64,
-      ossjava.jsr305-annotations,
-      ossjava.logback,
-      ossjava.metrics-core.variant.kafka,
-      ossjava.slf4j,
-      ossjava.snakeyaml,
-      ossjava.zkclient,
-      ossscala.apache-kafka,
-      ossscala.scala.tools,
-      ossscala.spray-json
+      zookeeper,
+//      // msjava.base,
+//      // msjava.zkapi,
+      archaius-core,
+      args4j,
+      curator-client,
+      guava,
+      httpcomponents-client,
+//      httpcomponents-core,
+      iharder-base64,
+//      jsr305-annotations,
+      logback,
+//      metrics-core.variant.kafka,
+      slf4j,
+      snakeyaml,
+//      zkclient,
+      apache-kafka,
+//      scala.tools,
+      spray-json
     ]
   }
   runtime.libs = [
-    msjava.logbackutils,
-    msjava.slf4jutils
+    // // msjava.logbackutils,
+    // // msjava.slf4jutils
   ]
 
-  copyFiles = [
-    {from = "scripts", into = "etc/config/breadcrumbs/scripts"}
-  ]
+//  copyFiles = [
+//    {from = "scripts", into = "etc/config/breadcrumbs/scripts"}
+//  ]
 }
 
-// the kerberos-specific authentication code (must remain internal!)
-auth {
-  root = "src/auth"
-  open = true
-  compile {
-    modules += optimus.platform.breadcrumbs.main
-    libs += msjava.kerberos
-  }
-}
-
-internal {
-  root = "src/internal"
-  open = true
-  compile.modules += optimus.platform.breadcrumbs.main
-}
-
-apps {
-  root = "src/apps"
-  runtime {
-    modules = [
-      optimus.platform.breadcrumbs.auth,
-      optimus.platform.breadcrumbs.internal,
-      optimus.platform.breadcrumbs.main
-    ]
-    libs = [
-      msjava.logbackutils,
-      msjava.slf4jutils,
-      ossjava.metrics-core.variant.kafka
-    ]
-  }
-}
+//// the kerberos-specific authentication code (must remain internal!)
+//auth {
+//  root = "src/auth"
+//  open = true
+//  compile {
+//    modules += optimus.platform.breadcrumbs.main
+//    libs += // msjava.kerberos
+//  }
+//}
+//
+//internal {
+//  root = "src/internal"
+//  open = true
+//  compile.modules += optimus.platform.breadcrumbs.main
+//}
+//
+//apps {
+//  root = "src/apps"
+//  runtime {
+//    modules = [
+//      optimus.platform.breadcrumbs.auth,
+//      optimus.platform.breadcrumbs.internal,
+//      optimus.platform.breadcrumbs.main
+//    ]
+//    libs = [
+//      // msjava.logbackutils,
+//      // msjava.slf4jutils,
+//      metrics-core.variant.kafka
+//    ]
+//  }
+//}

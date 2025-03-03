@@ -32,37 +32,37 @@ main {
       optimus.silverking.silverking
     ]
     libs = [
-      fsf.zookeeper,
+      zookeeper,
       ipm.watchtower_core,
-      msjava.base,
-      msjava.hdom,
-      msjava.msnet,
-      msjava.msxml,
-      msjava.zkapi,
-      ossjava.commons-codec,
-      ossjava.commons-lang3,
-      ossjava.curator,
-      ossjava.eaio-uuid-stephenc,
-      ossjava.guava,
-      ossjava.hibernate-validator,
-      ossjava.iharder-base64,
-      ossjava.jackson2,
-      ossjava.jsr305-annotations,
-      ossjava.lz4-java,
-      ossjava.protobuf-java,
-      ossjava.slf4j.bridges,
-      ossjava.spring,
-      ossscala.jackson-module-scala,
-      ossscala.scala.tools,
-      ossscala.spray-json,
-      sam.zookeeper
+      // msjava.base,
+      // msjava.hdom,
+      // msjava.msnet,
+      // msjava.msxml,
+      // msjava.zkapi,
+      commons-codec,
+      commons-lang3,
+      curator,
+      eaio-uuid,
+      guava,
+      hibernate-validator,
+      iharder-base64,
+      jackson2,
+      jsr305-annotations,
+      lz4-java,
+      protobuf-java,
+      slf4j.bridges,
+      spring,
+      jackson-module-scala,
+      scala.tools,
+      spray-json,
+      // sam.zookeeper
     ]
   }
   runtime.libs = [
-    msjava.directory,
-    msjava.directory.testutils,
-    msjava.protobufutils,
-    ossjava.snakeyaml
+    // msjava.directory,
+    // msjava.directory.testutils,
+    // msjava.protobufutils,
+    snakeyaml
   ]
 
   copyFiles = [

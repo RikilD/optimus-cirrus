@@ -7,7 +7,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = 11
+// all.javac.release = 11
 
 main {
   compile {
@@ -20,18 +20,19 @@ main {
       optimus.silverking.silverking
     ]
     libs = [
-      ipm.watchtower_core
-      msjava.hdom
-      msjava.logbackutils
-      msjava.zkapi
-      ossjava.eaio-uuid-stephenc
-      sam.zookeeper
+//      ipm.watchtower_core
+      // msjava.hdom
+      // // msjava.logbackutils
+      // msjava.zkapi
+      eaio-uuid
+      typesafe-config
+//      sam.zookeeper
     ]
   }
 }
 
-internal {
-  root = "src/internal"
-  open = true
-  compile.modules += optimus.platform.dal_environment.main
-}
+//internal {
+//  root = "src/internal"
+//  open = true
+//  compile.modules += optimus.platform.dal_environment.main
+//}

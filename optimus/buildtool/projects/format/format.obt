@@ -7,7 +7,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = ${versions.javac.release.jetfireDependency}
+// all.javac.release = 11
 
 main {
   compile {
@@ -17,14 +17,14 @@ main {
     ]
 
     libs = [
-      ossjava.args4j,
-      ossjava.jgit,
-      ossjava.jib-core,
-      ossjava.typesafeconfig,
-      ossjava.zstd-jni,
-      ossscala.jackson-module-scala,
-      ossscala.scala,
-      ossscala.spray-json
+      args4j,
+      jgit,
+      jib-core,
+      typesafeconfig,
+      zstd-jni,
+      jackson-module-scala,
+      scala,
+      spray-json
     ]
   }
 }
@@ -33,10 +33,10 @@ test {
   open = true
   compile {
     libs = [
-      ossjava.jimfs,
-      ossjava.junit,
-      ossscala.scalatest,
-      ossscala.scalatestplus-junit-4-12
+      jimfs,
+      junit,
+      scalatest,
+      scalatestplus-junit-4-12
     ]
     modules = [
       optimus.stratosphere.bootstrap,

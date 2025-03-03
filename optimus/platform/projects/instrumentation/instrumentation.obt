@@ -7,7 +7,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = 11
+// all.javac.release = 11
 
 main {
   hasMacros = true
@@ -17,34 +17,34 @@ main {
       optimus.platform.alarms,
       optimus.platform.annotations,
       optimus.platform.breadcrumbs,
-      optimus.platform.breadcrumbs.auth,
+//      optimus.platform.breadcrumbs.auth,
       optimus.platform.entityagent,
       optimus.platform.scala_compat,
       optimus.platform.utils
     ]
     libs = [
-      java-jq,
-      optimus.async-profiler,
-      ossjava.commons-io,
-      ossjava.httpcomponents-client.mime,
-      ossjava.metrics-core.variant.kafka
+//      java-jq,
+      async-profiler,
+      commons-io,
+      httpcomponents-mime,
+//      metrics-core.variant.kafka
     ]
   }
-  compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.mbeans
-  runtime.libs += msjava.jprofiler
+//  compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.mbeans
+//  runtime.libs += msjava.jprofiler
 
   copyFiles = [
     {from = "scripts", into = "etc/config/instrumentation/scripts"}
   ]
 }
 
-test {
-  hasMacros = false
-  compile {
-    modules += optimus.platform.instrumentation
-    libs = [
-      ossjava.junit,
-      ossscala.scalatestplus-junit-4-12
-    ]
-  }
-}
+//test {
+//  hasMacros = false
+//  compile {
+//    modules += optimus.platform.instrumentation
+//    libs = [
+//      junit,
+//      scalatestplus-junit-4-12
+//    ]
+//  }
+//}

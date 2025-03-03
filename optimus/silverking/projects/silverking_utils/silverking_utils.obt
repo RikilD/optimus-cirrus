@@ -9,7 +9,7 @@
 // limitations under the License.
 main {
   compile.libs = [
-    ossjava.guava,
-    ossjava.slf4j
+    guava,
+    slf4j
   ]
 }

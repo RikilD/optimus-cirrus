@@ -7,9 +7,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-main.compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.unsafe
+main.compileOnly.modules += // optimus.platform.legacy-jdk-api-stubs.unsafe
 
 test.compile.libs = [
-  ossjava.guava,
-  ossjava.junit
+  guava,
+  junit
 ]

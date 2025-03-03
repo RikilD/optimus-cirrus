@@ -19,15 +19,15 @@ main.compile {
     optimus.platform.utils
   ]
   libs = [
-    msjava.base,
+    // msjava.base,
     optimus.async-profiler,
-    ossjava.args4j,
-    ossjava.guava,
-    ossjava.iharder-base64,
-    ossjava.junit,
-    ossjava.poi,
-    ossjava.slf4j,
-    ossscala.scalactic,
-    ossscala.scalatest
+    args4j,
+    guava,
+    iharder-base64,
+    junit,
+    poi,
+    slf4j,
+    scalactic,
+    scalatest
   ]
 }

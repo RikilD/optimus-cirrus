@@ -34,16 +34,16 @@ main {
       optimus.platform.utils
     ]
     libs = [
-      msjava.base,
-      ossjava.commons-io,
-      ossjava.commons-lang3,
-      ossjava.guava,
-      ossjava.poi,
-      ossjava.protobuf-java,
-      ossjava.slf4j,
-      ossjava.spring,
-      ossscala.scala-parser-combinators
+      // msjava.base,
+      commons-io,
+      commons-lang3,
+      guava,
+      poi,
+      protobuf-java,
+      slf4j,
+      spring,
+      scala-parser-combinators
     ]
   }
-  runtime.libs += msjava.protobufutils
+  runtime.libs += // msjava.protobufutils
 }

@@ -91,7 +91,7 @@ public class Settings {
       getBoolProperty("optimus.graph.keepTaskSchedulerAffinity", false);
 
   public static final boolean useVirtualThreads =
-      getBoolProperty("optimus.graph.useVirtualThreads", LoomDefaults.enabled);
+      getBoolProperty("optimus.graph.useVirtualThreads", false);
   public static final boolean limitThreads =
       getBoolProperty("optimus.graph.limitThreads", !useVirtualThreads);
 
