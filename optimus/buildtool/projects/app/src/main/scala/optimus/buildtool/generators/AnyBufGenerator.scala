@@ -112,11 +112,11 @@ import scala.sys.process.ProcessLogger
       scope: CompilationScope
   ): Inputs = {
     val generator = generatorDefaults.configured(configuration)
-    val execDep = generator.dependencyDefinition(scope)
-    val executable = generator.file(execDep.version)
+//    val execDep = generator.dependencyDefinition(scope)
+    val executable = generator.file()
 
     // we don't want the platform-specific execDir to be part of the fingerprint
-    val execFingerprint = generatorDefaults.linux.file(execDep.version)
+    val execFingerprint = generatorDefaults.linux.file()
 
     val filter = sourceFilter && sourcePredicate
     val (templates, templateFingerprint) = SourceGenerator.rootedTemplates(

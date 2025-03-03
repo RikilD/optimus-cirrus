@@ -65,15 +65,15 @@ import scala.sys.process.ProcessLogger
   ): SimpleAfsGenerator.Inputs = {
     // get the executable that we are running
     val exec = generatorDefaults.configured(configuration)
-    val version = exec.dependencyDefinition(scope).version
+//    val version = exec.dependencyDefinition(scope).version
 
     // actual executable
-    val generatorExecutable = exec.file(version)
+    val generatorExecutable = exec.file()
 
     // Linux defaults are used for the fingerprint to avoid contaminating it with local execution information. This of
     // course relies on the generators producing always the same results, even when running with different binaries on
     // different systems.
-    val generatorFingerprint = generatorDefaults.linux.file(version)
+    val generatorFingerprint = generatorDefaults.linux.file()
 
     val filter = sourceFilter && sourcePredicate
     val (templates, templateFingerprint) = SourceGenerator.rootedTemplates(

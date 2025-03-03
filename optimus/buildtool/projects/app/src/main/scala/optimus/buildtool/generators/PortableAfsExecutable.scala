@@ -48,8 +48,8 @@ final case class AfsExecutable(
     executablePath: String,
     variant: Option[String]
 ) {
-  def file(version: String): FileAsset =
-    FileAsset(Paths.get(s"${AfsNamingConventions.AfsDistStr}$metaDir/PROJ/$projectDir/$version/$executablePath"))
+  def file(): FileAsset =
+    FileAsset(Paths.get("protoc-3.21.1-linux-x86_64.exe").toAbsolutePath)
 
   def dependencyDefinition(scope: CompilationScope): DependencyDefinition =
     scope.externalDependencyResolver.dependencyDefinitions
