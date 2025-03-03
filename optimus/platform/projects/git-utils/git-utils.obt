@@ -9,7 +9,7 @@
 // limitations under the License.
 main.compile {
   libs = [
-    ossjava.slf4j
+    slf4j
   ]
 }
 
@@ -20,7 +20,7 @@ testutil {
 test {
   extends += testutil
   compile.libs = [
-    ossjava.junit
+    junit
   ]
   runtime.modules += optimus.platform.dtc_runners
 }
@@ -28,6 +28,6 @@ test {
 jmhTest {
   jmh = true
   compile.libs = [
-    ossjava.asm
+    asm
   ]
 }

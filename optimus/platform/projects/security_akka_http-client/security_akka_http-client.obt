@@ -7,14 +7,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = ${versions.javac.release.jetfireDependency}
+// all.javac.release = 11
 
 main {
   compile {
     // Do not depend on any other modules to avoid impacting classpath on dependent projects
     libs = [
-      ossscala.akka-http.json,
-      ossscala.akka.stream
+      akka-http.json,
+      akka.stream
     ]
   }
 }
@@ -28,12 +28,11 @@ internal {
     ]
     // Do not depend on any other modules to avoid impacting classpath on dependent projects
     libs = [
-      com.ms.infra.rr.kerberos
-      ossjava.guava,
-      ossjava.httpcomponents-core,
-      ossjava.slf4j,
-      ossscala.akka-http.json,
-      ossscala.akka.stream
+      guava,
+      httpcomponents-core,
+      slf4j,
+      akka-http.json,
+      akka.stream
     ]
   }
 }

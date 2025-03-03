@@ -107,15 +107,8 @@ public class Settings {
   public static boolean keepTaskSchedulerAffinity =
       getBoolProperty("optimus.graph.keepTaskSchedulerAffinity", false);
 
-  /**
-   * if this flag is true, we will collect minimal PGO stats and APPLY the learned cache settings at
-   * runtime (see additional settings in OGAutoPGOObserver)
-   */
-  public static boolean livePGO = getBoolProperty("optimus.graph.livePGO", false);
-
-  public static boolean livePGO_GivenNodes = getBoolProperty("optimus.graph.livePGO.given", false);
-
-  public static final boolean useVirtualThreads = DiagnosticSettings.useVirtualThreads;
+  public static final boolean useVirtualThreads =
+      getBoolProperty("optimus.graph.useVirtualThreads", false);
   public static final boolean limitThreads =
       getBoolProperty("optimus.graph.limitThreads", !useVirtualThreads);
 
