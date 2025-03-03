@@ -11,12 +11,12 @@ main {
   hasMacros = true
   implementsMacros = true
 
-  generators {
-    protobuf {
-      templates = [resources/optimus/platform/dsi/proto]
-      configuration.execPath.windows = exec/msvc140_64/bin/protoc
-    }
-  }
+//  generators {
+//    protobuf {
+//      templates = [resources/optimus/platform/dsi/proto]
+//      configuration.execPath.windows = exec/msvc140_64/bin/protoc
+//    }
+//  }
 
   compile {
     modules = [
@@ -26,34 +26,35 @@ main {
       optimus.platform.core_macro,
       optimus.platform.dal_environment,
       optimus.platform.entityagent,
-      optimus.platform.msnet-ssl,
-      optimus.platform.tls,
+//      optimus.platform.msnet-ssl,
+//      optimus.platform.tls,
       optimus.platform.utils,
       optimus.silverking.silverking
     ]
     libs = [
       zookeeper,
-      ipm.watchtower_core,
+//      ipm.watchtower_core,
       // msjava.base,
       // msjava.hdom,
       // msjava.msnet,
       // msjava.msxml,
       // msjava.zkapi,
-      commons-codec,
+//      commons-codec,
       commons-lang3,
-      curator,
+      curator-client,
       eaio-uuid,
       guava,
+      guice,
       hibernate-validator,
       iharder-base64,
-      jackson2,
-      jsr305-annotations,
-      lz4-java,
+//      jackson2,
+//      jsr305-annotations,
+//      lz4-java,
       protobuf-java,
-      slf4j.bridges,
-      spring,
+//      slf4j.bridges,
+//      spring,
       jackson-module-scala,
-      scala.tools,
+//      scala.tools,
       spray-json,
       // sam.zookeeper
     ]

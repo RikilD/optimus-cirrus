@@ -9,12 +9,15 @@
 // limitations under the License.
 main {
   compile {
+    modules = [
+      optimus.platform.missing
+    ]
     libs = [
       // msjava.msnet
-      netty-afscompat.handler
+//      netty-afscompat.handler
     ]
     mavenLibs = [
-      com.ms.infra.rr.msnet
+//      com.ms.infra.rr.msnet
       io.netty.netty-handler
       javax.inject.javax.inject
     ]

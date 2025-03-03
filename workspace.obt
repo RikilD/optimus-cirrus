@@ -5,6 +5,11 @@ all {
     options = []
     release = 21
   }
+  scalac {
+    options = [
+      "-language:dynamics"
+    ]
+  }
 
   
 }
