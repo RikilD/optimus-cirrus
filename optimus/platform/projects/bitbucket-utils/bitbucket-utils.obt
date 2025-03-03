@@ -8,7 +8,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 main {
-  javac.release = ${versions.javac.release.jetfireDependency}
+  // javac.release
   compile {
     modules = [
       optimus.platform.rest-utils
@@ -18,7 +18,7 @@ main {
 }
 
 test {
-  compile.libs += ossjava.junit
+  compile.libs += junit
   runtime.modules += optimus.platform.dtc_runners
 }
 
@@ -27,7 +27,7 @@ workflowIntegrationTest {
   compile {
     modules += optimus.platform.security_http
     libs = [
-      ossjava.junit
+      junit
     ]
   }
   runtime.modules += optimus.platform.dtc_runners

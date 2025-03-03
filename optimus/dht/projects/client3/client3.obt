@@ -16,7 +16,7 @@ main {
     ]
     libs = [
       io.netty.netty-resolver-dns
-      ossjava.google-guice.assistedinject
+      google-guice.assistedinject
     ]
   }
   runtime {
@@ -28,7 +28,7 @@ main {
 
 test {
   open = true
-  compile.libs += ossjava.junit
+  compile.libs += junit
 }
 
 testJmh {

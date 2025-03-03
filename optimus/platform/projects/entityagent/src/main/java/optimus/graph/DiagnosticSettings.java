@@ -142,7 +142,7 @@ public class DiagnosticSettings {
       enableRTVerifier && getBoolProperty("optimus.rt.verifier.accumulate.violations", false);
 
   public static final boolean loomTransformations =
-      getBoolProperty("optimus.loom.transformations", LoomDefaults.enabled);
+      getBoolProperty("optimus.loom.transformations", false);
 
   public static final int lCompilerLevel =
       getIntProperty("optimus.loom.compiler.level", LoomDefaults.enabled ? 1 : 0);

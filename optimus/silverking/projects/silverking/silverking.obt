@@ -23,30 +23,31 @@ main {
   ]
 
   compile.libs = [
-    fsf.zookeeper,
-    ossjava.args4j,
-    ossjava.aws-java-sdk,
-    ossjava.byte-buddy,
-    ossjava.caffeine,
-    ossjava.commons-compress,
-    ossjava.commons-io,
-    ossjava.curator,
-    ossjava.fastutil,
-    ossjava.guava,
-    ossjava.hadoop,
-    ossjava.hibernate-validator,
-    ossjava.jackson2,
-    ossjava.jackson2.dataformat-yaml,
-    ossjava.jgrapht,
-    ossjava.jline,
-    ossjava.lz4-java,
-    ossjava.netty,
-    ossjava.objenesis,
-    ossjava.protobuf-java, // TODO (OPTIMUS-40255): Remove this line after backwardsCompatibleDeserializer had beeb removed
-    ossjava.slf4j
+    zookeeper,
+    args4j,
+    aws-java-sdk,
+//    byte-buddy,
+    caffeine,
+    caliper,
+    commons-compress,
+    commons-io,
+    curator-client,
+    fastutil,
+    guava,
+//    hadoop,
+    hibernate-validator,
+    jackson-dataformat-yaml,
+//    jackson2,
+    jgrapht,
+//    jline,
+//    lz4-java,
+//    netty,
+//    objenesis,
+    protobuf-java, // TODO (OPTIMUS-40255): Remove this line after backwardsCompatibleDeserializer had beeb removed
+    slf4j
   ]
   compileOnly.modules = [
-    optimus.platform.legacy-jdk-api-stubs.unsafe,
+    // optimus.platform.legacy-jdk-api-stubs.unsafe,
   ]
 
   copyFiles = [

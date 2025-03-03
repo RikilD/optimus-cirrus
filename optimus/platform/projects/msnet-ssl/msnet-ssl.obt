@@ -10,7 +10,7 @@
 main {
   compile {
     libs = [
-      msjava.rr-msnet
+      // msjava.msnet
       netty-afscompat.handler
     ]
     mavenLibs = [
@@ -23,12 +23,12 @@ main {
 }
 
 // would used by interop which is used by Java 8 clients
-all.javac.release = 8
+// all.javac.release = 8
 
 test {
   compile {
     libs = [
-      ossjava.junit
+      junit
     ]
   }
 }

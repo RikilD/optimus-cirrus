@@ -7,12 +7,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = 11
+// all.javac.release = 11
 
 main {
   compile {
     libs = [
-      org.scala-lang.modules.scala-collection-compat_2.12 //force 2.12 be used for release, pay attention here when 2.13 arrived.
+      org.scala-lang.modules.scala-collection-compat_2.13,
+      scala-parallel-collections
     ]
   }
   installIvy = true

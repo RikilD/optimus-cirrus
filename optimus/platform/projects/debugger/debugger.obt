@@ -9,21 +9,21 @@
 # limitations under the License.
 
 // this is used by Jetfire inside IntelliJ
-all.javac.release = ${versions.javac.release.jetfireDependency}
+// all.javac.release = 11
 
 main {
   compile {
     libs = [
-      ossjava.jackson2
-      ossjava.jackson2.module-scala
+//      jackson2
+      jackson-module-scala
     ]
   }
 }
 
-test {
-  compile {
-    libs = [
-      ossjava.junit
-    ]
-  }
-}
+//test {
+//  compile {
+//    libs = [
+//      junit
+//    ]
+//  }
+//}

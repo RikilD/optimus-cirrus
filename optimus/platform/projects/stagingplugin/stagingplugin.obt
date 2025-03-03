@@ -8,7 +8,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 main {
-  javac.release = 11
+  // javac.release
   isCompilerPlugin = true
   compile.modules = [
     optimus.platform.alarms,
@@ -24,7 +24,7 @@ main {
 //    optimus.platform.utils
 //  ]
 //  compile.libs = [
-//    ossjava.junit
-//    ossscala.scala-collection-compat
+//    junit
+//    scala-collection-compat
 //  ]
 //}

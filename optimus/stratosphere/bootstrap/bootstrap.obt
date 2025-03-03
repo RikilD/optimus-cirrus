@@ -8,10 +8,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 main {
-  javac.release = ${versions.javac.release.jetfireDependency}
+  // javac.release
   compile {
     libs = [
-      ossjava.typesafeconfig
+      typesafeconfig
     ]
     modules = [
       optimus.platform.partial-rollout
@@ -39,8 +39,8 @@ jmhTest {
   root = "src/test-jmh"
   compile {
     libs = [
-      ossjava.jmh
-      ossscala.scala
+      jmh
+      scala
     ]
     modules = [
       optimus.prime.prime_bench,

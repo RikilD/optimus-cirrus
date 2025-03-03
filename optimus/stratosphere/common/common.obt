@@ -7,7 +7,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-all.javac.release = ${versions.javac.release.jetfireDependency}
+// all.javac.release = 11
 
 main {
   compile {
@@ -21,19 +21,15 @@ main {
     ]
 
     libs = [
-      nl.grons.metrics4-scala,
-      org.scala-lang.modules.scala-parser-combinators
-      ossjava.args4j
-      ossjava.commons-compress
-      ossjava.hamcrest
-      ossjava.jackson2.jaxrs-json
-      ossjava.jansi
-      ossjava.jna
-      ossjava.junit
-      ossscala.scala
-      ossscala.scala-collection-compat
-      ossscala.scala-xml
-      ossscala.spray-json
+      args4j
+      commons-compress
+      hamcrest
+      jackson2.jaxrs-json
+      jansi
+      jna
+      scala
+      scala-collection-compat
+      spray-json
     ]
   }
 }
@@ -41,7 +37,7 @@ main {
 test {
   compile {
     libs = [
-      ossjava.junit
+      junit
     ]
   }
 }
@@ -49,7 +45,7 @@ test {
 integrationTest {
   compile {
     libs = [
-      ossjava.junit
+      junit
     ]
   }
 }

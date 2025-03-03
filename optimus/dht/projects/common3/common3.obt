@@ -20,22 +20,22 @@ main {
     io.netty.netty-handler
     io.netty.netty-tcnative-boringssl-static
     io.netty.netty-transport-native-epoll
-    msjava.jpe-zookeeper-utils-curator
-    msjava.rr-msnet
-    ossjava.google-guice
-    ossjava.guava
-    ossjava.hdrhistogram
-    ossjava.jctools
-    ossjava.protobuf-java
-    sam.zookeeper
+    // msjava.msnet
+    // msjava.zkapi
+    google-guice
+    guava
+    hdrhistogram
+    jctools
+    protobuf-java
+    // sam.zookeeper
   ]
 
 }
 
 test.compile.libs = [
-  ossjava.jol
-  ossjava.junit
-  ossjava.mockito
+  jol
+  junit
+  mockito
 ]
 
 internal {

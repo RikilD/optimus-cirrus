@@ -13,7 +13,7 @@ main {
   ]
   compile.libs = [
     slf4j,
-    #ossscala.scala.tools
+    #scala.tools
   ]
   scalac.options = [
     "-opt:l:inline",

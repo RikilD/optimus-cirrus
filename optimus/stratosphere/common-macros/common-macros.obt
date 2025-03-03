@@ -8,14 +8,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-all.javac.release = ${versions.javac.release.jetfireDependency}
+// all.javac.release = 11
 main {
   hasMacros = true
   implementsMacros = true
   compile {
     libs = [
-      ossscala.scala
-      ossscala.scala.tools
+      scala
+      scala.tools
     ]
   }
 }
@@ -23,7 +23,7 @@ main {
 test {
   compile {
     libs = [
-      ossjava.junit
+      junit
     ]
   }
 }
