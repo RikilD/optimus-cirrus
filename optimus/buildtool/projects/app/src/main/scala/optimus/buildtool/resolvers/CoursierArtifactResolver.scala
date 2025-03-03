@@ -674,7 +674,8 @@ object CoursierArtifactResolver {
 
           artifacts.toIndexedSeq.apar.collect {
             case Right(artifact)
-                if MsIvyRepository.isClassJar(artifact) && checkMavenJar(hasMavenArtifacts, artifact) =>
+                if (MsIvyRepository.isClassJar(artifact) || dep.attributes.classifier == artifact.attributes.classifier)
+                  && checkMavenJar(hasMavenArtifacts, artifact) =>
               Right(
                 convertArtifact(
                   source,

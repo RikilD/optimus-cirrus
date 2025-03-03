@@ -30,6 +30,7 @@ import optimus.buildtool.utils.Utils
 import optimus.platform._
 import optimus.platform.util.Log
 
+import java.util.Properties
 import scala.collection.compat._
 import scala.collection.immutable.Seq
 import scala.util.control.NonFatal
@@ -138,9 +139,22 @@ class ZincClasspathResolver(
   }
 
   @node override def getZincJars: Seq[JarAsset] = {
-    val runtimeZincJars = getZincArtifactsFromObtCompile
+    /*val runtimeZincJars = getZincArtifactsFromObtCompile
     if (runtimeZincJars.nonEmpty) runtimeZincJars
-    else resolveZincJars(scalaMajorVersion)
+    else*/
+    resolveZincJars(scalaMajorVersion, Some("org.scala-sbt"), Some("compiler-bridge"), Some(findZincVersion()))
+  }
+
+  @node private def findZincVersion(): String = {
+    // this file is present in Zinc's compiler-interface jar which should be on our classpath
+    val stream = getClass.getClassLoader.getResourceAsStream("incrementalcompiler.version.properties")
+    require(stream ne null, "Unable to find Zinc's incrementalcompiler.version.properties file")
+    try {
+      val props = new Properties()
+      props.load(stream)
+      props.getProperty("version")
+    }
+    finally stream.close()
   }
 
   @node private def doCoursierZincResolve(zinc: DependencyDefinition): Seq[JarAsset] = {
@@ -213,6 +227,7 @@ class ZincClasspathResolver(
               nameWithScalaVer(newName, scalaVer),
               newMavenZincVer,
               LocalDefinition,
+              classifier = Some("sources"),
               isMaven = true)
         }
         resolveZinc(newZincDep, scalaVer)
