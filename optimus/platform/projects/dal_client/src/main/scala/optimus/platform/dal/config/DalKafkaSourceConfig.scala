@@ -89,7 +89,7 @@ class DalKafkaSourceConfig(lookup: DalFeatureKafkaLookup) {
       configXmlDocument: Document = getDocumentFromZk(lookup.connectionString)
   ): List[KafkaStream] = {
     val rootNode = configXmlDocument.getRootElement
-    val streamList = rootNode.getChildren(kafkaStreamPropXml).get(0).getChildren().asScala
+    val streamList = rootNode.getChildren(kafkaStreamPropXml).get(0).getChildren.asScala
     val kafkaStreamList = streamList
       .map(el =>
         KafkaStream(

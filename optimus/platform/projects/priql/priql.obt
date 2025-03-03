@@ -42,9 +42,9 @@ main {
       poi,
       protobuf-java,
       slf4j,
-      spring,
+//      spring,
       scala-parser-combinators
     ]
   }
-  runtime.libs += // msjava.protobufutils
+//  runtime.libs += msjava.protobufutils
 }

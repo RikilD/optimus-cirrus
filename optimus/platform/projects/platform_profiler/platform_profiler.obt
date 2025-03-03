@@ -20,14 +20,14 @@ main.compile {
   ]
   libs = [
     // msjava.base,
-    optimus.async-profiler,
+    async-profiler,
     args4j,
     guava,
     iharder-base64,
     junit,
     poi,
     slf4j,
-    scalactic,
-    scalatest
+//    scalactic,
+//    scalatest
   ]
 }
