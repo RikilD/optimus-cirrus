@@ -20,7 +20,7 @@ import java.awt.RenderingHints
 import javax.swing.JPanel
 
 class NodeTimeBar(tline: NodeTimeLine) extends JPanel {
-  private var width = getWidth
+  private var _width = getWidth
   private val headerHeight = 40
 
   private val counterValueFont = new Font("Consolas", Font.PLAIN, Math.round(10 * Fonts.multiplier))
@@ -53,7 +53,7 @@ class NodeTimeBar(tline: NodeTimeLine) extends JPanel {
   }
 
   def setWidth(w: Int): Unit = {
-    width = w
+    _width = w
   }
 
   private def drawTimeAxis(g: Graphics2D, w: Int, h: Int): Unit = {
@@ -100,7 +100,7 @@ class NodeTimeBar(tline: NodeTimeLine) extends JPanel {
 
   override protected def paintComponent(g1: Graphics): Unit = {
     super.paintComponent(g1)
-    val w = width
+    val w = _width
     val h = getHeight
     val g = g1.asInstanceOf[Graphics2D]
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

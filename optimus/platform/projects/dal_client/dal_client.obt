@@ -41,18 +41,18 @@ main {
       // msjava.zkapi,
       guava,
       iharder-base64,
-      jsr305-annotations,
+//      jsr305-annotations,
       protobuf-java,
-      slf4j.bridges,
-      spring,
+//      slf4j.bridges,
+//      spring,
       spray-json
     ]
   }
-  compileOnly.modules += // optimus.platform.legacy-jdk-api-stubs.unsafe
+  //  compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.unsafe
   runtime.libs = [
     // msjava.dbpool,
     // msjava.directory,
-    mskdb.kjava,
+//    mskdb.kjava,
     args4j,
     commons-io,
     // sam.zookeeper

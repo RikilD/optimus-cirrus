@@ -42,27 +42,27 @@ main {
       // msjava.zkapi,
       args4j,
       commons-lang3,
-      curator,
+      curator-client,
       freemarker,
       guava,
       iharder-base64,
-      jackson2,
-      jackson2.jsr310,
-      javamail,
-      javassist,
-      jsr305-annotations,
+//      jackson2,
+      jackson-datatype-jsr310,
+      javax-mail-api,
+//      javassist,
+//      jsr305-annotations,
       logback,
       poi,
       protobuf-java,
-      scannotation,
-      slf4j.bridges,
-      spring,
+//      scannotation,
+//      slf4j.bridges,
+//      spring,
       jackson-module-scala,
       spray-json,
       // sam.zookeeper
     ]
   }
-  compileOnly.modules += // optimus.platform.legacy-jdk-api-stubs.attach
+  //  compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.attach
   runtime {
     modules = [
       optimus.platform.platform_profiler
@@ -73,11 +73,11 @@ main {
       // msjava.directory.testutils,
       // msjava.integrations,
       // msjava.protobufutils,
-      mskdb.kjava,
+//      mskdb.kjava,
       commons-io,
-      dom4j,
-      javassist,
-      reflections
+//      dom4j,
+//      javassist,
+//      reflections
     ]
   }
 }

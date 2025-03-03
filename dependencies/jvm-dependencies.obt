@@ -287,6 +287,7 @@ dependencies {
   }
   scala-parser-combinators {
     noAfs = true
+    scala = true
     maven."org.scala-lang.modules"."scala-parser-combinators".version = "2.2.0"
   }
   scala-xml {
