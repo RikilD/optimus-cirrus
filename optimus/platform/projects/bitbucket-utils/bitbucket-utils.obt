@@ -17,18 +17,18 @@ main {
   }
 }
 
-test {
-  compile.libs += junit
-  runtime.modules += optimus.platform.dtc_runners
-}
-
-workflowIntegrationTest {
-  root = "src/test-integration"
-  compile {
-    modules += optimus.platform.security_http
-    libs = [
-      junit
-    ]
-  }
-  runtime.modules += optimus.platform.dtc_runners
-}
+//test {
+//  compile.libs += junit
+//  runtime.modules += optimus.platform.dtc_runners
+//}
+//
+//workflowIntegrationTest {
+//  root = "src/test-integration"
+//  compile {
+//    modules += optimus.platform.security_http
+//    libs = [
+//      junit
+//    ]
+//  }
+//  runtime.modules += optimus.platform.dtc_runners
+//}

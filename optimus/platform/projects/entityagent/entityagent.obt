@@ -9,4 +9,15 @@ main {
       asm-util
     ]
   }
+  agent {
+    agentClass = optimus.EntityAgent
+  }
+  jar {
+    manifest {
+      "Can-Retransform-Classes" = true
+      "Can-Set-Native-Method-Prefix" = true
+      "Premain-Class" = optimus.EntityAgent
+    }
+  }
+
 }

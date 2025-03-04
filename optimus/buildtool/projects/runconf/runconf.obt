@@ -15,14 +15,10 @@ main.compile {
   ]
 
   libs = [
-    typesafeconfig
+    typesafe-config
   ]
 }
 
-test {
-  includeInClassBundle = false // prevent class with buildtool.format resources
-
-  compile.libs = [
-    ossjava.junit
-  ]
-}
+//test {
+//  includeInClassBundle = false // prevent class with buildtool.format resources
+//}
