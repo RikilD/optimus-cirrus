@@ -50,7 +50,7 @@ main {
     // optimus.platform.legacy-jdk-api-stubs.unsafe,
   ]
 
-  copyFiles = [
-    {fromResources = "bin", into = "bin"}
-  ]
+//  copyFiles = [
+//    {fromResources = "bin", into = "bin"}
+//  ]
 }

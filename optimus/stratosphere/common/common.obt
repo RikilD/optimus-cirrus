@@ -13,8 +13,8 @@ main {
   compile {
     modules = [
       optimus.platform.bitbucket-utils
-      optimus.platform.security_akka_http-client.internal
-      optimus.platform.security_http
+      optimus.platform.security_akka_http-client //.internal
+//      optimus.platform.security_http
       optimus.platform.utils
       optimus.stratosphere.bootstrap
       optimus.stratosphere.common-macros
@@ -24,28 +24,31 @@ main {
       args4j
       commons-compress
       hamcrest
-      jackson2.jaxrs-json
+      jackson-databind
+//      jackson2.jaxrs-json
       jansi
       jna
-      scala
+      junit
+//      scala
       scala-collection-compat
       spray-json
     ]
   }
 }
 
-test {
-  compile {
-    libs = [
-      junit
-    ]
-  }
-}
-
-integrationTest {
-  compile {
-    libs = [
-      junit
-    ]
-  }
-}
+//test {
+//  compile {
+//    libs = [
+//      junit
+//    ]
+//  }
+//}
+//
+//integrationTest {
+//  root = "src/test-integration"
+//  compile {
+//    libs = [
+//      junit
+//    ]
+//  }
+//}

@@ -33,9 +33,9 @@ main {
 //  compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.mbeans
 //  runtime.libs += msjava.jprofiler
 
-  copyFiles = [
-    {from = "scripts", into = "etc/config/instrumentation/scripts"}
-  ]
+//  copyFiles = [
+//    {from = "scripts", into = "etc/config/instrumentation/scripts"}
+//  ]
 }
 
 //test {

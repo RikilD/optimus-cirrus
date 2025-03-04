@@ -14,16 +14,16 @@ main {
   implementsMacros = true
   compile {
     libs = [
-      scala
-      scala.tools
+//      scala
+//      scala.tools
     ]
   }
 }
 
-test {
-  compile {
-    libs = [
-      junit
-    ]
-  }
-}
+//test {
+//  compile {
+//    libs = [
+//      junit
+//    ]
+//  }
+//}

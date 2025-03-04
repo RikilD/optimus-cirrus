@@ -9,25 +9,26 @@
 // limitations under the License.
 main.compile {
   libs = [
+    scala-collection-compat
     slf4j
   ]
 }
 
-testutil {
-  open = true // meant to be extended by tests
-}
-
-test {
-  extends += testutil
-  compile.libs = [
-    junit
-  ]
-  runtime.modules += optimus.platform.dtc_runners
-}
-
-jmhTest {
-  jmh = true
-  compile.libs = [
-    asm
-  ]
-}
+//testutil {
+//  open = true // meant to be extended by tests
+//}
+//
+//test {
+//  extends += testutil
+//  compile.libs = [
+//    junit
+//  ]
+//  runtime.modules += optimus.platform.dtc_runners
+//}
+//
+//jmhTest {
+//  jmh = true
+//  compile.libs = [
+//    asm
+//  ]
+//}
