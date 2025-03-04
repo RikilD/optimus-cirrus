@@ -12,35 +12,37 @@
 main {
   compile {
     modules = [
-      optimus.buildtool.core,
-      optimus.platform.annotations
+      optimus.buildtool.core
+      optimus.buildtool.format
+      optimus.buildtool.rest
+      optimus.buildtool.runconf
+      optimus.dht.client3
+//      optimus.dht.server3
+      optimus.platform.git-utils
+      optimus.platform.platform
+      optimus.platform.platform_profiler
+//      optimus.platform.testplan_utils
+      optimus.stratosphere.bootstrap
+      optimus.stratosphere.common
+//      optimus.workflow.build_common
     ]
-
     libs = [
-      args4j,
-      jgit,
-      jib-core,
-      typesafe-config,
-      zstd-jni,
-      jackson-module-scala,
-//      scala,
-      spray-json
+      avro-compiler
+      bsp4j
+      coursier
+      cxf-tools
+      cxf-tools-wsdlto
+      jgit
+      jmustache
+      jsonschema2pojo-core
+      scalaxb
+      scala-xml
+      zinc
+    ]
+  }
+  runtime {
+    libs = [
+
     ]
   }
 }
-
-//test {
-//  open = true
-//  compile {
-//    libs = [
-//      jimfs,
-//      junit,
-//      scalatest,
-//      scalatestplus-junit-4-12
-//    ]
-//    modules = [
-//      optimus.stratosphere.bootstrap,
-//      optimus.stratosphere.common
-//    ]
-//  }
-//}

@@ -17,10 +17,10 @@ main.compile {
   ]
 
   libs = [
-    typesafeconfig
+    typesafe-config
   ]
 }
 
-test {
-  includeInClassBundle = false // prevent class with buildtool.format resources
-}
+//test {
+//  includeInClassBundle = false // prevent class with buildtool.format resources
+//}

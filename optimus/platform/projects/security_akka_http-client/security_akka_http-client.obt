@@ -13,26 +13,26 @@ main {
   compile {
     // Do not depend on any other modules to avoid impacting classpath on dependent projects
     libs = [
-      akka-http.json,
-      akka.stream
+      akka-http-spray-json,
+      akka-stream
     ]
   }
 }
 
-internal {
-  root = "src/internal"
-  open = true
-  compile {
-    modules = [
-      optimus.platform.security_akka_http-client
-    ]
-    // Do not depend on any other modules to avoid impacting classpath on dependent projects
-    libs = [
-      guava,
-      httpcomponents-core,
-      slf4j,
-      akka-http.json,
-      akka.stream
-    ]
-  }
-}
+//internal {
+//  root = "src/internal"
+//  open = true
+//  compile {
+//    modules = [
+//      optimus.platform.security_akka_http-client
+//    ]
+//    // Do not depend on any other modules to avoid impacting classpath on dependent projects
+//    libs = [
+//      guava,
+//      httpcomponents-core,
+//      slf4j,
+//      akka-http.json,
+//      akka.stream
+//    ]
+//  }
+//}

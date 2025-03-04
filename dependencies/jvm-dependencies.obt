@@ -1,18 +1,22 @@
 dependencies {
   akka-ctor {
     noAfs = true
+    scala = true
     maven."com.typesafe.akka"."akka-actor".version = "2.6.20"
   }
   akka-http-core {
     noAfs = true
+    scala = true
     maven."com.typesafe.akka"."akka-http-core".version = "10.2.10"
   }
-  akka-httpspray-json {
+  akka-http-spray-json {
     noAfs = true
+    scala = true
     maven."com.typesafe.akka"."akka-http-spray-json".version = "10.2.10"
   }
   akka-stream {
     noAfs = true
+    scala = true
     maven."com.typesafe.akka"."akka-stream".version = "2.6.20"
   }
   apache-kafka {
@@ -94,6 +98,7 @@ dependencies {
   }
   coursier {
     noAfs = true
+    scala = true
     maven."io.get-coursier"."coursier".version = "2.0.16"
   }
   curator-client {
@@ -144,7 +149,7 @@ dependencies {
     noAfs = true
     maven."org.hamcrest"."hamcrest".version = "3.0"
   }
-  hdrHistogram {
+  hdrhistogram {
     noAfs = true
     maven."org.hdrhistogram"."HdrHistogram".version = "2.2.2"
   }
@@ -201,7 +206,7 @@ dependencies {
     noAfs = true
     maven."javax.mail"."javax.mail-api".version = "1.6.2"
   }
-  jctools-core {
+  jctools {
     noAfs = true
     maven."org.jctools"."jctools-core".version = "4.0.5"
   }
@@ -243,7 +248,7 @@ dependencies {
   }
   logback {
     noAfs = true
-    maven."ch.qos.logback"."logback-core".version = "1.5.12"
+    maven."ch.qos.logback"."logback-core".version = "1.2.9"
   }
   logback-classic {
     noAfs = true
@@ -293,15 +298,12 @@ dependencies {
   scala-xml {
     noAfs = true
     scala = true
-    maven."org.scala-lang.modules"."scala-xml".version = 1.0.6
+    maven."org.scala-lang.modules"."scala-xml".version = "2.0.1"
   }
   scalaxb {
     noAfs = true
+    scala = true
     maven."org.scalaxb"."scalaxb".version = "1.9.1"
-  }
-  scala-xml {
-    noAfs = true
-    maven."org.scala-lang.modules"."scala-xml".version = "2.0.1"
   }
   slf4j {
     noAfs = true
@@ -330,6 +332,7 @@ dependencies {
   }
   zinc {
     noAfs = true
+    scala = true
     maven."org.scala-sbt"."zinc".version = "1.10.4"
   }
   zookeeper {

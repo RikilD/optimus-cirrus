@@ -15,31 +15,35 @@ main {
     }
   }
 
-
-  compile.libs = [
-    io.netty.netty-handler
-    io.netty.netty-tcnative-boringssl-static
-    io.netty.netty-transport-native-epoll
-    // msjava.msnet
-    // msjava.zkapi
-    google-guice
-    guava
-    hdrhistogram
-    jctools
-    protobuf-java
-    // sam.zookeeper
-  ]
+  compile {
+    modules = [optimus.platform.missing]
+    libs = [
+      commons-lang3
+      io.netty.netty-handler
+      //    io.netty.netty-tcnative-boringssl-static
+      //    io.netty.netty-transport-native-epoll
+      // msjava.msnet
+      // msjava.zkapi
+      guice
+      guava
+      hdrhistogram
+      jctools
+      protobuf-java
+      slf4j
+      // sam.zookeeper
+    ]
+  }
 
 }
 
-test.compile.libs = [
-  jol
-  junit
-  mockito
-]
-
-internal {
-  root = "src/internal"
-  open = true
-  compile.modules += optimus.dht.common3.main
-}
+//test.compile.libs = [
+//  jol
+//  junit
+//  mockito
+//]
+//
+//internal {
+//  root = "src/internal"
+//  open = true
+//  compile.modules += optimus.dht.common3.main
+//}

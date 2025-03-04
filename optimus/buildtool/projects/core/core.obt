@@ -11,22 +11,23 @@
 
 main {
   compile.libs = [
-    jackson2,
-    typesafeconfig,
+//    jackson2,
+    typesafe-config,
     jackson-module-scala,
+    scala-collection-compat,
     scala-parser-combinators,
-    spray-json
+    spray-json,
   ]
 
-  tokens {
-    // replacing the version in src/main/resources/versions.properties
-    JEMALLOC_VERSION = ${versions.jeMalloc}
-    GOOGLE_PERF_TOOLS_VERSION = ${versions.googlePerfTools}
-  }
+//  tokens {
+//    // replacing the version in src/main/resources/versions.properties
+//    JEMALLOC_VERSION = ${versions.jeMalloc}
+//    GOOGLE_PERF_TOOLS_VERSION = ${versions.googlePerfTools}
+//  }
 }
 
-test.compile.libs = [
-  hamcrest,
-  junit,
-  scalatest
-]
+//test.compile.libs = [
+//  hamcrest,
+//  junit,
+//  scalatest
+//]
