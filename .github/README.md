@@ -1,3 +1,5 @@
+![Lifecycle Active](https://img.shields.io/badge/Lifecycle-Active-brightgreen)
+
 Welcome to Optimus Cirrus. This is our open-sourcing of a set of software infrastructure that we use internally to build and run highly-performant and parallelizable applications.
 
 Please note the LICENSE file.
