@@ -16,6 +16,30 @@ object Platform {
 //  lazy val talks = Project("platformTalks", projectsDir / "talks")
 //    .dependsOn(platform, entityPlugin, entityPluginJar % "plugin")
 
+  lazy val examples = Project("platformExamples", projectsDir / "examples_platform")
+    .settings(
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.dynamics ++ Seq("-P:entity:enableStaging:true"),
+      libraryDependencies += "org.apache.poi" % "poi-ooxml" % "5.3.0", // xssf, used by the relational Excel examples
+      libraryDependencies ++= Seq(junit % Test, junitInterface % Test),
+      // -v names each test as it runs, -a shows assertion failures in full.
+      Test / testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-a"),
+      // OptimusApps must run in a forked JVM with the entity agent attached and a
+      // handful of JDK module flags opened up. Wiring this here means
+      // `platformExamples/runMain <app>` works out of the box; referencing the
+      // entityAgent assembly builds the agent jar automatically as a dependency.
+      fork := true,
+      javaOptions ++= Seq(
+        "-Doptimus.logging.checkAsync=false",
+        "--add-exports=java.management/sun.management=ALL-UNNAMED",
+        "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
+        "--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED",
+        "--add-opens=java.base/java.lang.ref=ALL-UNNAMED",
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+      ),
+      javaOptions += s"-javaagent:${(entityAgent / assembly).value.getAbsolutePath}=e",
+    )
+    .dependsOn(platform, entityPlugin, entityPluginJar % "plugin")
+
   lazy val platform = Project("platform", projectsDir / "platform")
     .settings(
       scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.dynamics ++ Seq("-P:entity:enableStaging:true"),
@@ -125,6 +149,7 @@ object Platform {
 			scalaCollectionCompat,
 		),
 	  )
+	  .dependsOn(scalaCompat)
 
   lazy val dalEnvironment = Project("platformDalEnvironment", projectsDir / "dal_environment")
     .settings(
@@ -147,7 +172,9 @@ object Platform {
         eaioUUID,
         fastUtil,
 		jnaPlatform,
+        jacksonDatatypeJSR310,
         jodaTime,
+        scalaXml,
         typesafeConfig,
       )
     )
@@ -161,12 +188,13 @@ object Platform {
       inputs,
       instrumentation,
       missing,
+      scalaCompat,
       sprayJson,
       stagingPluginJar % "plugin"
     )
 
   lazy val debugger = Project("platformDebugger", projectsDir / "debugger")
-    .settings(libraryDependencies ++= Seq(jacksonDatabind, jacksonModuleScala, junit % Test))
+    .settings(libraryDependencies ++= Seq(jacksonDatabind, jacksonModuleScala, junit % Test, junitInterface % Test))
 
   lazy val instrumentation = Project("platformInstrumentation", projectsDir / "instrumentation")
     .settings(
@@ -175,8 +203,11 @@ object Platform {
         asyncProfilerLoaderAll,
         httpClient,
         httpMime,
+        jsoniterScalaCore,
+        jsoniterScalaMacros,
         kafka,
-        springWeb
+        springWeb,
+        typesafeConfig
       )
     )
     .dependsOn(
@@ -199,19 +230,23 @@ object Platform {
 			  case other => assemblyMergeStrategy.value(other)
 		  }
 	  ),
+      // The java agent manifest headers must be baked into the assembled fat jar
+      // itself, so the resulting jar is directly usable as `-javaagent:<jar>`.
+      // (Setting these on entityAgentJar's packageBin has no effect, because that
+      // task is overridden to return this assembly's output verbatim.)
+      assembly / packageOptions += Package.ManifestAttributes(
+        "Premain-Class" -> "optimus.EntityAgent",
+        "Can-Retransform-Classes" -> "true",
+        "Can-Set-Native-Method-Prefix" -> "true"),
       libraryDependencies ++= Seq(asm, asmCommons, asmTree, asmUtil)
     )
     .dependsOn(entityAgentExt)
 
-	// fat jar version of entityPlugin, to be consumed as a compiler plugin
+	// fat jar version of entityAgent, to be consumed as a `-javaagent`
 	lazy val entityAgentJar = Project("platformEntityAgentJar", projectsDir / "entityagent-jar")
 		.settings(
 			exportJars := true,
 			Compile / packageBin := (entityAgent / assembly).value,
-			Compile / packageBin / packageOptions += Package.ManifestAttributes(
-				"Premain-Class" -> "optimus.EntityAgent", 
-				"Can-Retransform-Classes" -> "true", 
-				"Can-Set-Native-Method-Prefix" -> "true"),
 		)
 
   lazy val entityAgentExt = Project("platformEntityAgentExt", projectsDir / "entityagent-ext")
@@ -288,7 +323,7 @@ object Platform {
       libraryDependencies ++= Seq(
         scalaCollectionCompat,
         scalaCompiler,
-//        scalaParallelCollections,
+        scalaParallelCollections,
 //        scalaXml
       )
     )

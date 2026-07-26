@@ -10,11 +10,11 @@ object Dependencies {
   val cxfVersion = "3.3.3"
   val guiceVersion = "7.0.0"
   val httpComponentsVersion = "4.5.13"
-  val jacksonVersion = "2.10.1"
+  val jacksonVersion = "2.19.4"
   val kafkaVersion = "3.6.2"
   val logbackVersion = "1.5.12"
   val nettyVersion = "4.1.115.Final"
-  val scala2Version = "2.12.20"
+  val scala2Version = "2.13.18"
   val springVersion = "5.3.33"
 
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
@@ -65,14 +65,19 @@ object Dependencies {
   val jacksonModuleScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion
   val jcTools = "org.jctools" % "jctools-core" % "4.0.5"
   val jettison = "org.codehaus.jettison" % "jettison" % "1.5.4"
+  val metrics4Scala = "nl.grons" %% "metrics4-scala" % "4.3.7"
   val jgit = "org.eclipse.jgit" % "org.eclipse.jgit" % "4.11.4.201810060650-r"
   val jgrapht = "org.jgrapht" % "jgrapht-core" % "1.3.1"
+  val jsoniterScalaCore = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "2.40.1"
+  val jsoniterScalaMacros = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.40.1"
   val jibCore = "com.google.cloud.tools" % "jib-core" % "0.15.0"
   val jmustache = "com.samskivert" % "jmustache" % "1.13"
   val jnaPlatform = "net.java.dev.jna" % "jna-platform" % "5.8.0"
   val jodaTime = "joda-time" % "joda-time" % "2.10.8"
   val jsonSchema2Pojo = "org.jsonschema2pojo" % "jsonschema2pojo-core" % "1.1.0"
   val junit = "junit" % "junit" % "4.13.2"
+  // sbt has no built-in JUnit test interface; without this it compiles test sources and runs nothing.
+  val junitInterface = "com.github.sbt" % "junit-interface" % "0.13.3"
   val kafka = "org.apache.kafka" %% "kafka" % kafkaVersion
   val kafkaClients = "org.apache.kafka" % "kafka-clients" % kafkaVersion
   val logbackClassic = "ch.qos.logback" % "logback-classic" % logbackVersion
@@ -84,11 +89,11 @@ object Dependencies {
   val poi = "org.apache.poi" % "poi" % "5.3.0"
   val scalaCollectionCompat = "org.scala-lang.modules" %% "scala-collection-compat" % "2.12.0"
   val scalaCompiler = "org.scala-lang" % "scala-compiler" % scala2Version
-//  val scalaParallelCollections = "org.scala-lang.modules" %% "scala-parallel-collections" % "0.2.0"
+  val scalaParallelCollections = "org.scala-lang.modules" %% "scala-parallel-collections" % "0.2.0"
   val scalaParserCombinators = "org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0"
   val scalaReflect = "org.scala-lang" % "scala-reflect" % scala2Version
   val scalaxb = "org.scalaxb" %% "scalaxb" % "1.9.1"
-  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "2.0.1"
+  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "2.4.0"
   val slf4j = "org.slf4j" % "slf4j-api" % "1.7.29"
   val snakeYaml = "org.yaml" % "snakeyaml" % "1.27"
   val sprayJson = "io.spray" %% "spray-json" % "1.3.6"

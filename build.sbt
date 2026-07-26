@@ -24,6 +24,7 @@ val dhtCommon3 = DHT.common3
 val gsfBreadcrumbs = GSF.breadcrumbs
 
 //val platformTalks = Platform.talks
+val platformExamples = Platform.examples
 val platform = Platform.platform
 val platformGitUtils = Platform.gitUtils
 val platformBitBucketUtils = Platform.bitBucketUtils
