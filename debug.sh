@@ -1,2 +1,29 @@
-#!/bin/sh
-jdb -Doptimus.logging.checkAsync=false -Dlogback.configurationFile=./optimus/platform/projects/entityplugin/src/main/resources/logback.xml -R--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED -R--add-exports=java.management/sun.management=ALL-UNNAMED -Xmx1g -R-javaagent:./optimus/platform/projects/entityagent-jar/target/scala-2.12/platformEntityAgentJar-assembly-0.1.0-SNAPSHOT.jar -classpath ./optimus/buildtool/projects/app-jar/target/scala-2.12/buildToolAppJar-assembly-0.1.0-SNAPSHOT.jar optimus.buildtool.OptimusBuildTool  -e none
+#!/usr/bin/env bash
+#
+# Run OBT under jdb. Same invocation as ./run.sh, remapped to jdb's argument
+# syntax: -D options and -classpath are jdb's own, everything else destined for
+# the debuggee VM needs an -R prefix.
+#
+# For IDE debugging use ./remote-debug.sh instead.
+#
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+JDB_ARGS=()
+in_jvm_args=1
+while IFS= read -r arg; do
+  if [[ $in_jvm_args -eq 1 ]]; then
+    case "$arg" in
+      --) in_jvm_args=0 ;;
+      -D*) JDB_ARGS+=("$arg") ;;
+      *) JDB_ARGS+=("-R$arg") ;;
+    esac
+  elif [[ "$arg" == "-cp" ]]; then
+    JDB_ARGS+=("-classpath")
+  else
+    JDB_ARGS+=("$arg")
+  fi
+done < <("$ROOT/bootstrap.sh" --print-cmd -- "$@")
+
+exec jdb "${JDB_ARGS[@]}"

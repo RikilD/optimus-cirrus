@@ -37,6 +37,7 @@ optimus.platform {
   entityagent {owner = x, group = y}
   entityagent-ext {owner = x, group = y}
   entityplugin {owner = x, group = y}
+  examples_platform {owner = x, group = y}
   git-utils { owner = x, group = y }
   inputs {owner = x, group = y}
   instrumentation {owner = x, group = y}
