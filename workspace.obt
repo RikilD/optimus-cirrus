@@ -17,3 +17,7 @@ all {
 main {
   root = "src/main"
 }
+
+test {
+  root = "src/test"
+}

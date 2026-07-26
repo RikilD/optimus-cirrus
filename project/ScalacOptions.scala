@@ -7,5 +7,8 @@ object ScalacOptions {
   )
   val macros = Seq("-language:experimental.macros")
   val dynamics = Seq("-language:dynamics")
-  val entityPlugin = Seq("-Xplugin-require:entity", "-Xplugin:/Users/cyrus/git/optimus-cirrus/optimus/platform/projects/entityplugin-jar/target/scala-2.12/platformEntityPluginJar-assembly-0.1.0-SNAPSHOT.jar")
+  // The entity compiler plugin jar is supplied to dependent modules via sbt's
+  // `entityPluginJar % "plugin"` dependency (see project/Platform.scala), so no
+  // absolute -Xplugin path is needed here. We only require that the plugin be present.
+  val entityPlugin = Seq("-Xplugin-require:entity")
 }

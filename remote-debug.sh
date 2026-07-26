@@ -1,2 +1,13 @@
-#!/bin/sh
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:5005 -Doptimus.debug.assist=false -Doptimus.logging.checkAsync=false -Dlogback.configurationFile=./optimus/platform/projects/entityplugin/src/main/resources/logback.xml --add-exports=java.base/jdk.internal.vm=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED -Xmx1g -javaagent:./optimus/platform/projects/entityagent-jar/target/scala-2.12/platformEntityAgentJar-assembly-0.1.0-SNAPSHOT.jar -cp ./optimus/buildtool/projects/app-jar/target/scala-2.12/buildToolAppJar-assembly-0.1.0-SNAPSHOT.jar optimus.buildtool.OptimusBuildTool  -e none
+#!/usr/bin/env bash
+#
+# Run OBT with a jdwp agent and wait for a debugger to attach on port 5005
+# (override with OBT_DEBUG_PORT). Arguments are passed through to OBT.
+#
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PORT="${OBT_DEBUG_PORT:-5005}"
+
+echo ">> Waiting for a debugger on localhost:$PORT"
+export OBT_JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:$PORT -Doptimus.debug.assist=false ${OBT_JAVA_OPTS:-}"
+exec "$ROOT/run.sh" "$@"

@@ -49,7 +49,7 @@ final case class AfsExecutable(
     variant: Option[String]
 ) {
   def file(): FileAsset =
-    FileAsset(Paths.get("protoc-3.21.1-linux-x86_64.exe").toAbsolutePath)
+    FileAsset(Paths.get(s"protoc-3.21.1-${AfsExecutable.hostClassifier}.exe").toAbsolutePath)
 
   def dependencyDefinition(scope: CompilationScope): DependencyDefinition =
     scope.externalDependencyResolver.dependencyDefinitions
@@ -58,4 +58,25 @@ final case class AfsExecutable(
         val suffix = variant.map(v => s".$v").getOrElse("")
         throw new IllegalArgumentException(s"No central dependency found for ${metaDir}.${projectDir}$suffix")
       }
+}
+
+object AfsExecutable {
+
+  /**
+   * Maven Central classifier for the host, e.g. "osx-aarch_64". `file` resolves the protoc binary by this name because
+   * this workspace has no AFS to look it up in; bootstrap.sh derives the same name and links the matching binary into
+   * the source root, so the two must agree.
+   */
+  def hostClassifier: String = {
+    val os = sys.props("os.name").toLowerCase match {
+      case n if n.contains("mac") || n.contains("darwin") => "osx"
+      case n if n.contains("win")                         => "windows"
+      case _                                              => "linux"
+    }
+    val arch = sys.props("os.arch").toLowerCase match {
+      case "aarch64" | "arm64" => "aarch_64"
+      case _                   => "x86_64"
+    }
+    s"$os-$arch"
+  }
 }

@@ -56,5 +56,9 @@ bdd_report.html
 /target/
 **/target/
 
+# protoc binary linked into the source root by bootstrap.sh; the protobuf
+# generator resolves it by name relative to the working directory
+/protoc-*.exe
+
 # EOF
 # See top of file for .gitignore guidelines.

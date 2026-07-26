@@ -73,6 +73,8 @@ object Dependencies {
   val jodaTime = "joda-time" % "joda-time" % "2.10.8"
   val jsonSchema2Pojo = "org.jsonschema2pojo" % "jsonschema2pojo-core" % "1.1.0"
   val junit = "junit" % "junit" % "4.13.2"
+  // sbt has no built-in JUnit test interface; without this it compiles test sources and runs nothing.
+  val junitInterface = "com.github.sbt" % "junit-interface" % "0.13.3"
   val kafka = "org.apache.kafka" %% "kafka" % kafkaVersion
   val kafkaClients = "org.apache.kafka" % "kafka-clients" % kafkaVersion
   val logbackClassic = "ch.qos.logback" % "logback-classic" % logbackVersion

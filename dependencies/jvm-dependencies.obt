@@ -282,6 +282,10 @@ dependencies {
     noAfs = true
     maven."org.apache.poi"."poi".version = "5.3.0"
   }
+  poi-ooxml {
+    noAfs = true
+    maven."org.apache.poi"."poi-ooxml".version = "5.3.0"
+  }
   protobuf-java {
     noAfs = true
     maven."com.google.protobuf"."protobuf-java".version = "3.21.1"
