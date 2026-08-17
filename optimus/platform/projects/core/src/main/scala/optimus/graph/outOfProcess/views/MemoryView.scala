@@ -11,6 +11,8 @@
  */
 package optimus.graph.outOfProcess.views
 
+import optimus.scala212.DefaultSeq._
+
 import optimus.graph.DiagnosticSettings
 import optimus.graph.JMXConnection
 import optimus.graph.cache.NCSupport

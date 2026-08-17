@@ -11,6 +11,8 @@
  */
 package optimus.buildtool.runconf.compile
 
+import optimus.scala212.DefaultSeq._
+
 import scala.jdk.CollectionConverters._
 
 private[compile] object Typer {

@@ -14,9 +14,9 @@ main {
     libs = [
       typesafe-config
     ]
-    modules = [
-      optimus.platform.partial-rollout
-    ]
+    // modules = [
+    //   optimus.platform.partial-rollout // internal-only, no OSS equivalent
+    // ]
   }
 //  tokens {
 //    "INTELLIJ_VERSION" = ${versions.intellij.core}

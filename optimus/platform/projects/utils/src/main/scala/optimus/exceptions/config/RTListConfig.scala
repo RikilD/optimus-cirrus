@@ -17,6 +17,8 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.Properties
 
+import optimus.scala212.DefaultSeq._
+
 import scala.util.Try
 import msjava.slf4jutils.scalalog.getLogger
 

@@ -23,6 +23,9 @@ main {
       typesafe-config,
       zstd-jni,
       jackson-module-scala,
+      jsoniter-scala-core,
+      jsoniter-scala-macros,
+      opencsv,
 //      scala,
       spray-json
     ]

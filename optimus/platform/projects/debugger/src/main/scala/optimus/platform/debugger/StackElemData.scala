@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.fasterxml.jackson.module.scala.ClassTagExtensions
 
 object StackElemType extends Enumeration {
   type StackElemType = Value
@@ -50,7 +49,7 @@ final case class StackElemData(
 )
 
 object StackElemData {
-  private val mapper = new ObjectMapper() with ClassTagExtensions
+  private val mapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
 
   def write(elem: StackElemData): String =

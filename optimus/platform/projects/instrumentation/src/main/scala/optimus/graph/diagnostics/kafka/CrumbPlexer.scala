@@ -20,7 +20,7 @@ import com.github.luben.zstd.ZstdInputStream
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
 import kafka.zk.KafkaZkClient
-import com.ms.infra.kerberos.configuration.MSKerberosConfiguration
+// import com.ms.infra.kerberos.configuration.MSKerberosConfiguration // internal-only, no OSS equivalent
 import msjava.zkapi.ZkaAttr
 import msjava.zkapi.ZkaConfig
 import msjava.zkapi.internal.ZkaContext
@@ -525,7 +525,8 @@ object CrumbPlexer extends App with CrumbRecordParser with OptimusStringUtils {
   if (userjaas)
     props.put(
       SaslConfigs.SASL_JAAS_CONFIG,
-      s"""com.sun.security.auth.module.Krb5LoginModule required principal=\"${MSKerberosConfiguration.getDefault.getLibraryConfigurations.getUserPrincipal}\" useTicketCache=true;"""
+      // MSKerberosConfiguration is internal-only, no OSS equivalent
+      s"""com.sun.security.auth.module.Krb5LoginModule required principal=\"${???}\" useTicketCache=true;"""
     )
 
   private val partitions = zkClient.getReplicaAssignmentForTopics(topics.split(",").toSet).keys.toSeq

@@ -13,24 +13,27 @@ package optimus.platform.dsi.protobufutils
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.MessageLite
+// import msjava.base.spring.lifecycle.BeanState
 import msjava.msnet._
 import msjava.msnet.internal.MSNetProtocolConnectionConfigurationSupport
-import msjava.msnet.ssl.SSLEstablisherFactory
-import msjava.protobufutils.generated.proto.Eai.RequestResponseEnvelope
-import msjava.protobufutils.generated.proto.Eai.RequestResponseHeader
+// import msjava.msnet.ssl.SSLEstablisherFactory
+/* import msjava.protobufutils.generated.proto.Eai.RequestResponseEnvelope
+import msjava.protobufutils.generated.proto.Eai.RequestResponseHeader */
 import msjava.slf4jutils.scalalog.getLogger
-import java.util.Base64
+import net.iharder.Base64
 import optimus.breadcrumbs.Breadcrumbs
 import optimus.breadcrumbs.BreadcrumbsSendLimit.OnceByCrumbEquality
 import optimus.breadcrumbs.ChainedID
 import optimus.breadcrumbs.crumbs.CrumbNodeType
 import optimus.breadcrumbs.crumbs.EdgeType
+import optimus.breadcrumbs.crumbs.EventCrumb
 import optimus.breadcrumbs.crumbs.LogPropertiesCrumb
 import optimus.breadcrumbs.crumbs.Properties
 import optimus.breadcrumbs.crumbs.PropertiesCrumb
 import optimus.core.ChainedNodeID
 import optimus.dal.ssl.DalSSLConfig
 import optimus.graph.DiagnosticSettings._
+import optimus.graph.Edges
 import optimus.graph.PluginType
 import optimus.graph.Settings
 import optimus.graph.diagnostics.gridprofiler.GridProfiler
@@ -54,7 +57,6 @@ import optimus.platform.dsi.protobufutils.DALProtoClient.DsiServer
 import optimus.platform.dsi.protobufutils.DALProtoClient.VersioningServer
 import optimus.platform.dsi.versioning.VersioningRedirectionInfo
 import optimus.platform.internal.TemporalSource
-import optimus.platform.util.ObjectState
 import optimus.platform.util.PrettyStringBuilder
 import optimus.utils.PropertyUtils
 import optimus.utils.misc.Color
@@ -129,7 +131,7 @@ final class RequestSender(
       requestType: DSIRequestProto.Type,
       token: Option[InFlightRequestToken] = None,
       redirectionInfo: Option[VersioningRedirectionInfo] = None
-  ): Unit = {
+  ): Unit = ??? /* {
 
     val requestUuid = UUID.randomUUID
     val requestId = requestUuid.toString
@@ -177,9 +179,9 @@ final class RequestSender(
         redirectionInfo,
         batchRetryManager)
     sendBatch(requestContext)
-  }
+  } */
 
-  private[optimus] def sendBatch(rc: BatchContext): Unit = {
+  /* private[optimus] def sendBatch(rc: BatchContext): Unit = {
 
     val commandLocations = CommandLocations.extract(rc.clientRequests)
     val commandTags = CommandAppNameTags.extract(rc.clientRequests)
@@ -207,6 +209,9 @@ final class RequestSender(
         s"Multiple node ID's found in batch, will use chained ID ${rc.chainedId} for node ID's ${nodeIDs mkString ","}")
 
     try {
+      nodeIDs.foreach { nid =>
+        Edges.ensureTracked(rc.chainedId, nid, "sendBatch", CrumbNodeType.DataRequest, EdgeType.RequestedBy)
+      }
 
       /*as we check commandLocation is nonEmpty, we should always get a clientRequest hence clientRequests.head is safe
        * We need clientRequests.head.completable to pass into customCounter for jobID and scope. The method is called in a
@@ -234,10 +239,9 @@ final class RequestSender(
       val writeReqSpecificProps =
         if (rc.requestType == DSIRequestProto.Type.WRITE) {
           val anyWriteReq = rc.clientRequests.collectFirst { case req: WriteClientRequest => req }
-          val reqEnv = anyWriteReq.flatMap(_.completable.env)
-          val maybeEnv = reqEnv.flatMap(r => Option(r.config)).map(_.runtimeConfig.mode)
-          val tpe = if (anyWriteReq.exists(_.hasMessagesCommands)) "message" else "write"
-          Seq(Properties.`type` -> tpe) ++ maybeEnv.map(env => Properties.env -> env)
+          val re = anyWriteReq.flatMap(_.completable.env)
+          val maybeEnv = re.flatMap(r => Option(r.config)).map(_.runtimeConfig.mode)
+          Seq(Properties.`type` -> "write") ++ maybeEnv.map(env => Properties.env -> env)
         } else Seq.empty
 
       if (requestCommandLocationProp.nonEmpty || writeReqSpecificProps.nonEmpty) {
@@ -284,6 +288,10 @@ final class RequestSender(
       ClientRequestTracker.add(rc)
 
       assertConnected
+      Breadcrumbs.trace(
+        OnceByCrumbEquality,
+        rc.chainedId,
+        EventCrumb(_, DalClientCrumbSource, DalEvents.Client.RequestSubmitted))
       impl.asyncSend(message)
 
     } catch {
@@ -343,11 +351,11 @@ final class RequestSender(
 
       val commands = requests.flatMap(_.commandProtos)
       val encodedCmds = commands map { cmd =>
-        Base64.getEncoder.encodeToString(cmd.toByteArray)
+        Base64.encodeBytes(cmd.toByteArray)
       }
       saveToFile(encodedCmds, file)
     }
-  }
+  } */
 }
 
 object TcpRequestSender {
@@ -382,10 +390,10 @@ private[optimus] class TcpRequestSender(
 
   private[this] var connection: MSNetTCPConnection = null
   private[this] var remoteProtocolVersion: Option[DalProtocolVersion] = null
-  private[this] val state = new ObjectState()
-  private[optimus] def hostPort = configSupport.getHostPort
+  // private[this] val state = new BeanState()
+  private[optimus] def hostPort = ??? // configSupport.getHostPort
 
-  private[this] def createConnection() = {
+  private[this] def createConnection() = ??? /* {
     log.info(s"Creating new connection to $hostPort${if (secureTransport) " (secure)" else ""}")
     val connection = config.createConnection(configSupport)
     if (dalProtocolVersionEstablisherEnabled && !secureTransport) {
@@ -415,7 +423,7 @@ private[optimus] class TcpRequestSender(
       // regex-ignore-line (open-sourcing) has to persist unless lib is updated
       connection.setMasterEstablisherMode(MasterEstablisherMode.OFF)
     }
-    state.initializeIfNotInitialized()
+    // state.initializeIfNotInitialized()
     if (!connection.syncConnect(config.defaultConnectTimeout)) {
       throw new DALRetryableActionException(s"Failed to connect to $hostPort", Option(client))
     }
@@ -425,12 +433,12 @@ private[optimus] class TcpRequestSender(
     connection.addListener(msgListener(remoteProtocolVersion))
     connection.setImmutable(true)
     connection
-  }
+  } */
 
   private[optimus] def start(): Unit =
     try {
       connection = createConnection()
-      state.startIfNotRunning()
+      // state.startIfNotRunning()
     } catch {
       case NonFatal(ex) =>
         log.error("Exception caught in start(), about to shutdown()", ex)
@@ -438,24 +446,24 @@ private[optimus] class TcpRequestSender(
         throw ex
     }
 
-  private[optimus] def shutdown(): Unit = {
+  private[optimus] def shutdown(): Unit = ??? /* {
     Option(connection) foreach (_.close())
     Option(configSupport.getLoop) foreach (_.quit())
     Option(configSupport.getCallbackExecutor) foreach {
       case e: ExecutorService => e.shutdown()
       case _                  =>
     }
-    state.destroyIfNotDestroyed()
-  }
+    // state.destroyIfNotDestroyed()
+  } */
 
-  private[optimus] def asyncSend(message: MessageType): Unit = {
+  private[optimus] def asyncSend(message: MessageType): Unit = ??? /* {
     val msg = new MSNetStringMessage(message)
     connection.asyncSend(msg)
-  }
+  } */
 
-  private[optimus] def assertConnected(): Unit = {
+  private[optimus] def assertConnected(): Unit = ??? /* {
     try {
-      state.throwIfNotRunning()
+      // state.throwIfNotRunning()
       if (!connection.isConnected && !connection.getRetryFlag) throw new MSNetException("DAL is not connected.")
     } catch {
       case e: IllegalStateException => {
@@ -467,7 +475,7 @@ private[optimus] class TcpRequestSender(
         throw new DALRetryableActionException(e.toString, Option(client))
       }
     }
-  }
+  } */
 
   // necessary for tests
   protected[optimus] def dalRequestRemoteProtocolVersion: Boolean =
@@ -488,7 +496,7 @@ private[optimus] class TcpRequestSender(
       commandTags: Seq[CommandAppNameTag],
       minAssignableTtOpt: Option[Instant],
       lastWitnessedTxTimeOpt: Option[Instant],
-      redirectionInfo: Option[VersioningRedirectionInfo] = None): MessageLite = {
+      redirectionInfo: Option[VersioningRedirectionInfo] = None): MessageLite = ??? /* {
 
     val cmdProtos = requests.flatMap(_.commandProtos)
     val commandLocationsProto = commandLocations map { CommandLocationSerializer.toProto } asJava
@@ -562,7 +570,7 @@ private[optimus] class TcpRequestSender(
       }
       builder.build
     }
-  }
+  } */
 
   override private[platform] def buildMessage(
       seqId: Int,
@@ -588,7 +596,7 @@ private[optimus] class TcpRequestSender(
     buildMsnetMessageImpl(req.toByteString, seqId)
   }
 
-  private[optimus] def buildMsnetMessageImpl(payload: ByteString, seqId: Int): Array[Byte] = {
+  private[optimus] def buildMsnetMessageImpl(payload: ByteString, seqId: Int): Array[Byte] = ??? /* {
     val header = RequestResponseHeader.newBuilder
       .setSeqId(seqId)
       .build
@@ -599,7 +607,7 @@ private[optimus] class TcpRequestSender(
     val bytes = envelope.toByteArray
     assertMessageSizeUnderLimit(bytes.length)
     bytes
-  }
+  } */
 
   private[this] def assertMessageSizeUnderLimit(size: Int): Unit = {
     val maxSize = config.maxMessageSize
@@ -608,15 +616,15 @@ private[optimus] class TcpRequestSender(
     }
   }
 
-  private[optimus] def enableReading(): Unit = {
+  private[optimus] def enableReading(): Unit = ??? /* {
     Option(connection).foreach(_.enableReading)
-  }
+  } */
 
-  private[optimus] def disableReading(): Unit = {
+  private[optimus] def disableReading(): Unit = ??? /* {
     Option(connection).foreach(_.disableReading)
-  }
+  } */
 
-  private[optimus] def disconnectConnection(): Unit = {
+  private[optimus] def disconnectConnection(): Unit = ??? /* {
     Option(connection).foreach(_.disconnect)
-  }
+  } */
 }

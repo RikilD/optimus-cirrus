@@ -11,6 +11,8 @@
  */
 package optimus.graph
 
+import optimus.scala212.DefaultSeq._
+
 import scala.annotation.nowarn
 import java.io.StringWriter
 import java.lang.{Boolean => JBoolean}

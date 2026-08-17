@@ -11,6 +11,7 @@
  */
 package optimus.stratosphere.filesanddirs
 
+import optimus.scala212.DefaultSeq._
 import optimus.stratosphere.bootstrap.StratosphereException
 import optimus.stratosphere.common.PlatformSpecific
 import optimus.stratosphere.config.AutoDetect

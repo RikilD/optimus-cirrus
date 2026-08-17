@@ -34,6 +34,8 @@ main {
       cxf-tools-wsdlto
       jgit
       jmustache
+      jsoniter-scala-core
+      jsoniter-scala-macros
       jsonschema2pojo-core
       scalaxb
       scala-xml

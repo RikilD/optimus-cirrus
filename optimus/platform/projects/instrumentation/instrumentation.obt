@@ -27,6 +27,8 @@ main {
       async-profiler,
       commons-io,
       httpcomponents-mime,
+      jsoniter-scala-core,
+      jsoniter-scala-macros,
 //      metrics-core.variant.kafka
     ]
   }

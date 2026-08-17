@@ -34,27 +34,10 @@ private[optimus /*platform*/ ] trait QueryProtoSerialization extends BasicProtoS
   implicit val eventCmReferenceQuerySerializer: EventCmReferenceQuerySerializer.type = EventCmReferenceQuerySerializer
 }
 
-object VersionedReferenceQuerySerializer
-    extends QueryProtoSerialization
-    with ProtoSerializer[VersionedReferenceQuery, VersionedReferenceQueryProto] {
-  override def serialize(query: VersionedReferenceQuery): VersionedReferenceQueryProto = {
-    val builder = VersionedReferenceQueryProto.newBuilder()
-    builder.setEntitledOnly(query.entitledOnly)
-    builder.setVref(toProto(query.versionedRef))
-    builder.setValidTimeRange(toProto(query.validTimeInterval))
-    builder.setTxRange(toProto(query.txTimeInterval))
-    builder.setClassName(query.cn)
-    builder.build()
-  }
-
-  override def deserialize(proto: VersionedReferenceQueryProto): VersionedReferenceQuery = {
-    val vref = fromProto(proto.getVref)
-    val tt = fromProto(proto.getTxRange)
-    val vt = fromProto(proto.getValidTimeRange)
-    val classNameOpt = proto.getClassName
-    val entitledOnly = proto.getEntitledOnly
-    VersionedReferenceQuery(vref, vt, tt, classNameOpt, entitledOnly)
-  }
+object VersionedReferenceQuerySerializer extends QueryProtoSerialization {
+  // VersionedReferenceQueryProto is not defined in the .proto sources available in this branch
+  def serialize(query: VersionedReferenceQuery): Nothing = ???
+  def deserialize(proto: Nothing): VersionedReferenceQuery = ???
 }
 
 object ReferenceQuerySerializer

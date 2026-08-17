@@ -32,8 +32,8 @@ class AdvancedUtilsMacros(val c: Context) {
   }
 
   final def traceLatencyWithDefaultingArgsImpl(log: c.Expr[Logger], action: c.Tree)(f: c.Tree): c.Tree = {
-    val infoThresholdInNanos = c.Expr[Long](q"50_000_000L")
-    val warnThresholdInNanos = c.Expr[Long](q"100_000_000L")
+    val infoThresholdInNanos = c.Expr[Long](q"50000000L")
+    val warnThresholdInNanos = c.Expr[Long](q"100000000L")
 
     traceLatencyImpl(log, action, infoThresholdInNanos, warnThresholdInNanos)(f)
   }

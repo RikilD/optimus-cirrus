@@ -23,31 +23,25 @@ import optimus.graph.OGSchedulerContext
 import optimus.platform.EvaluationContext
 import optimus.platform.EvaluationQueue
 import optimus.platform.annotations.nodeSync
-import optimus.platform.async
-import optimus.platform.dal.EntitySerialization
 import optimus.platform.dal.StorableSerializer
-import optimus.platform.internal.TemporalSource
 import optimus.platform.pickling.PicklingReflectionUtils._
 import optimus.platform.storable.Embeddable
 import optimus.platform.storable.EmbeddableCompanionBase
 import optimus.platform.storable.EmbeddableTraitCompanionBase
 import optimus.platform.storable.HasDefaultUnpickleableValue
-import optimus.platform.versioning.TransformerRegistry
-import optimus.scalacompat.collection._
 
-import scala.annotation.nowarn
 import scala.collection.compat._
 import scala.collection.immutable.SortedSet
-import scala.reflect.runtime.universe._
-import scala.reflect.runtime.universe.{Try => _}
 import scala.util.Try
+import scala.reflect.runtime.universe.{Try => _, _}
+import optimus.scalacompat.collection._
 
 object EmbeddablePicklers extends StorableSerializer {
 
   /** _tag field contains the simple classname for pickled @embedable case classes */
-  val Tag: String = PicklingConstants.embeddableTag
+  val Tag = "_tag"
 
-  private lazy val EmbeddableType = typeOf[Embeddable]
+  private val EmbeddableType = typeOf[Embeddable]
   def picklerForType(tpe: Type): Pickler[_] = {
     def module = {
       val companionName = tpe.typeSymbol.companion match {
@@ -112,8 +106,6 @@ object EmbeddablePicklers extends StorableSerializer {
   }
 
   class TraitUnpickler(val etcb: EmbeddableTraitCompanionBase) extends Unpickler[Embeddable] {
-    private val converterOpt = PicklingReflectionUtils.getUnpickleConverterMethodHandle(etcb.getClass)
-
     private[optimus] lazy val unpicklers: Map[String, Try[Unpickler[Embeddable]]] =
       etcb.subtypeSimpleNameToClass.mapValuesNow(cls =>
         Try(Registry.unpicklerOfType(PicklingReflectionUtils.classToType(cls)).asInstanceOf[Unpickler[Embeddable]]))
@@ -138,15 +130,8 @@ object EmbeddablePicklers extends StorableSerializer {
       m match {
         case e: Embeddable => new AlreadyCompletedNode(e)
         case _ =>
-          converterOpt
-            .map { converter =>
-              val res = converter.invoke(etcb, m.asInstanceOf[String]).asInstanceOf[Embeddable]
-              new AlreadyCompletedNode(res)
-            }
-            .getOrElse {
-              val clsName = extractSimpleClassname(m)
-              unpickleTrait(clsName, m, is)
-            }
+          val clsName = extractSimpleClassname(m)
+          unpickleTrait(clsName, m, is)
       }
     }
   }
@@ -154,7 +139,6 @@ object EmbeddablePicklers extends StorableSerializer {
   def extractSimpleClassname(pickled: Any): String = {
     val clsName = pickled match {
       // @embeddable case classes get pickled as a map with _tag containing the simple classname
-      case m: PickledProperties              => m.tag
       case m: Map[String, String] @unchecked => m(Tag)
       // @embeddable case object is pickled as a bare String of the simple classname (see EmbeddableObjectPickler)
       case objName: String => objName
@@ -164,8 +148,8 @@ object EmbeddablePicklers extends StorableSerializer {
     clsName
   }
 
-  private class EmbeddablePickler(val ecb: EmbeddableCompanionBase, tpe: Type) extends Pickler[Embeddable] {
-    private val name = getEncodedName(tpe)
+  class EmbeddablePickler(val ecb: EmbeddableCompanionBase, tpe: Type) extends Pickler[Embeddable] {
+    val name = getEncodedName(tpe)
 
     private lazy val picklers: Array[(String, Pickler[_])] = {
       val ctorArgs = extractCtorArgs(tpe)
@@ -180,8 +164,12 @@ object EmbeddablePicklers extends StorableSerializer {
       }.toArray
     }
 
-    private def pickleProperties(t: Embeddable, os: PickledOutputStream): Unit = {
+    def pickle(t: Embeddable, os: PickledOutputStream): Unit = {
       val values = ecb.toArray(t)
+      os.writeStartObject()
+      os.writeFieldName(Tag)
+      os.write(name, DefaultPicklers.stringPickler)
+
       var i = 0
       while (i < picklers.length) {
         val (fname, pickler: Pickler[AnyRef] @unchecked) = picklers(i)
@@ -189,67 +177,12 @@ object EmbeddablePicklers extends StorableSerializer {
         os.write(values(i), pickler)
         i += 1
       }
-    }
-
-    private def pickleWithoutVersioning(t: Embeddable, os: PickledOutputStream): Unit = {
-      os.writeStartObject()
-      os.writeFieldName(Tag)
-      os.write(name, DefaultPicklers.stringPickler)
-      pickleProperties(t, os)
       os.writeEndObject()
-    }
-
-    /**
-     * Adding @nowarn because this method invokes an async method [[TransformerRegistry.versionToWrite]]. And
-     * making base [[pickle]] method async (and whole call-chain) will impact lots of code. Async method in question
-     * just invokes *write-time* versioning transformer, which is typically only present temporarily during schema
-     * change rollout. Also, embeddable transformers are mostly expected to be much simpler, i.e., rarely any DAL calls.
-     * Hence, this sync-stack shouldn't have an adverse impact in practice.
-     */
-    @async @nowarn("msg=22202")
-    private def pickleWithVersioning(t: Embeddable, os: EntitySerialization#InliningOutputStream): Unit = {
-
-      /**
-       * Pickle into a temporary stream to get properties map for write-time versioning.
-       */
-      val tmpOutStrm = os.newInstance
-      tmpOutStrm.writeStartObject()
-      pickleProperties(t, tmpOutStrm)
-      tmpOutStrm.writeEndObject()
-
-      /**
-       * Check and apply write time versioning, if any.
-       */
-      val versionedPropMap = {
-        val propMap = tmpOutStrm.value.asInstanceOf[PickledProperties]
-        val slot = 0 // Slot versioning is not implemented.
-        TransformerRegistry
-          .versionToWrite(ecb.shapeName, propMap, slot, TemporalSource.loadContext)
-          .get
-          .getOrElse(slot, propMap)
-      }
-
-      /**
-       * Write already pickled properties into the real output stream.
-       */
-      val pickledProps = Map(Tag -> name) ++ versionedPropMap
-      os.writeRawObject(pickledProps)
-    }
-
-    def pickle(t: Embeddable, os: PickledOutputStream): Unit = {
-      os match {
-        // InlineEntityOutputStream is used to serialize entities to write in DAL, and hence
-        // write-time versioning is applied for this case only.
-        case ios: EntitySerialization#InliningOutputStream
-            if TransformerRegistry.getWriteShapes(ecb.shapeName).nonEmpty =>
-          pickleWithVersioning(t, ios)
-        case _ => pickleWithoutVersioning(t, os)
-      }
     }
   }
 
   class EmbeddableUnpickler(val ecb: EmbeddableCompanionBase, tpe: Type) extends Unpickler[Embeddable] {
-    val name: String = extractName(tpe)
+    val name = extractName(tpe)
     lazy val unpicklers: Array[(String, Unpickler[_])] = {
       val ctorArgs = extractCtorArgs(tpe)
       ctorArgs.map { case (ctorName, ctorType) =>
@@ -271,30 +204,25 @@ object EmbeddablePicklers extends StorableSerializer {
         new CompletableNodeM[Embeddable] {
           private var waitingOn = 0 // Current/last sub unpickler we are waiting on....
           private var arr: Array[AnyRef] = _ // Waiting on list to resolve values
-          private var versionResolver: Node[PickledProperties] = _
-          private var propMap: PickledProperties = _
+          private var versionResolver: Node[Map[String, Any]] = _
+          private var propMap: Map[String, Any] = _
 
           enqueueChildrenOrComplete()
 
           def enqueueChildrenOrComplete(): Unit = {
-            def complete(properties: PickledProperties) = {
-              initAsRunning(EvaluationContext.scenarioStack)
-              arr = new Array[AnyRef](unpicklers.length)
-              propMap = properties.untagged
-              versionResolver = NodeAPI.queuedNodeOf(
-                version(ecb.shapeName, propMap, is.temporalContext, applyForceTransformation = false))
-              versionResolver.continueWith(this, OGSchedulerContext.current())
-            }
             pickled match {
-              case m: PickledProperties =>
-                complete(m)
               case m: Map[String, Any] @unchecked =>
-                complete(PickledProperties(m))
+                initAsRunning(EvaluationContext.scenarioStack)
+                arr = new Array[AnyRef](unpicklers.length)
+                propMap = m - Tag
+                versionResolver = NodeAPI.queuedNodeOf(
+                  version(ecb.shapeName, propMap, is.temporalContext, applyForceTransformation = false))
+                versionResolver.continueWith(this, OGSchedulerContext.current())
               case o: Embeddable => initAsCompleted(o) // Assume it's already the right type
             }
           }
 
-          override def onChildCompleted(eq: EvaluationQueue, child: NodeTask): Unit = {
+          override def onChildCompleted(eq: EvaluationQueue, child: NodeTask): Unit = ??? /* {
             try {
               if (child eq versionResolver) {
                 val versionedPropMap = versionResolver.get
@@ -327,25 +255,16 @@ object EmbeddablePicklers extends StorableSerializer {
                   case _ => i += 1
                 }
               }
-              if (i == unpicklers.length) {
-                val res = EvaluationContext.asIfCalledFrom(this, eq)(ecb.fromArray(arr))
-                completeWithResult(res, eq)
-              }
-            } catch {
-              case e: ExceptionWithHistory =>
-                val (field, _) = unpicklers(waitingOn)
-                e.addSource(field)
-                e.addSource(name)
-                completeWithException(e, eq)
-              case e: Throwable => completeWithException(e, eq)
-            }
-          }
+              if (i == unpicklers.length)
+                completeWithResult(ecb.fromArray(arr), eq)
+            } catch { case e: Throwable => completeWithException(e, eq) }
+          } */
         }
     }
   }
 
   // @embeddable objects are written simply as the classname (unwrapped, NOT inside a "_tag" field)
-  private class EmbeddableObjectPickler(name: String) extends Pickler[Embeddable] {
+  class EmbeddableObjectPickler(name: String) extends Pickler[Embeddable] {
     override def pickle(t: Embeddable, visitor: PickledOutputStream): Unit =
       visitor.writeRawObject(name)
   }
@@ -371,11 +290,8 @@ final class IncompatibleEmbeddableVersionException private (
     val foundFields: SortedSet[String],
     val requiredFields: SortedSet[String])
 // extends NoSuchElementException to preserve client incompatible versions handling code
-    extends NoSuchElementException
-    with RTExceptionTrait
-    with ExceptionWithHistory {
-  override protected val lineage = new ExceptionLineage
-  override def getMessage: String = details + lineage.lineageString
+    extends NoSuchElementException(details)
+    with RTExceptionTrait {
 
   // using chaining ctor rather than companion apply as exceptions are very commonly instantiated in throw new E pattern
   // so it's likely the apply method will go unnoticed and clients will be constructing strings manually

@@ -149,6 +149,7 @@ object Platform {
 			scalaCollectionCompat,
 		),
 	  )
+	  .dependsOn(scalaCompat)
 
   lazy val dalEnvironment = Project("platformDalEnvironment", projectsDir / "dal_environment")
     .settings(
@@ -171,7 +172,9 @@ object Platform {
         eaioUUID,
         fastUtil,
 		jnaPlatform,
+        jacksonDatatypeJSR310,
         jodaTime,
+        scalaXml,
         typesafeConfig,
       )
     )
@@ -185,6 +188,7 @@ object Platform {
       inputs,
       instrumentation,
       missing,
+      scalaCompat,
       sprayJson,
       stagingPluginJar % "plugin"
     )
@@ -199,8 +203,11 @@ object Platform {
         asyncProfilerLoaderAll,
         httpClient,
         httpMime,
+        jsoniterScalaCore,
+        jsoniterScalaMacros,
         kafka,
-        springWeb
+        springWeb,
+        typesafeConfig
       )
     )
     .dependsOn(
@@ -316,7 +323,7 @@ object Platform {
       libraryDependencies ++= Seq(
         scalaCollectionCompat,
         scalaCompiler,
-//        scalaParallelCollections,
+        scalaParallelCollections,
 //        scalaXml
       )
     )

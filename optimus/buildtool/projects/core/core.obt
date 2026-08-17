@@ -14,6 +14,8 @@ main {
 //    jackson2,
     typesafe-config,
     jackson-module-scala,
+    jsoniter-scala-core,
+    jsoniter-scala-macros,
     scala-collection-compat,
     scala-parser-combinators,
     spray-json,

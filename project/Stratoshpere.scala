@@ -24,8 +24,10 @@ object Stratosphere {
         javaxActivation,
         jnaPlatform,
         junit,
+        metrics4Scala,
         scalaReflect,
         scalaCollectionCompat,
+        scalaXml,
         sprayJson
       )
     )

@@ -30,6 +30,8 @@ object BuildTool {
         jgit,
         jmustache,
         jsonSchema2Pojo,
+        jsoniterScalaCore,
+        jsoniterScalaMacros,
         scalaxb,
         scalaXml,
         zinc,
@@ -74,6 +76,9 @@ object BuildTool {
 		zstdJni,
         jacksonModuleScala,
 		  //"ossscala.scala",
+        jsoniterScalaCore,
+        jsoniterScalaMacros,
+        openCSV,
         sprayJson,
       )
     )
@@ -84,6 +89,8 @@ object BuildTool {
       libraryDependencies ++= Seq(
 		jacksonDatabind,
 		jacksonModuleScala,
+        jsoniterScalaCore,
+        jsoniterScalaMacros,
         scalaParserCombinators,
         sprayJson,
         typesafeConfig,
