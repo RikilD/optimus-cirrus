@@ -1,0 +1,6 @@
+jdks {
+  8 = {home = X}
+  11 = {home = X}
+  20 = {home = X}
+  21 = {home = X}
+}

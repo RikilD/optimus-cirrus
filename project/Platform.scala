@@ -1,0 +1,365 @@
+package optimus
+
+import optimus.Dependencies._
+import sbt._
+import sbt.Keys._
+import sbtprotobuf.ProtobufPlugin
+import sbtprotobuf.ProtobufPlugin.autoImport._
+import sbtassembly.AssemblyPlugin.autoImport._
+
+object Platform {
+  private val projectsDir = file("optimus/platform/projects")
+  private val loomSettings = Seq(
+    Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / "loom-off",
+  )
+
+//  lazy val talks = Project("platformTalks", projectsDir / "talks")
+//    .dependsOn(platform, entityPlugin, entityPluginJar % "plugin")
+
+  lazy val examples = Project("platformExamples", projectsDir / "examples_platform")
+    .settings(
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.dynamics ++ Seq("-P:entity:enableStaging:true"),
+      libraryDependencies += "org.apache.poi" % "poi-ooxml" % "5.3.0", // xssf, used by the relational Excel examples
+      libraryDependencies ++= Seq(junit % Test, junitInterface % Test),
+      // -v names each test as it runs, -a shows assertion failures in full.
+      Test / testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-a"),
+      // OptimusApps must run in a forked JVM with the entity agent attached and a
+      // handful of JDK module flags opened up. Wiring this here means
+      // `platformExamples/runMain <app>` works out of the box; referencing the
+      // entityAgent assembly builds the agent jar automatically as a dependency.
+      fork := true,
+      javaOptions ++= Seq(
+        "-Doptimus.logging.checkAsync=false",
+        "--add-exports=java.management/sun.management=ALL-UNNAMED",
+        "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
+        "--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED",
+        "--add-opens=java.base/java.lang.ref=ALL-UNNAMED",
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+      ),
+      javaOptions += s"-javaagent:${(entityAgent / assembly).value.getAbsolutePath}=e",
+    )
+    .dependsOn(platform, entityPlugin, entityPluginJar % "plugin")
+
+  lazy val platform = Project("platform", projectsDir / "platform")
+    .settings(
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.dynamics ++ Seq("-P:entity:enableStaging:true"),
+      libraryDependencies ++= Seq(freemarker, jacksonDatatypeJSR310, javaxMail)
+    )
+    .dependsOn(
+      core,
+      dalClient,
+      entityPlugin,
+      entityPluginJar % "plugin",
+      priql,
+      priqlDal,
+      priqlDalPersistence
+    )
+
+  lazy val gitUtils = Project("platformGitUtils", projectsDir / "git-utils")
+    .settings(libraryDependencies ++= Seq(scalaCollectionCompat, slf4j))
+
+  lazy val bitBucketUtils = Project("platformBitBucketUtils", projectsDir / "bitbucket-utils")
+    .settings(
+      libraryDependencies ++= Seq(
+        akkaHttpCore,
+        akkaHttpSprayJson,
+        Dependencies.sprayJson,
+        typesafeConfig
+      )
+    )
+    .dependsOn(restUtils)
+
+  lazy val restUtils = Project("platformRestUtils", projectsDir / "rest-utils")
+    .settings(libraryDependencies ++= Seq(Dependencies.sprayJson))
+
+  lazy val priqlDalPersistence = Project("platformPriqlDalPersistence", projectsDir / "priql_dal_persistence")
+    .settings(scalacOptions ++= ScalacOptions.common)
+    .dependsOn(priqlDal)
+
+  lazy val priqlDal = Project("platformPriqlDal", projectsDir / "priql_dal")
+    .enablePlugins(ProtobufPlugin)
+    .settings(
+      ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros
+    )
+    .dependsOn(dalClient, dalCore, entityPlugin, entityPluginJar % "plugin", priql)
+
+  lazy val priql = Project("platformPriql", projectsDir / "priql")
+    .enablePlugins(ProtobufPlugin)
+    .settings(
+      ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ Seq("-P:entity:enableStaging:true"),
+      libraryDependencies ++= Seq(poi, scalaParserCombinators),
+    )
+    .dependsOn(
+      alarms,
+      core,
+      coreMacro,
+      collections,
+      entityPlugin,
+      entityPluginJar % "plugin",
+      scalaCompat
+    )
+
+  lazy val dalClient = Project("platformDalClient", projectsDir / "dal_client")
+    .settings(scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros)
+    .dependsOn(
+		core,
+		dalCore,
+		entityPlugin,
+		entityPluginJar % "plugin",
+//		tls,
+		versioningRuntime,
+	)
+
+
+  lazy val versioningRuntime = Project("platformVersioningRuntime", projectsDir / "versioning_runtime")
+    .settings(scalacOptions ++= ScalacOptions.common)
+    .dependsOn(dalCore, entityPlugin, entityPluginJar % "plugin", core)
+
+//  /* lazy val msNetSSL = Project("platformMSNetSSL", projectsDir / "msnet-ssl")
+//    .dependsOn(missing) */
+//
+//  lazy val tls = Project("platformTls", projectsDir / "tls")
+//    .settings(libraryDependencies ++= Seq(guava, nettyHandler, typesafeConfig))
+//    .dependsOn(missing, utils)
+
+  lazy val dalCore = Project("platformDalCore", projectsDir / "dal_core")
+	  .enablePlugins(ProtobufPlugin)
+	  .settings(
+		  ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
+		  scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
+      libraryDependencies ++= Seq(guice, logbackClassic, slf4j, springContext)
+    )
+    .dependsOn(
+      breadcrumbs,
+      collections,
+      core,
+      coreConfig,
+      dalEnvironment,
+      entityAgent,
+      Silverking.silverking
+    )
+
+  lazy val collections = Project("platformCollections", projectsDir / "collections")
+	  .settings(
+		scalacOptions ++= ScalacOptions.common,
+		libraryDependencies ++= Seq(
+			slf4j,
+			scalaCollectionCompat,
+		),
+	  )
+	  .dependsOn(scalaCompat)
+
+  lazy val dalEnvironment = Project("platformDalEnvironment", projectsDir / "dal_environment")
+    .settings(
+      scalacOptions ++= ScalacOptions.common,
+      libraryDependencies ++= Seq(curatorFramework, guava, typesafeConfig)
+    )
+    .dependsOn(
+      breadcrumbs,
+      coreConfig,
+      coreMacro,
+      missing,
+      Silverking.silverking
+    )
+
+  lazy val core = Project("platformCore", projectsDir / "core")
+    .settings(
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
+      libraryDependencies ++= Seq(
+        commonsMath3,
+        eaioUUID,
+        fastUtil,
+		jnaPlatform,
+        jacksonDatatypeJSR310,
+        jodaTime,
+        scalaXml,
+        typesafeConfig,
+      )
+    )
+    .dependsOn(
+      annotations,
+      breadcrumbs,
+      coreConfig,
+      debugger,
+      entityAgent,
+      GSF.breadcrumbs,
+      inputs,
+      instrumentation,
+      missing,
+      scalaCompat,
+      sprayJson,
+      stagingPluginJar % "plugin"
+    )
+
+  lazy val debugger = Project("platformDebugger", projectsDir / "debugger")
+    .settings(libraryDependencies ++= Seq(jacksonDatabind, jacksonModuleScala, junit % Test, junitInterface % Test))
+
+  lazy val instrumentation = Project("platformInstrumentation", projectsDir / "instrumentation")
+    .settings(
+      scalacOptions ++= ScalacOptions.common,
+      libraryDependencies ++= Seq(
+        asyncProfilerLoaderAll,
+        httpClient,
+        httpMime,
+        jsoniterScalaCore,
+        jsoniterScalaMacros,
+        kafka,
+        springWeb,
+        typesafeConfig
+      )
+    )
+    .dependsOn(
+      breadcrumbs,
+      entityAgent,
+      utils,
+      stagingPluginJar % "plugin"
+    )
+
+  lazy val inputs = Project("platformInputs", projectsDir / "inputs")
+
+  lazy val coreConfig = Project("platformCoreConfig", projectsDir / "core_config")
+    .dependsOn(breadcrumbs, utils)
+
+  lazy val entityAgent = Project("platformEntityAgent", projectsDir / "entityagent")
+    .settings(
+      loomSettings ++ Seq(
+		  assemblyMergeStrategy := {
+			  case /*x if x.endsWith(*/"module-info.class"/*)*/ => MergeStrategy.discard
+			  case other => assemblyMergeStrategy.value(other)
+		  }
+	  ),
+      // The java agent manifest headers must be baked into the assembled fat jar
+      // itself, so the resulting jar is directly usable as `-javaagent:<jar>`.
+      // (Setting these on entityAgentJar's packageBin has no effect, because that
+      // task is overridden to return this assembly's output verbatim.)
+      assembly / packageOptions += Package.ManifestAttributes(
+        "Premain-Class" -> "optimus.EntityAgent",
+        "Can-Retransform-Classes" -> "true",
+        "Can-Set-Native-Method-Prefix" -> "true"),
+      libraryDependencies ++= Seq(asm, asmCommons, asmTree, asmUtil)
+    )
+    .dependsOn(entityAgentExt)
+
+	// fat jar version of entityAgent, to be consumed as a `-javaagent`
+	lazy val entityAgentJar = Project("platformEntityAgentJar", projectsDir / "entityagent-jar")
+		.settings(
+			exportJars := true,
+			Compile / packageBin := (entityAgent / assembly).value,
+		)
+
+  lazy val entityAgentExt = Project("platformEntityAgentExt", projectsDir / "entityagent-ext")
+
+  // fat jar version of entityPlugin, to be consumed as a compiler plugin
+  lazy val entityPluginJar = Project("platformEntityPluginJar", projectsDir / "entityplugin-jar")
+    .settings(
+      exportJars := true,
+      Compile / packageBin := (entityPlugin / assembly).value,
+    )
+
+  lazy val entityPlugin = Project("platformEntityPlugin", projectsDir / "entityplugin")
+    .settings(
+      loomSettings,
+      scalacOptions ++= Seq("-language:postfixOps"),
+      libraryDependencies ++= Seq(scalaCompiler, typesafeConfig),
+      assembly / assemblyOption ~= { _.withIncludeScala(false) },
+      assemblyMergeStrategy := {
+        case "scalac-plugin.xml" => MergeStrategy.preferProject
+        case other => assemblyMergeStrategy.value(other)
+      }
+    )
+    .dependsOn(
+      scalaCompat,
+      stagingPlugin,
+      stagingPluginJar % "plugin"
+    )
+
+  lazy val breadcrumbs = Project("platformBreadcrumbs", projectsDir / "breadcrumbs")
+    .settings(
+      scalacOptions ++= ScalacOptions.common,
+      libraryDependencies ++= Seq(
+        archaiusCore,
+        base64,
+        httpClient,
+        jacksonDatabind,
+        jacksonModuleScala,
+        kafkaClients,
+        scalaCollectionCompat,
+        snakeYaml,
+        Dependencies.sprayJson,
+      )
+    )
+    .dependsOn(missing, utils)
+
+  lazy val missing = Project("platformMissing", projectsDir / "missing")
+    .settings(libraryDependencies ++= Seq(curatorFramework, slf4j))
+
+  lazy val utils = Project("platformUtils", projectsDir / "utils")
+    .settings(
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
+      libraryDependencies ++= Seq(
+        args4j,
+        caffeine,
+        commonsIO,
+        curatorRecipes,
+        curatorFramework,
+        guava,
+        hkdf,
+        javaxActivation,
+        javaxMail,
+        jettison,
+        logbackClassic,
+        openCSV,
+        slf4j,
+        zooKeeper,
+        zstdJni
+      )
+    )
+    .dependsOn(coreMacro, scalaCompat, stagingPlugin)
+
+  lazy val scalaCompat = Project("platformScalaCompat", projectsDir / "scala_compat")
+    .settings(
+      libraryDependencies ++= Seq(
+        scalaCollectionCompat,
+        scalaCompiler,
+        scalaParallelCollections,
+//        scalaXml
+      )
+    )
+//
+  // fat jar version of entityPlugin, to be consumed as a compiler plugin
+  lazy val stagingPluginJar = Project("platformStagingPluginJar", projectsDir / "stagingplugin-jar")
+    .settings(
+      exportJars := true,
+      Compile / packageBin := (stagingPlugin / assembly).value,
+    )
+
+  lazy val stagingPlugin = Project("platformStagingPlugin", projectsDir / "stagingplugin")
+    .settings(
+      libraryDependencies ++= Seq(scalaCompiler),
+      assembly / assemblyOption ~= { _.withIncludeScala(false) }
+    )
+    .dependsOn(alarms, scalaCompat, sprayJson)
+
+  lazy val coreMacro = Project("platformCoreMacro", projectsDir / "core_macro")
+    .settings(
+      scalacOptions ++= Seq("-language:experimental.macros"),
+      libraryDependencies ++= Seq(logbackClassic, logbackCore, scalaReflect, slf4j)
+    )
+    .dependsOn(alarms)
+
+  lazy val alarms = Project("platformAlarms", projectsDir / "alarms")
+    .settings(
+      exportJars := true,
+      libraryDependencies ++= Seq(scalaCompiler)
+    )
+
+  lazy val annotations = Project("platformAnnotations", projectsDir / "annotations")
+
+  lazy val sprayJson = Project("platformSprayJson", projectsDir / "spray_json")
+    .settings(
+      exportJars := true,
+      libraryDependencies += scalaReflect
+    )
+}

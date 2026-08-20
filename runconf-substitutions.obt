@@ -1,0 +1,11 @@
+allowList {
+  config = []
+  env = []
+  properties = []
+  sys = []
+  versions = []
+}
+
+ignoreList {
+
+}

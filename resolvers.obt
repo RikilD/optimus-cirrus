@@ -1,0 +1,11 @@
+maven-resolvers = [
+  ${mavenCentral}
+]
+
+mavenCentral {
+  name = maven-central
+  root = "https://repo1.maven.org"
+  poms = [maven2]
+  artifacts = [maven2]
+}
+
