@@ -17,6 +17,14 @@ object BuildTool {
   lazy val app = Project("buildToolApp", projectsDir / "app")
     .settings(
       scalacOptions ++= ScalacOptions.common,
+      // The fingerprintdiffing package is not fully exported: BuildArtifactComparatorApp
+      // references FingerprintDirComparison, ArtifactsSearchStrategy, JarHashingStrategy,
+      // DiffMode, FingerprintPaths and hashBuildArtifacts, none of which are defined
+      // anywhere in this repository. It is a standalone diffing app that OBT itself does
+      // not call, so leave it out of the build until the missing sources are published.
+      Compile / unmanagedSources / excludeFilter :=
+        (Compile / unmanagedSources / excludeFilter).value ||
+          new SimpleFileFilter(_.getPath.contains("/fingerprintdiffing/")),
 		assemblyMergeStrategy := {
 			case x if x.endsWith(".SF") || x.endsWith(".DSA") || x.endsWith(".RSA") => MergeStrategy.discard
 				case x =>  MergeStrategy.first
