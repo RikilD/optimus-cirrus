@@ -13,10 +13,12 @@ package optimus.platform.util
 
 import java.io.File
 import java.math.BigInteger
+import java.nio.file.Path
 import java.security.MessageDigest
 
-import optimus.platform.relational.RelationalException
 import optimus.platform.PackageAliases
+import optimus.platform.relational.RelationalException
+import optimus.platform.utils.ClassPathUtils
 
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.io.VirtualDirectory
@@ -24,7 +26,25 @@ import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.StoreReporter
 import scala.tools.nsc.{Global, Settings}
 
+object RuntimeScalaCompiler {
+  lazy val unexpandedClassPath: Seq[Path] = ClassPathUtils.readClasspathEntries(this.getClass.getClassLoader)
+
+  lazy val classPathSeq: Seq[Path] = ClassPathUtils.expandClasspath(unexpandedClassPath)
+
+  lazy val classpath: String = classPathSeq.mkString(File.pathSeparator)
+}
+
+/**
+ * Compiles Scala source at runtime against the current classpath, with the entity plugin enabled.
+ *
+ * @param pluginJars
+ *   path-separator-joined jars supplying the required compiler plugins
+ * @param requiredPlugins
+ *   plugin names the compiler must load (e.g. "entity")
+ */
 class RuntimeScalaCompiler(
+    pluginJars: String,
+    requiredPlugins: Seq[String],
     targetDir: Option[File] = None,
     fatalWarnings: Boolean = true,
     pluginOptions: Seq[String] = Seq.empty,
@@ -44,17 +64,27 @@ class RuntimeScalaCompiler(
   settings.usejavacp.value = true
   settings.async.value = true
 
-  settings.require.value ++= List("entity")
-  settings.plugin.value ++= Seq(ScalaCompilerUtils.entityJars)
+  settings.require.value ++= requiredPlugins
+  settings.plugin.value ++= Seq(pluginJars)
 
-  settings.bootclasspath.append(ScalaCompilerUtils.classpath)
-  settings.classpath.append(ScalaCompilerUtils.classpath)
+  settings.bootclasspath.append(RuntimeScalaCompiler.classpath)
+  settings.classpath.append(RuntimeScalaCompiler.classpath)
   settings.feature.value = true
   settings.fatalWarnings.value = fatalWarnings
 
   settings.pluginOptions.value ++= pluginOptions
 
-  // settings.YaliasPackage.tryToSet(PackageAliases.aliases)
+  // -Yalias-package is an Optimus addition to scalac. It is absent from a stock
+  // scala-compiler, so set it reflectively and carry on without package aliasing
+  // when running against one.
+  try {
+    val setting = settings.getClass.getMethod("YaliasPackage").invoke(settings)
+    setting.getClass
+      .getMethod("tryToSet", classOf[List[_]])
+      .invoke(setting, PackageAliases.aliases)
+  } catch {
+    case _: NoSuchMethodException =>
+  }
 
   ScalaCompilerConfigurer.updateSettingsForVersion(settings)
 

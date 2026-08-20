@@ -42,7 +42,7 @@ object Platform {
 
   lazy val platform = Project("platform", projectsDir / "platform")
     .settings(
-      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.dynamics ++ Seq("-P:entity:enableStaging:true"),
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.dynamics ++ ScalacOptions.defaultSeqImports ++ Seq("-P:entity:enableStaging:true"),
       libraryDependencies ++= Seq(freemarker, jacksonDatatypeJSR310, javaxMail)
     )
     .dependsOn(
@@ -80,7 +80,7 @@ object Platform {
     .enablePlugins(ProtobufPlugin)
     .settings(
       ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
-      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.defaultSeqImports
     )
     .dependsOn(dalClient, dalCore, entityPlugin, entityPluginJar % "plugin", priql)
 
@@ -102,7 +102,7 @@ object Platform {
     )
 
   lazy val dalClient = Project("platformDalClient", projectsDir / "dal_client")
-    .settings(scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros)
+    .settings(scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.defaultSeqImports)
     .dependsOn(
 		core,
 		dalCore,
@@ -128,7 +128,7 @@ object Platform {
 	  .enablePlugins(ProtobufPlugin)
 	  .settings(
 		  ProtobufConfig / sourceDirectory := (Compile / resourceDirectory).value,
-		  scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros,
+		  scalacOptions ++= ScalacOptions.common ++ ScalacOptions.macros ++ ScalacOptions.defaultSeqImports,
       libraryDependencies ++= Seq(guice, logbackClassic, slf4j, springContext)
     )
     .dependsOn(

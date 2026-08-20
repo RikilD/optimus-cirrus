@@ -15,7 +15,6 @@ import optimus.utils.datetime.ZoneIds
 
 import scala.jdk.CollectionConverters._
 import scala.collection.Map
-import scala.collection.Seq
 import com.google.protobuf.ByteString
 
 import java.time.LocalDate
@@ -31,8 +30,16 @@ import optimus.platform.dsi.bitemporal.DateTimeSerialization
 import optimus.platform.storable._
 
 import java.time.ZoneOffset
-import net.iharder.Base64
+import java.util.Base64
 import optimus.core.CoreHelpers
+import optimus.graph.Settings
+import optimus.platform.pickling.PickledProperties
+import optimus.platform.pickling.PicklingConstants
+import optimus.platform.pickling.Shape
+import optimus.platform.pickling.SlottedBufferAsEmptySeq
+
+import java.util
+import scala.collection.immutable.ArraySeq
 
 object ProtoPickleSerializer {
   // The original implementation serializes Map[String, Any] to a list of values and a list of keys.
@@ -54,6 +61,7 @@ object ProtoPickleSerializer {
       builder.setAssociatedKey(associatedKey.get)
     }
 
+    // IMPORTANT! If adding new non-Comparable types here, consider strongly also adding them to PickledComparator.compare
     o match {
       case x: Int                => builder.setType(FieldProto.Type.INT).setIntValue(x)
       case x: String             => builder.setType(FieldProto.Type.STRING).setStringValue(x)
@@ -65,11 +73,18 @@ object ProtoPickleSerializer {
       case x: Byte               => builder.setType(FieldProto.Type.BYTE).setIntValue(x)
       case x: Array[Byte]        => builder.setType(FieldProto.Type.BLOB).setBlobValue(ByteString.copyFrom(x))
       case x: ImmutableByteArray => builder.setType(FieldProto.Type.BLOB).setBlobValue(ByteString.copyFrom(x.data))
-      case x: Seq[_] =>
+      case x: collection.Seq[_] =>
         val seq = (x map (propertiesToProto(_, None))).asJava
         builder.setType(FieldProto.Type.SEQ).addAllChildren(seq)
-      case x: Map[_, _] =>
-        val values = (x.map(v => propertiesToProto(v._2, Some(v._1.asInstanceOf[String]))).toSeq).asJava
+      case x: PickledProperties =>
+        val values = x.map(v => propertiesToProto(v._2, Some(v._1))).toSeq.asJava
+        val keys = x.map(k => k._1).toSeq.asJava
+        // TODO (OPTIMUS-13435): When we serialize map values, we serialize the associated key, too.
+        // So the value serialization contains sufficient information about the map. For backward compatibility, we still serialize the
+        // keys with addAllFields. When all the clients have upgraded to the new code base, we need to remove the redundant key fields.
+        builder.setType(FieldProto.Type.MAP).addAllChildren(values).addAllFields(keys)
+      case x: Map[_, _] if PickledProperties.checkPickledPropertiesAsMapsAllowed(x) =>
+        val values = x.map(v => propertiesToProto(v._2, Some(v._1.asInstanceOf[String]))).toSeq.asJava
         val keys = x.map(k => k._1.asInstanceOf[String]).toSeq.asJava
         // TODO (OPTIMUS-13435): When we serialize map values, we serialize the associated key, too.
         // So the value serialization contains sufficient information about the map. For backward compatibility, we still serialize the
@@ -80,7 +95,7 @@ object ProtoPickleSerializer {
       case x: FinalTypedReference =>
         builder
           .setType(FieldProto.Type.ENTITY_REF)
-          .setStringValue(Base64.encodeBytes(x.data))
+          .setStringValue(Base64.getEncoder.encodeToString(x.data))
           .setBlobValue(ByteString.copyFrom(x.data))
           .setIntValue(x.typeId)
       case x: FinalReference =>
@@ -88,7 +103,7 @@ object ProtoPickleSerializer {
         // upgraded to support string entity ref, we need to remove blob value from the representation
         builder
           .setType(FieldProto.Type.ENTITY_REF)
-          .setStringValue(Base64.encodeBytes(x.data))
+          .setStringValue(Base64.getEncoder.encodeToString(x.data))
           .setBlobValue(ByteString.copyFrom(x.data))
       case x: TemporaryReference =>
         // NB TemporaryReference should never be used for filtering on CPS so we should only ever need to serialize to a blob value here
@@ -135,55 +150,270 @@ object ProtoPickleSerializer {
               .build)
       case null  => builder.setType(FieldProto.Type.NULL)
       case other => throw new IllegalArgumentException(s"Cannot serialize ${other.getClass}")
+
+      // IMPORTANT! If adding new non-Comparable types here, consider strongly also adding them to PickledComparator.compare
     }
 
     builder.build
   } */
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+  // ProtoBuf -> Proto Section
+  //
+  // The code int his section deliberately uses while loops, avoid boxing and uses mutation to
+  // avoid allocations as this is a hot path for client processes.
+  //
+  // The main complexities in this area are as follows:
+  //
+  // [1]- We want to handle SEQ and MAP protobuf types rather specifically:
+  //   - For MAP, we use SlottedBufferAsMap as the pickled form (instead of a Map)
+  //   - For SEQs that have low number of entries (below Settings.slottedBufferForSeqThreshold) we
+  //   use SlottedBufferAsSeq which holds the members as individual fields rather than inside of an
+  //   array.
+  //   - For SEQs that have higher number of entries, we use ArraySeq instances. Here, we are careful
+  //   to use ArraySeq.ofInt, ArraySeq.ofDouble, etc. to avoid boxing of the primitive types where we can.
+  //
+  // [2]- We want to intern the values of fields of SlottedBufferAsMap. The interning behaviour is driven by
+  // per-property stats maintained in the Shape class. Based on these stats we may deem interning unfruitful for a
+  // given field and turn it off.
+  //
   private final case class MapEntry(key: String, value: Any)
+
+  private def compareTypes(o1: FieldProto.Type, o2: FieldProto.Type) = ??? /* {
+    def mappedType(t: FieldProto.Type) = ??? /* {
+      t match {
+        case FieldProto.Type.INT     => 0
+        case FieldProto.Type.DOUBLE  => 1
+        case FieldProto.Type.BOOLEAN => 2
+        case FieldProto.Type.CHAR    => 3
+        case FieldProto.Type.LONG    => 4
+        case FieldProto.Type.SHORT   => 5
+        case FieldProto.Type.BYTE    => 6
+        case _                       => 7
+      }
+    } */
+    mappedType(o1).compare(mappedType(o2))
+  } */
+
+  // Takes a MAP or SEQ FieldProto instance and creates a SlottedBufferAsMap or SlottedBufferAsSeq
+  // with it.
+  private def protoToSlottedBuffer(proto: FieldProto, isMap: Boolean): Any = ??? /* {
+    val rawValues: util.List[FieldProto] = proto.getChildrenList
+    val sortedList = new util.ArrayList(rawValues)
+    var tag: String = Shape.NoTag
+    if (sortedList.isEmpty) {
+      if (isMap) PickledProperties.empty else Seq.empty
+    } else {
+      var i = 0
+      var tagIndex = -1
+      var keys: Array[String] = null
+      var valuesSize = sortedList.size()
+      if (isMap) {
+        // For maps, we need to sort the FieldProtos by type and also find the tag if there is one
+        // (embeddables have a tag property)
+        sortedList.sort((o1: FieldProto, o2: FieldProto) => compareTypes(o1.getType, o2.getType))
+        while (i < sortedList.size() && tagIndex == -1) {
+          val currField = sortedList.get(i)
+          if (
+            currField.getType == FieldProto.Type.STRING &&
+            currField.getAssociatedKey == PicklingConstants.embeddableTag
+          ) {
+            tagIndex = i
+            tag = currField.getStringValue
+            valuesSize = sortedList.size() - 1
+          }
+          i += 1
+        }
+        // For MAP, we have keys. This will hold them:
+        keys = new Array[String](valuesSize)
+      }
+
+      // Fill in keys (if applicable), types to create the shape
+      def getValueFor(field: FieldProto, tpe: Class[_]): Any = ??? /* {
+        if (tpe.isPrimitive) {
+          // [SEE_FIELDPROTO_FOR_PRIMITIVES]
+          // The generated SlottedBuffer classes take an Object[] as we need a somewhat generic ctor signature
+          // across SlottedBuffers of all shapes. On the other-hand we want to avoid boxing of primitive types
+          // so what we do here is to just use the FieldProto as the item in that array and we let the generated
+          // code call the appropriate type-specific accessor of the FieldProto class to get the value without
+          // boxing.
+          field
+        } else {
+          // For object types, we get the actual values and
+          // set the value into the array directly. The SlottedBuffers
+          // will just use the value directly.
+          protoToProperties(field) match {
+            case MapEntry(_, v) => v
+            case other          => other
+          }
+        }
+      } */
+
+      val types = new Array[Class[_]](valuesSize)
+      val values = new Array[Any](valuesSize)
+      var srcI = 0
+      var destI = 0
+      while (srcI < sortedList.size) {
+        if (srcI != tagIndex) {
+          val rv = sortedList.get(srcI)
+          if (isMap) keys(destI) = rv.getAssociatedKey.intern
+          types(destI) = rv.getType match {
+            case FieldProto.Type.INT     => classOf[Int]
+            case FieldProto.Type.DOUBLE  => classOf[Double]
+            case FieldProto.Type.BOOLEAN => classOf[Boolean]
+            case FieldProto.Type.CHAR    => classOf[Char]
+            case FieldProto.Type.LONG    => classOf[Long]
+            case FieldProto.Type.SHORT   => classOf[Short]
+            case FieldProto.Type.BYTE    => classOf[Byte]
+            case _                       => classOf[AnyRef]
+          }
+          values(destI) = getValueFor(rv, types(destI))
+          destI += 1
+        }
+        srcI += 1
+      }
+
+      val shape = Shape(keys, types, tag)
+
+      if (!isMap)
+        shape.createInstanceAsSeq(values)
+      else
+        shape.createInstanceAsMap(values)
+    }
+  } */
+
+  // Takes a SEQ FieldProto and creates a ArraySeq with it. Implementation is quite
+  // repetitive because we want to use the ArraySeq.of* classes to avoid boxing
+  // of primitive types and uses while loops to avoid closure allocations in hot code
+  // like this.
+  private def protoToArraySeq(proto: FieldProto): ArraySeq[_] = ??? /* {
+    // We'll walk the values once to see if they are homogenous primitive types...
+    var fType: FieldProto.Type = null
+    var i = 0
+    while (i < proto.getChildrenCount && fType != FieldProto.Type.NULL) {
+      val currType = proto.getChildren(i).getType
+      if (fType eq null)
+        fType = currType
+      else if (currType != fType) {
+        fType = FieldProto.Type.NULL // We'll use this to mean mixed-type.
+      }
+      i += 1
+    }
+    // ... and a second time to create the correct type of array and set the values
+    val seq = fType match {
+      case FieldProto.Type.INT =>
+        val values = new Array[Int](proto.getChildrenCount)
+        i = 0
+        while (i < proto.getChildrenCount) {
+          values(i) = getIntValue(proto.getChildren(i))
+          i += 1
+        }
+        new ArraySeq.ofInt(values)
+      case FieldProto.Type.DOUBLE =>
+        val values = new Array[Double](proto.getChildrenCount)
+        i = 0
+        while (i < proto.getChildrenCount) {
+          values(i) = getDoubleValue(proto.getChildren(i))
+          i += 1
+        }
+        new ArraySeq.ofDouble(values)
+      case FieldProto.Type.BOOLEAN =>
+        val values = new Array[Boolean](proto.getChildrenCount)
+        i = 0
+        while (i < proto.getChildrenCount) {
+          values(i) = getBoolValue(proto.getChildren(i))
+          i += 1
+        }
+        new ArraySeq.ofBoolean(values)
+      case FieldProto.Type.CHAR =>
+        getCharValue(proto)
+        val values = new Array[Char](proto.getChildrenCount)
+        i = 0
+        while (i < proto.getChildrenCount) {
+          values(i) = getCharValue(proto.getChildren(i))
+          i += 1
+        }
+        new ArraySeq.ofChar(values)
+      case FieldProto.Type.LONG =>
+        val values = new Array[Long](proto.getChildrenCount)
+        i = 0
+        while (i < proto.getChildrenCount) {
+          values(i) = getLongValue(proto.getChildren(i))
+          i += 1
+        }
+        new ArraySeq.ofLong(values)
+      case FieldProto.Type.SHORT =>
+        val values = new Array[Short](proto.getChildrenCount)
+        i = 0
+        while (i < proto.getChildrenCount) {
+          values(i) = getShortValue(proto.getChildren(i))
+          i += 1
+        }
+        new ArraySeq.ofShort(values)
+      case FieldProto.Type.BYTE =>
+        val values = new Array[Byte](proto.getChildrenCount)
+        i = 0
+        while (i < proto.getChildrenCount) {
+          values(i) = getByteValue(proto.getChildren(i))
+          i += 1
+        }
+        new ArraySeq.ofByte(values)
+      case _ =>
+        val values = new Array[AnyRef](proto.getChildrenCount)
+        i = 0
+        while (i < proto.getChildrenCount) {
+          values(i) = protoToProperties(proto.getChildren(i)).asInstanceOf[AnyRef]
+          i += 1
+        }
+        new ArraySeq.ofRef(values)
+    }
+    seq
+  } */
+
+  // The following methods are used to get values of primitive types from the proto
+  // These methods are called from generated SlottedBuffer classes and deal with the
+  // type conversions for the primitive types that require it.
+  // The need to remain public so that the generated code can access them.
+  // noinspection ScalaWeakerAccess - used from generated code
+  def getIntValue(proto: FieldProto): Int = proto.getIntValue
+  // noinspection ScalaWeakerAccess - used from generated code
+  def getDoubleValue(proto: FieldProto): Double = proto.getDoubleValue
+  // noinspection ScalaWeakerAccess - used from generated code
+  def getBoolValue(proto: FieldProto): Boolean = proto.getBoolValue
+  // noinspection ScalaWeakerAccess - used from generated code
+  def getCharValue(proto: FieldProto): Char = proto.getIntValue.toChar
+  // noinspection ScalaWeakerAccess - used from generated code
+  def getLongValue(proto: FieldProto): Long = proto.getLongValue
+  // noinspection ScalaWeakerAccess - used from generated code
+  def getShortValue(proto: FieldProto): Short = proto.getIntValue.toShort
+  // noinspection ScalaWeakerAccess - used from generated code
+  def getByteValue(proto: FieldProto): Byte = proto.getIntValue.toByte
 
   def protoToProperties(proto: FieldProto): Any = ??? /* {
     val value = proto.getType match {
-      case FieldProto.Type.INT     => proto.getIntValue
+      case FieldProto.Type.INT     => getIntValue(proto)
       case FieldProto.Type.STRING  => proto.getStringValue
-      case FieldProto.Type.DOUBLE  => proto.getDoubleValue
-      case FieldProto.Type.BOOLEAN => proto.getBoolValue
-      case FieldProto.Type.CHAR    => proto.getIntValue.toChar
-      case FieldProto.Type.LONG    => proto.getLongValue
-      case FieldProto.Type.SHORT   => proto.getIntValue.toShort
-      case FieldProto.Type.BYTE    => proto.getIntValue.toByte
+      case FieldProto.Type.DOUBLE  => getDoubleValue(proto)
+      case FieldProto.Type.BOOLEAN => getBoolValue(proto)
+      case FieldProto.Type.CHAR    => getCharValue(proto)
+      case FieldProto.Type.LONG    => getLongValue(proto)
+      case FieldProto.Type.SHORT   => getShortValue(proto)
+      case FieldProto.Type.BYTE    => getByteValue(proto)
       case FieldProto.Type.BLOB    => ImmutableByteArray(proto.getBlobValue.toByteArray)
-      case FieldProto.Type.SEQ     => proto.getChildrenList.asScala.iterator.map { protoToProperties }.toList: List[Any]
-      case FieldProto.Type.MAP => {
-        // updated to keep the collection as a Java collection rather than tupling and mapping to avoid intermediate collections
-        // this is a hot method wrt allocations.
-
-        // TODO (OPTIMUS-13435): The original serialization of Map serializes the values and keys
-        // independently. The new implementation serialize the key into the associated value. When all clients have upgraded to new
-        // implementation, we should remove the legacy support.
-        val rawValues = proto.getChildrenList
-        if (rawValues.isEmpty) {
-          Map.empty
-        } else
-          protoToProperties(rawValues.get(0)) match {
-            // new protocol format
-            case newFormat: MapEntry =>
-              var result = collection.immutable.Map.empty[String, Any]
-              result = result.updated(newFormat.key.intern, newFormat.value)
-              // and then the rest of the list
-              rawValues.subList(1, rawValues.size()).forEach { raw =>
-                val converted = protoToProperties(raw).asInstanceOf[MapEntry]
-                result = result.updated(converted.key.intern, converted.value)
-              }
-
-              result
-            case oldFormat => // legacy protocol format
-              val values = rawValues.subList(1, rawValues.size()).asScala map protoToProperties
-              values.+=:(oldFormat)
-              val keys = proto.getFieldsList.asScala.map(_.intern)
-              (keys.iterator zip values.iterator).toIndexedSeq
-          }
-      }
+      case FieldProto.Type.SEQ     =>
+        // For small collections use SlottedBuffer classes as long as we didn't already create
+        // a large number of such classes
+        if (proto.getChildrenCount == 0) SlottedBufferAsEmptySeq
+        else if (
+          proto.getChildrenCount <= Settings.slottedBufferForSeqThreshold &&
+          !Shape.reachedUniqueShapeThreshold
+        ) {
+          // We're below the thresholds so we'll go with SlottedBuffers
+          protoToSlottedBuffer(proto, isMap = false)
+        } else {
+          protoToArraySeq(proto)
+        }
+      case FieldProto.Type.MAP        => protoToSlottedBuffer(proto, isMap = true)
       case FieldProto.Type.TUPLE2     => (proto.getStringValue, protoToProperties(proto.getChildren(0)))
       case FieldProto.Type.ENTITY_REF =>
         // TODO (OPTIMUS-13436): string representation is used for filtering on CPS in DAL notification
@@ -197,7 +427,6 @@ object ProtoPickleSerializer {
       case FieldProto.Type.TEMPORARY_ENTITY_REF =>
         require(proto.hasBlobValue)
         EntityReference.temporary(proto.getBlobValue.toByteArray)
-
       case FieldProto.Type.BUSINESS_EVENT_REF =>
         val data = proto.getBlobValue.toByteArray
         val typeOpt = if (proto.hasIntValue) Some(proto.getIntValue) else None

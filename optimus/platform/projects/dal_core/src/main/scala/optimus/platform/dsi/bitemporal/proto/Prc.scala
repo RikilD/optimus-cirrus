@@ -21,5 +21,7 @@ object Prc {
   class PrcClientSessionInfoProto extends MessageLiteImpl
   class NormalizedNonCacheableCommandProto extends MessageLiteImpl
   class SilverKingTraceIdProto extends MessageLiteImpl
-  class PrcSingleKeyResponseProto extends MessageLiteImpl
+  class PrcSingleKeyResponseProto extends MessageLiteImpl {
+    def getResultsList: java.util.List[Dsi.ResultProto] = ???
+  }
 }

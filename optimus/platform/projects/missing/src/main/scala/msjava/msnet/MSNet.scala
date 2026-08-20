@@ -52,3 +52,12 @@ trait MSNetConnectionListenerAdapter {
 class MSNetID
 class MSNetProtocolTCPConnection(config: internal.MSNetProtocolConnectionConfigurationSupport) extends MSNetTCPConnection
 class MSNetExecption(cause: String) extends Exception(cause)
+
+class MSNetEvent
+trait MSNetEventListener {
+  def eventOccurred(event: MSNetEvent): Unit
+}
+class MSNetLoop {
+  def callbackPeriodically(period: Long, listener: MSNetEventListener): Any = ???
+  def quit(): Unit = ???
+}

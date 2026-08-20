@@ -12,10 +12,9 @@
 package optimus.platform.dsi.bitemporal.proto
 
 import java.time.Instant
-
 import com.google.protobuf.ByteString
 import msjava.slf4jutils.scalalog.getLogger
-import net.iharder.Base64
+import java.util.Base64
 import optimus.dsi.session.SlotMap
 import optimus.entity.EntityLinkageProperty
 import optimus.platform._
@@ -24,6 +23,9 @@ import optimus.platform.dal.config.DalZoneId
 import optimus.platform.dal.config.HostPort
 import optimus.platform.dsi.bitemporal._
 import optimus.platform.dsi.bitemporal.proto.Dsi._
+import optimus.platform.dsi.bitemporal.proto.Peer.EntityTimeSliceReferenceProto
+import optimus.platform.pickling.PickledProperties
+import optimus.platform.pickling.PropertyMapOutputStream.PickleSeq
 import optimus.platform.storable._
 
 import scala.jdk.CollectionConverters._
@@ -123,7 +125,7 @@ object SerializedKeySerializer extends BasicProtoSerialization with ProtoSeriali
   } */
 
   override def deserialize(proto: SerializedKeyProto): SerializedKey = ??? /* {
-    val properties = ProtoPickleSerializer.protoToProperties(proto.getProperties).asInstanceOf[Seq[(String, Any)]]
+    val properties = ProtoPickleSerializer.protoToProperties(proto.getProperties).asInstanceOf[PickleSeq[(String, Any)]]
     val serializedSizeOpt = Option(proto.getSerializedSize)
     SerializedKey(
       proto.getTypeName.intern(),
@@ -221,7 +223,7 @@ object SerializedEntitySerializer
 
     if (entity.entityRef != null) {
       builder.setEntityRef(toProto(entity.entityRef))
-      builder.setEntityRefString(Base64.encodeBytes(entity.entityRef.data))
+      builder.setEntityRefString(Base64.getEncoder.encodeToString(entity.entityRef.data))
     }
     if (entity.linkages.isDefined) {
       val linkageProtos = entity.linkages.get map { case (linkageField, links) =>
@@ -239,7 +241,7 @@ object SerializedEntitySerializer
   } */
 
   override def deserialize(proto: SerializedEntityProto): SerializedEntity = ??? /* {
-    val properties = ProtoPickleSerializer.protoToProperties(proto.getProperties).asInstanceOf[Map[String, Any]]
+    val properties = ProtoPickleSerializer.protoToProperties(proto.getProperties).asInstanceOf[PickledProperties]
     val keyIterator = proto.getKeysList.asScala.iterator map { fromProto(_) }
     val keys = ProtoSerialization
       .distinctBy(keyIterator, (s: SerializedKey) => (s.unique, s.indexed, s.refFilter, s))
@@ -257,7 +259,7 @@ object SerializedEntitySerializer
       else None
     val cmid = if (proto.hasCmRef) Some(fromProto(proto.getCmRef)) else None
     val slot = if (proto.hasSlot) proto.getSlot else 0
-    val types = proto.getTypesList.asScala.map(_.intern())
+    val types = proto.getTypesList.asScalaUnsafeImmutable.map(_.intern())
     SerializedEntity(
       ref,
       cmid,
@@ -340,7 +342,7 @@ object VersionedReferenceSerializer
   } */
 
   override def deserialize(proto: VersionedReferenceProto): VersionedReference = ??? /* {
-    new VersionedReference(proto.getData.toByteArray)
+    VersionedReference(proto.getData.toByteArray)
   } */
 }
 
@@ -354,10 +356,8 @@ object StorableReferenceSerializer
       .build
   } */
 
-  override def deserialize(proto: StorableReferenceProto): StorableReference = ??? /* {
-    val bytes = proto.getData.toByteArray
-    new StorableReference(bytes)
-  } */
+  override def deserialize(proto: StorableReferenceProto): StorableReference =
+    StorableReference(proto.getData.toByteArray)
 }
 
 object EntityTimeSliceReferenceSerializer
@@ -526,7 +526,7 @@ object SerializedBusinessEventSerializer
   } */
 
   override def deserialize(proto: SerializedBusinessEventProto): SerializedBusinessEvent = ??? /* {
-    val properties = ProtoPickleSerializer.protoToProperties(proto.getProperties).asInstanceOf[Map[String, Any]]
+    val properties = ProtoPickleSerializer.protoToProperties(proto.getProperties).asInstanceOf[PickledProperties]
     val keys = proto.getKeysList.asScala map { fromProto(_) }
     val types = proto.getTypesList.asScala
     val appEventRef = if (proto.hasAppeventRef()) fromProto(proto.getAppeventRef()) else null

@@ -39,7 +39,9 @@ object Dsi {
   class PersistentEntityProto extends MessageLiteImpl
   class ValidTimeIntervalProto extends MessageLiteImpl
   class VersionedReferenceProto extends MessageLiteImpl
-  class StorableReferenceProto extends MessageLiteImpl
+  class StorableReferenceProto extends MessageLiteImpl {
+    def getData: com.google.protobuf.ByteString = ???
+  }
   class EntityTimeSliceReferenceProto extends MessageLiteImpl
   class EntityReferenceProto extends MessageLiteImpl
   class BusinessEventReferenceProto extends MessageLiteImpl
@@ -181,10 +183,21 @@ object Dsi {
   class SerializedTransactionProto extends MessageLiteImpl
   class StreamsACLsCommandProto extends MessageLiteImpl
   class StreamsACLsProto extends MessageLiteImpl
-  class HierarchicalEntitiesProto extends MessageLiteImpl
+  class HierarchicalEntitiesProto extends MessageLiteImpl {
+    def getEntityNamesList: java.util.List[String] = ???
+  }
   class StreamsACLsCommandSuccessProto extends MessageLiteImpl
   class CommandAppNameTagProto extends MessageLiteImpl
-  class FieldProto extends MessageLiteImpl
+  class FieldProto extends MessageLiteImpl {
+    def getType: FieldProto.Type = ???
+    def getIntValue: Int = ???
+    def getLongValue: Long = ???
+    def getDoubleValue: Double = ???
+    def getBoolValue: Boolean = ???
+  }
+  object FieldProto {
+    class Type
+  }
   class CommandLocationProto extends MessageLiteImpl
   class PartialQueryResultProto extends MessageLiteImpl
   class QueryResultProto extends MessageLiteImpl
@@ -258,7 +271,17 @@ object Dsi {
   class NamespaceProto extends MessageLiteImpl
   class TemporalContextProto extends MessageLiteImpl
   class TemporalSurfaceMatcherProto extends MessageLiteImpl
-  class DSIResponseProto extends MessageLiteImpl
+  class DSIResponseProto extends MessageLiteImpl {
+    def getIsPartial: Boolean = ???
+    def getResultsList: java.util.List[ResultProto] = ???
+    def getCommandIndicesList: java.util.List[Integer] = ???
+    def hasEstablishSessionResult: Boolean = ???
+    def getEstablishSessionResult: EstablishSessionResultProto = ???
+    def hasTimings: Boolean = ???
+    def getTimings: TimingsProto = ???
+  }
   class RelationElementProto extends MessageLiteImpl
   class ClassEntityInfoProto extends MessageLiteImpl
+  class PrepareMonoTemporalProto extends MessageLiteImpl
+  class PrepareMonoTemporalResultProto extends MessageLiteImpl
 }

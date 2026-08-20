@@ -4,13 +4,13 @@ import java.io.Closeable
 import msjava.base.slr.internal.ServiceEnvironment
 import org.apache.curator.framework.CuratorFramework
 
-class ZkaContext(x: Any) extends Closeable {
+class ZkaContext(x: Any) extends msjava.zkapi.ZkaPathContext with Closeable {
   def getRootNode: String = ???
   def getData(p: String): ZkaData = ???
-  def getNodeData(mode: String): Array[Byte] = ???
+  override def getNodeData(node: String): Array[Byte] = ???
   def getCurator: CuratorFramework = ???
   def getEnvironment: ServiceEnvironment = ???
-  def close(): Unit = ???
+  override def close(): Unit = ???
 }
 
 object ZkaContext {

@@ -13,27 +13,24 @@ package optimus.platform.dsi.protobufutils
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.MessageLite
-// import msjava.base.spring.lifecycle.BeanState
 import msjava.msnet._
 import msjava.msnet.internal.MSNetProtocolConnectionConfigurationSupport
 // import msjava.msnet.ssl.SSLEstablisherFactory
 /* import msjava.protobufutils.generated.proto.Eai.RequestResponseEnvelope
 import msjava.protobufutils.generated.proto.Eai.RequestResponseHeader */
 import msjava.slf4jutils.scalalog.getLogger
-import net.iharder.Base64
+import java.util.Base64
 import optimus.breadcrumbs.Breadcrumbs
 import optimus.breadcrumbs.BreadcrumbsSendLimit.OnceByCrumbEquality
 import optimus.breadcrumbs.ChainedID
 import optimus.breadcrumbs.crumbs.CrumbNodeType
 import optimus.breadcrumbs.crumbs.EdgeType
-import optimus.breadcrumbs.crumbs.EventCrumb
 import optimus.breadcrumbs.crumbs.LogPropertiesCrumb
 import optimus.breadcrumbs.crumbs.Properties
 import optimus.breadcrumbs.crumbs.PropertiesCrumb
 import optimus.core.ChainedNodeID
 import optimus.dal.ssl.DalSSLConfig
 import optimus.graph.DiagnosticSettings._
-import optimus.graph.Edges
 import optimus.graph.PluginType
 import optimus.graph.Settings
 import optimus.graph.diagnostics.gridprofiler.GridProfiler
@@ -57,6 +54,7 @@ import optimus.platform.dsi.protobufutils.DALProtoClient.DsiServer
 import optimus.platform.dsi.protobufutils.DALProtoClient.VersioningServer
 import optimus.platform.dsi.versioning.VersioningRedirectionInfo
 import optimus.platform.internal.TemporalSource
+import optimus.platform.util.ObjectState
 import optimus.platform.util.PrettyStringBuilder
 import optimus.utils.PropertyUtils
 import optimus.utils.misc.Color
@@ -209,9 +207,6 @@ final class RequestSender(
         s"Multiple node ID's found in batch, will use chained ID ${rc.chainedId} for node ID's ${nodeIDs mkString ","}")
 
     try {
-      nodeIDs.foreach { nid =>
-        Edges.ensureTracked(rc.chainedId, nid, "sendBatch", CrumbNodeType.DataRequest, EdgeType.RequestedBy)
-      }
 
       /*as we check commandLocation is nonEmpty, we should always get a clientRequest hence clientRequests.head is safe
        * We need clientRequests.head.completable to pass into customCounter for jobID and scope. The method is called in a
@@ -239,9 +234,10 @@ final class RequestSender(
       val writeReqSpecificProps =
         if (rc.requestType == DSIRequestProto.Type.WRITE) {
           val anyWriteReq = rc.clientRequests.collectFirst { case req: WriteClientRequest => req }
-          val re = anyWriteReq.flatMap(_.completable.env)
-          val maybeEnv = re.flatMap(r => Option(r.config)).map(_.runtimeConfig.mode)
-          Seq(Properties.`type` -> "write") ++ maybeEnv.map(env => Properties.env -> env)
+          val reqEnv = anyWriteReq.flatMap(_.completable.env)
+          val maybeEnv = reqEnv.flatMap(r => Option(r.config)).map(_.runtimeConfig.mode)
+          val tpe = if (anyWriteReq.exists(_.hasMessagesCommands)) "message" else "write"
+          Seq(Properties.`type` -> tpe) ++ maybeEnv.map(env => Properties.env -> env)
         } else Seq.empty
 
       if (requestCommandLocationProp.nonEmpty || writeReqSpecificProps.nonEmpty) {
@@ -288,10 +284,6 @@ final class RequestSender(
       ClientRequestTracker.add(rc)
 
       assertConnected
-      Breadcrumbs.trace(
-        OnceByCrumbEquality,
-        rc.chainedId,
-        EventCrumb(_, DalClientCrumbSource, DalEvents.Client.RequestSubmitted))
       impl.asyncSend(message)
 
     } catch {
@@ -351,7 +343,7 @@ final class RequestSender(
 
       val commands = requests.flatMap(_.commandProtos)
       val encodedCmds = commands map { cmd =>
-        Base64.encodeBytes(cmd.toByteArray)
+        Base64.getEncoder.encodeToString(cmd.toByteArray)
       }
       saveToFile(encodedCmds, file)
     }
@@ -390,8 +382,8 @@ private[optimus] class TcpRequestSender(
 
   private[this] var connection: MSNetTCPConnection = null
   private[this] var remoteProtocolVersion: Option[DalProtocolVersion] = null
-  // private[this] val state = new BeanState()
-  private[optimus] def hostPort = ??? // configSupport.getHostPort
+  private[this] val state = new ObjectState()
+  private[optimus] def hostPort = configSupport.getHostPort
 
   private[this] def createConnection() = ??? /* {
     log.info(s"Creating new connection to $hostPort${if (secureTransport) " (secure)" else ""}")
