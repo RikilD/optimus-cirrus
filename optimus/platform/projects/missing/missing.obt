@@ -1,0 +1,9 @@
+main {
+  compile {
+    libs = [
+      curator-client
+      curator-framework
+      slf4j
+    ]
+  }
+}
