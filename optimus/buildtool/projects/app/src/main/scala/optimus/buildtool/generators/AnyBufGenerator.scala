@@ -54,10 +54,12 @@ import scala.sys.process.ProcessLogger
         organisation = "com.google.protobuf",
         project = "protoc",
         classifier = Some(Platforms.Windows.classifier)),
+      // Platforms.current rather than Linux: this slot is used for every non-windows host,
+      // including macOS, and protoc publishes a separate artifact per os/arch.
       linux = MavenExecutable(
         organisation = "com.google.protobuf",
         project = "protoc",
-        classifier = Some(Platforms.Linux.classifier))
+        classifier = Some(Platforms.current.classifier))
     )
 
   override val generatorExecutableNameForLog = "protoc"
@@ -134,13 +136,9 @@ import scala.sys.process.ProcessLogger
       templates: SandboxedInputs,
       configuration: Map[String, String],
       scope: CompilationScope
-  ): Inputs = {
-    val generator = generatorDefaults.configured(configuration)
-//    val execDep = generator.dependencyDefinition(scope)
-    val executable = generator.file()
-
-    // we don't want the platform-specific execDir to be part of the fingerprint
-    val execFingerprint = generatorDefaults.linux.file()
+  ): AnyBufGenerator.Inputs = {
+    val executable = generatorDefaults.resolve(configuration, scope)
+    val execFingerprint = generatorDefaults.fingerprint(configuration, scope)
 
     val allTemplatePaths = templates.content().keySet.map(_.path)
 

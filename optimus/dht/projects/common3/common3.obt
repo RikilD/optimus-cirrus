@@ -7,7 +7,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = 11
+// Dependencies (digest, platform.missing) build at the default release, so
+// pinning 11 here makes them ineligible as dependencies.
+// all.javac.release = 11
 main {
   generators {
     protobuf {

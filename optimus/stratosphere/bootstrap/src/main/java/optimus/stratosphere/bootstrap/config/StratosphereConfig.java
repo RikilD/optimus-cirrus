@@ -222,12 +222,16 @@ public class StratosphereConfig {
       // resolving to have stratosphereSrcDir, we need it to add sysloc property
       tmpResolvedConfig = config.resolve(allowUnresolved);
 
-      FsCampus fsCampus =
-          new FsCampus(
-              Paths.get(tmpResolvedConfig.getString("stratosphereSrcDir")).resolve("config"));
-      updateProperty("region.default", fsCampus.getValue());
-      updateProperty("region.reports", fsCampus.getAlternativeMapping("report-upload"));
-      updateProperty("region.obt-dht", fsCampus.getAlternativeMapping("obt-dht"));
+      // stratosphereSrcDir is only set above when workspaceRoot != null, so it can legitimately
+      // be absent here; without it there is no config dir to read the campus mapping from.
+      if (tmpResolvedConfig.hasPath("stratosphereSrcDir")) {
+        FsCampus fsCampus =
+            new FsCampus(
+                Paths.get(tmpResolvedConfig.getString("stratosphereSrcDir")).resolve("config"));
+        updateProperty("region.default", fsCampus.getValue());
+        updateProperty("region.reports", fsCampus.getAlternativeMapping("report-upload"));
+        updateProperty("region.obt-dht", fsCampus.getAlternativeMapping("obt-dht"));
+      }
 
       /*
        * We need to load the mapping before we start to apply anything related to the channels,

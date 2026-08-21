@@ -30,7 +30,8 @@ main {
       optimus.platform.core_macro,
       optimus.platform.entityagent,
       optimus.platform.entityplugin,
-      optimus.platform.runtime-compiler,
+      // optimus.platform.runtime-compiler is not part of the open-source tree;
+      // RuntimeScalaCompiler/ScalaCompilerConfigurer live in this module instead.
       optimus.platform.spray_json,
       optimus.platform.utils
     ]

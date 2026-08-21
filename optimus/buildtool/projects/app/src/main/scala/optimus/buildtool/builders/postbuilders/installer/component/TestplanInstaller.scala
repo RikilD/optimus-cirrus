@@ -14,7 +14,6 @@ package optimus.buildtool.builders.postbuilders.installer.component
 import optimus.buildtool.artifacts.Artifact
 import optimus.buildtool.builders.postbuilders.installer.BatchInstallableArtifacts
 import optimus.buildtool.builders.postbuilders.installer.Installer
-import optimus.buildtool.builders.postbuilders.installer.component.fingerprintdiffing.FingerprintDiffChanges
 import optimus.buildtool.builders.postbuilders.installer.component.testplans.GitChanges
 import optimus.buildtool.builders.postbuilders.installer.component.testplans._
 import optimus.buildtool.config.MetaBundle
@@ -81,13 +80,14 @@ final class TestplanInstaller(
 
     val gitChanges: GitChanges =
       GitChanges(gitLogOpt, scopeConfigSource, testplanConfig.ignoredPaths)
-    val fingerprintChanges: Changes =
-      FingerprintDiffChanges.create(
+    // The fingerprintdiffing package is not exported (it needs optimus.buildtool.artifactcomparator,
+    // which is also absent), so fingerprint-based test selection is unavailable here.
+    val fingerprintChanges: Changes = ??? /* FingerprintDiffChanges.create(
         scopeConfigSource,
         installer.fingerprintsConfiguration,
         installer.buildDir.path,
         versionConfig.installVersion,
-        gitChanges)
+        gitChanges) */
 
     val testTypes = readTestTypes()
     val allTestData: Seq[TestData] = prepareFor(testTypes, gitChanges, installable.allScopes)

@@ -16,5 +16,7 @@ main {
       scala-parallel-collections
     ]
   }
-  installIvy = true
+  // installIvy publishes an ivy artifact, which requires every maven dependency to have an
+  // AFS equivalent. There is no AFS here and nothing is installed, so leave it off.
+  // installIvy = true
 }

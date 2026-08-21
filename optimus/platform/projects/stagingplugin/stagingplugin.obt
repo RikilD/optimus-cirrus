@@ -15,7 +15,9 @@ main {
     optimus.platform.scala_compat,
     optimus.platform.spray_json
   ]
-  installIvy = true
+  // Nothing is installed from this workspace, and installIvy would require every
+  // transitive maven dependency to have an AFS equivalent.
+  // installIvy = true
 }
 
 //test {

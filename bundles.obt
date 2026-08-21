@@ -1,73 +1,31 @@
+// Bundle definitions. Modules live in config/module-sets.obt.
+
 optimus.buildtool {
   modulesRoot = "optimus/buildtool/projects"
-  app {owner = x, group = y}
-  core {owner = x, group = y}
-  format {owner = x, group = y}
-  htmlreport {owner = x, group = y}
-  rest {owner = x, group = y}
-  runconf {owner = x, group = y}
+  eonId = 0
 }
 
 optimus.dht {
   modulesRoot = "optimus/dht/projects"
-  client3 {owner = x, group = y}
-  common3 {owner = x, group = y}
-  digest {owner = x, group = y}
+  eonId = 0
 }
 
 optimus.gsf {
   modulesRoot = "optimus/gsf/projects"
-  gsf_breadcrumbs {owner = x, group = y}
+  eonId = 0
 }
 
 optimus.platform {
   modulesRoot = "optimus/platform/projects"
-  alarms {owner = x, group = y}
-  annotations {owner = x, group = y}
-  bitbucket-utils {owner = x, group = y}
-  breadcrumbs {owner = x, group = y}
-  collections {owner = x, group = y}
-  core {owner = x, group = y}
-  core_config {owner = x, group = y}
-  core_macro {owner = x, group = y}
-  dal_client {owner = x, group = y}
-  dal_core {owner = x, group = y}
-  dal_environment {owner = x, group = y}
-  debugger {owner = x, group = y}
-  entityagent {owner = x, group = y}
-  entityagent-ext {owner = x, group = y}
-  entityplugin {owner = x, group = y}
-  examples_platform {owner = x, group = y}
-  git-utils { owner = x, group = y }
-  inputs {owner = x, group = y}
-  instrumentation {owner = x, group = y}
-  missing {owner = x, group = y}
-  #msnet-ssl { owner = x, group = y }
-  platform {owner = x, group = y}
-  platform_profiler {owner = x, group = y}
-  priql {owner = x, group = y}
-  priql_dal {owner = x, group = y}
-  priql_dal_persistence {owner = x, group = y}
-  rest-utils {owner = x, group = y}
-  scala_compat {owner = x, group = y}
-  security_akka_http-client {owner = x, group = y}
-  spray_json {owner = x, group = y}
-  stagingplugin {owner = x, group = y}
-  #talks { owner = x, group = y }
-  #tls { owner = x, group = y }
-  utils {owner = x, group = y}
-  versioning_runtime {owner = x, group = y}
+  eonId = 0
 }
 
 optimus.silverking {
   modulesRoot = "optimus/silverking/projects"
-  silverking {owner = x, group = y}
-  silverking_utils {owner = x, group = y}
+  eonId = 0
 }
 
 optimus.stratosphere {
   modulesRoot = "optimus/stratosphere"
-  bootstrap {owner = x, group = y}
-  common {owner = x, group = y}
-  common-macros {owner = x, group = y}
+  eonId = 0
 }

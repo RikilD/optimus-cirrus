@@ -28,14 +28,14 @@ import optimus.dht.common.util.registry.ZkConfig
 import optimus.dht.server.api.registry.RegistryConsts
 import optimus.dht.server.management.DHTManagementInterface */
 import optimus.platform._
-import optimus.platform.util.ArgHandlers.StringOptionOptionHandler
+import optimus.utils.app.StringOptionOptionHandler
 import optimus.platform.util.Log
 import optimus.utils.app.ScalaEnumerationOptionHandler
 import org.apache.curator.utils.ZKPaths
 import org.kohsuke.args4j.CmdLineParser
 import org.kohsuke.args4j.OptionDef
 import org.kohsuke.args4j.spi.Setter
-import spray.json._
+import com.github.plokhotnyuk.jsoniter_scala.core.readFromArray
 
 import java.io.FileWriter
 import java.net.URI
@@ -132,8 +132,8 @@ object ObtDhtCacheAdminApp extends OptimusApp[ObtDhtCacheAdminAppCmdLine] with L
 
   private lazy val keyConverter: Array[Byte] => StoredKey = (key: Array[Byte]) =>
     keyspaceName match {
-      case "obt-assets"    => new String(key).parseJson.convertTo[AssetKey]
-      case "obt-artifacts" => new String(key).parseJson.convertTo[ArtifactKey]
+      case "obt-assets"    => readFromArray[AssetKey](key)
+      case "obt-artifacts" => readFromArray[ArtifactKey](key)
       case other           => throw new IllegalArgumentException(s"Unknown OBT key type: $other")
     }
 
@@ -150,12 +150,12 @@ object ObtDhtCacheAdminApp extends OptimusApp[ObtDhtCacheAdminAppCmdLine] with L
     ArtifactType.parse(artifactType).asInstanceOf[CachedArtifactType]
 
   private lazy val dhtStore =
-    new DHTStore(
+    DHTStore.uniqueInstance(
       CompilePathBuilder(Directory(Paths.get("."))),
       DHTStore.zkClusterType(zkPath),
       artifactVersion,
       cacheMode = CacheMode.ReadWrite, // admin needs to be able to read and delete
-      /* DHTStore.ZkBuilder(zkPath) */
+      DHTStore.ZkBuilder(zkPath)
     )
 
   @entersGraph override def run(): Unit = {
@@ -176,12 +176,12 @@ object ObtDhtCacheAdminApp extends OptimusApp[ObtDhtCacheAdminAppCmdLine] with L
     val pathBuilder = CompilePathBuilder(Directory(Paths.get(buildDir)))
 
     val store =
-      new DHTStore(
+      DHTStore.uniqueInstance(
         pathBuilder,
         DHTStore.zkClusterType(zkPath),
         artifactVersion,
         cacheMode = CacheMode.ReadOnly,
-        /* DHTStore.ZkBuilder(zkPath) */)
+        DHTStore.ZkBuilder(zkPath))
 
     val maybeResult = getArtifactKey match {
       case artifactKey: ArtifactKey =>
@@ -200,7 +200,10 @@ object ObtDhtCacheAdminApp extends OptimusApp[ObtDhtCacheAdminAppCmdLine] with L
     getKey match {
       case Some(res) =>
         log.info(s"[before removal] Query result: $res")
-        val result = dhtStore._remove(key)
+        val result = key match {
+          case k: ArtifactKey => dhtStore._remove(k)
+          case k: AssetKey    => dhtStore._remove(k)
+        }
         log.info(s"Result of key removal: $result")
         result
       case None =>

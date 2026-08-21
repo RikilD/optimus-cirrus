@@ -119,8 +119,11 @@ object AsyncProfilerIntegration extends Log {
         if (profiler ne null)
           true;
         else {
-          import scala.util.Try
-          val tried = Try {
+          // AsyncProfiler.getInstance() throws UnsatisfiedLinkError when the native library
+          // is not on java.library.path. That is a LinkageError, which scala.util.Try counts
+          // as fatal and does not catch, so the recovery below never ran and the failure took
+          // down startup. Catch Throwable directly instead.
+          try {
             val p = AsyncProfiler.getInstance()
             // One of the next two lines will likely throw if the native library is broken (so we'll catch
             // below and disable AP).
@@ -143,13 +146,13 @@ object AsyncProfilerIntegration extends Log {
               doEnable = false; // disable checking forever more
               false
             }
-          } recover { case t: Throwable =>
-            profiler = null
-            log.warn(s"asyncProfiler not initialized", t)
-            doEnable = false; // disable checking forever more
-            false
+          } catch {
+            case t: Throwable =>
+              profiler = null
+              log.warn(s"asyncProfiler not initialized", t)
+              doEnable = false // disable checking forever more
+              false
           }
-          tried.get
         }
       }
     }

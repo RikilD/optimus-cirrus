@@ -12,11 +12,18 @@ object BuildTool {
 	  .settings(
 		exportJars := true,
 		  Compile / packageBin := (app / assembly).value,
+		  // packageBin above is already the app's fat jar, so assembling this project
+		  // merges that jar with scala-library a second time and every scala/** entry
+		  // collides. Take the first copy rather than failing on the duplicates.
+		  assemblyMergeStrategy := {
+			  case x if x.endsWith(".SF") || x.endsWith(".DSA") || x.endsWith(".RSA") => MergeStrategy.discard
+			  case _                                                                 => MergeStrategy.first
+		  },
 	  )
 
   lazy val app = Project("buildToolApp", projectsDir / "app")
     .settings(
-      scalacOptions ++= ScalacOptions.common,
+      scalacOptions ++= ScalacOptions.common ++ ScalacOptions.defaultSeqImports,
       // The fingerprintdiffing package is not fully exported: BuildArtifactComparatorApp
       // references FingerprintDirComparison, ArtifactsSearchStrategy, JarHashingStrategy,
       // DiffMode, FingerprintPaths and hashBuildArtifacts, none of which are defined
@@ -48,6 +55,9 @@ object BuildTool {
 			"org.scala-lang.modules" %% "scala-parser-combinators" % VersionScheme.Always,
 			"org.scala-lang.modules" %% "scala-java8-compat" % VersionScheme.Always,
 			"org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
+			// coursier 2.1.x pulls plexus-archiver, which wants a newer zstd-jni than
+			// kafka-clients and platform/utils do.
+			"com.github.luben" % "zstd-jni" % VersionScheme.Always,
 		),
 	)
     .dependsOn(

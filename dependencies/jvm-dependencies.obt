@@ -300,6 +300,18 @@ dependencies {
     noAfs = true
     maven."com.google.protobuf"."protobuf-java".version = "3.21.1"
   }
+  // The protobuf source generator resolves protoc from maven central, picking the artifact
+  // for the host os/arch by classifier. Keep the version in step with protobuf-java.
+  protoc {
+    noAfs = true
+    maven."com.google.protobuf"."protoc".version = "3.21.1"
+    // protoc is published as a native executable, not a jar; without this coursier looks
+    // for protoc-<version>-<classifier>.jar and resolves nothing.
+    publicationSettings {
+      tpe = exe
+      ext = exe
+    }
+  }
   scala-collection-compat {
     noAfs = true
     maven."org.scala-lang.modules"."scala-collection-compat_2.13".version = 2.12.0

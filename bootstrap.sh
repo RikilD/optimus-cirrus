@@ -76,8 +76,13 @@ echo ">> JDK: $(java -version 2>&1 | head -1)" >&2
 # Assembling the latter produces a fresh manifest without them, and the JVM
 # then refuses to start with "Failed to find Premain-Class manifest attribute".
 # ---------------------------------------------------------------------------
-AGENT_JAR="$ROOT/optimus/platform/projects/entityagent/target/scala-2.12/platformEntityAgent-assembly-0.1.0-SNAPSHOT.jar"
-OBT_JAR="$ROOT/optimus/buildtool/projects/app-jar/target/scala-2.12/buildToolAppJar-assembly-0.1.0-SNAPSHOT.jar"
+#
+# The target directory carries the scala binary version, so read it out of the
+# build rather than hardcoding it here -- they drift apart otherwise.
+SCALA_BIN="$(sed -n 's/.*val scala2Version *= *"\([0-9]*\.[0-9]*\)\..*/\1/p' "$ROOT/project/Dependencies.scala" | head -1)"
+SCALA_BIN="${SCALA_BIN:-2.13}"
+AGENT_JAR="$ROOT/optimus/platform/projects/entityagent/target/scala-$SCALA_BIN/platformEntityAgent-assembly-0.1.0-SNAPSHOT.jar"
+OBT_JAR="$ROOT/optimus/buildtool/projects/app-jar/target/scala-$SCALA_BIN/buildToolAppJar-assembly-0.1.0-SNAPSHOT.jar"
 
 if [[ $RUN_SBT -eq 1 ]]; then
   echo ">> Stage 1/2: building OBT with sbt"

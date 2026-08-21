@@ -38,7 +38,7 @@ object Dependencies {
   val commonsIO = "commons-io" % "commons-io" % "2.16.1"
   val commonsLang3 = "org.apache.commons" % "commons-lang3" % "3.10"
   val commonsMath3 = "org.apache.commons" % "commons-math3" % "3.6.1"
-  val coursier = "io.get-coursier" %% "coursier" % "2.0.16"
+  val coursier = "io.get-coursier" %% "coursier" % "2.1.24"
   val curatorRecipes = "org.apache.curator" % "curator-recipes" % curatorVersion
   val curatorFramework = "org.apache.curator" % "curator-framework" % curatorVersion
   val cxfTools = "org.apache.cxf" % "cxf-tools-common" % cxfVersion
