@@ -19,7 +19,7 @@ class EntitySettings {
   var enableStaging: Boolean = false
   var posValidate = false
   var disableExportInfo: Boolean = false
-  var loom: Boolean = LoomDefaults.enabled
+  var loom: Boolean = false
 }
 
 object EntitySettings {

@@ -104,7 +104,7 @@ object GraphConsole {
       override def echoInit = false
       override def scalaSettings(settings: Settings): Unit = {
         super.scalaSettings(settings)
-        settings.YaliasPackage.tryToSet(PackageAliases.aliases)
+//        settings.YaliasPackage.tryToSet(PackageAliases.aliases)
       }
     })
   }

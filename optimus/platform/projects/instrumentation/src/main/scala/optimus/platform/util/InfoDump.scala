@@ -337,7 +337,12 @@ trait InfoDumpUtils extends Log {
 
   private lazy val config = ConfigFactory.parseResources("main/internal/utils.conf")
 
-  val euStack: Option[String] = config.getString("eu-stack").split(',').find(p => Files.isExecutable(Paths.get(p)))
+  // main/internal/utils.conf is not part of the open-source tree, so treat a missing
+  // key as "no eu-stack available" rather than throwing out of static initialisation.
+  val euStack: Option[String] =
+    if (config.hasPath("eu-stack"))
+      config.getString("eu-stack").split(',').find(p => Files.isExecutable(Paths.get(p)))
+    else None
 
   val TIMEOUT = 137
   val EXCEPTION = 998

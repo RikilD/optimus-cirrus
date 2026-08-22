@@ -95,8 +95,10 @@ final class DefensiveOperatingSystemMXBean extends OperatingSystemMXBean {
   override def getProcessCpuTime: Long = getNumber(_.getProcessCpuTime)
   override def getFreePhysicalMemorySize: Long = getNumber(_.getFreePhysicalMemorySize)
   override def getTotalPhysicalMemorySize: Long = getNumber(_.getTotalPhysicalMemorySize)
+  override def getFreeMemorySize(): Long = getFreePhysicalMemorySize
+  override def getTotalMemorySize(): Long = getTotalPhysicalMemorySize
   def getCpuLoad: Double = getNumber(DefensiveOperatingSystemMXBean.getCpuLoad(_))
-  def getSystemCpuLoad: Double = getCpuLoad
+  override def getSystemCpuLoad: Double = getCpuLoad
   override def getProcessCpuLoad: Double = getNumber(_.getProcessCpuLoad)
   override def getName: String = getString(_.getName)
   override def getArch: String = getString(_.getArch)
