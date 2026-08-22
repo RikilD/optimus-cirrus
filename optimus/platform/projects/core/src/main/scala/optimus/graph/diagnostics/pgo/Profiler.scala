@@ -11,6 +11,8 @@
  */
 package optimus.graph.diagnostics.pgo
 
+import optimus.scala212.DefaultSeq._
+
 import msjava.slf4jutils.scalalog.Logger
 import optimus.config.CacheConfig
 import optimus.config.NodeCacheConfigs

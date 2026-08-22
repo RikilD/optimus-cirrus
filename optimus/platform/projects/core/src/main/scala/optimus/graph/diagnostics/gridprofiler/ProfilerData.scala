@@ -11,6 +11,8 @@
  */
 package optimus.graph.diagnostics.gridprofiler
 
+import optimus.scala212.DefaultSeq._
+
 import optimus.graph.OGSchedulerLostConcurrency.CriticalSyncStack
 import optimus.graph.OGTrace
 import optimus.graph.diagnostics.PNodeTaskInfo
