@@ -157,6 +157,31 @@ private[breadcrumbs] final case class FlushMarker(close: Boolean = false) extend
   private[breadcrumbs] override def stringProperties: Map[String, String] = Map.empty
 }
 
+/**
+ * Records that a named event happened at a point in time. Crumb is sealed, so this has to live beside the other crumb
+ * types rather than in the missing project with the rest of the stand-ins.
+ */
+@SerialVersionUID(2020060801L)
+class EventCrumb(
+    uuid: ChainedID,
+    source: Crumb.Source,
+    val event: Events.EventVal,
+    hints: Set[CrumbHint] = Set.empty[CrumbHint])
+    extends Crumb(uuid, source, hints) {
+  override def toString: String = s"$baseString, $event)"
+  private[breadcrumbs] override def stringProperties: Map[String, String] = Map("event" -> event.name)
+  override def equals(that: Any): Boolean = that match {
+    case that: EventCrumb => uuid == that.uuid && event == that.event && hints == that.hints
+    case _                => false
+  }
+  override def hashCode: Int = uuid.hashCode ^ event.name.hashCode
+}
+
+object EventCrumb {
+  def apply(uuid: ChainedID, source: Crumb.Source, event: Events.EventVal): EventCrumb =
+    new EventCrumb(uuid, source, event)
+}
+
 object CrumbNodeType extends Enumeration {
   type CrumbNodeType = Value
   val GenericNode, NullNode, UserAction, CalculationUnit, DataRequest, DistributedCalculation, DMCCalculation, Trace,

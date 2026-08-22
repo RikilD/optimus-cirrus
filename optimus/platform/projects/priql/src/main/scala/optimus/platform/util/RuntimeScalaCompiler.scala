@@ -13,10 +13,12 @@ package optimus.platform.util
 
 import java.io.File
 import java.math.BigInteger
+import java.nio.file.Path
 import java.security.MessageDigest
 
 import optimus.platform.relational.RelationalException
 import optimus.platform.PackageAliases
+import optimus.platform.utils.ClassPathUtils
 
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.io.VirtualDirectory
@@ -25,6 +27,8 @@ import scala.tools.nsc.reporters.StoreReporter
 import scala.tools.nsc.{Global, Settings}
 
 class RuntimeScalaCompiler(
+    pluginJars: String,
+    requiredPlugins: Seq[String],
     targetDir: Option[File] = None,
     fatalWarnings: Boolean = true,
     pluginOptions: Seq[String] = Seq.empty,
@@ -44,11 +48,11 @@ class RuntimeScalaCompiler(
   settings.usejavacp.value = true
   settings.async.value = true
 
-  settings.require.value ++= List("entity")
-  settings.plugin.value ++= Seq(ScalaCompilerUtils.entityJars)
+  settings.require.value ++= requiredPlugins
+  settings.plugin.value ++= Seq(pluginJars)
 
-  settings.bootclasspath.append(ScalaCompilerUtils.classpath)
-  settings.classpath.append(ScalaCompilerUtils.classpath)
+  settings.bootclasspath.append(RuntimeScalaCompiler.classpath)
+  settings.classpath.append(RuntimeScalaCompiler.classpath)
   settings.feature.value = true
   settings.fatalWarnings.value = fatalWarnings
 
@@ -115,4 +119,17 @@ class RuntimeScalaCompiler(
   private def wrapCodeInClassForEntity(className: String, entityName: String, code: String) = {
     s"class $className extends (() => Any) {\n $code\n def apply() = {$entityName()}\n}\n"
   }
+}
+
+object RuntimeScalaCompiler {
+
+  /**
+   * The compiler classpath. These used to live on ScalaCompilerUtils; upstream moved the reads here, so the
+   * definitions follow.
+   */
+  lazy val unexpandedClassPath: Seq[Path] = ClassPathUtils.readClasspathEntries(this.getClass.getClassLoader)
+
+  lazy val classPathSeq: Seq[Path] = ClassPathUtils.expandClasspath(unexpandedClassPath)
+
+  lazy val classpath: String = classPathSeq.mkString(File.pathSeparator)
 }
