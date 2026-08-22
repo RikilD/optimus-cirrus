@@ -26,46 +26,46 @@ trait QueryEntityMetadataProtoSerialization extends BasicProtoSerialization {
 object QueryEntityMetadataSerializer
     extends QueryEntityMetadataProtoSerialization
     with ProtoSerializer[QueryEntityMetadata, QueryEntityMetadataProto] {
-  override def serialize(meta: QueryEntityMetadata): QueryEntityMetadataProto = {
+  override def serialize(meta: QueryEntityMetadata): QueryEntityMetadataProto = ??? /* {
     QueryEntityMetadataProto.newBuilder.setEntityRef(toProto(meta.entityRef)).build
-  }
+  } */
 
-  override def deserialize(proto: QueryEntityMetadataProto): QueryEntityMetadata = {
+  override def deserialize(proto: QueryEntityMetadataProto): QueryEntityMetadata = ??? /* {
     QueryEntityMetadata(fromProto(proto.getEntityRef))
-  }
+  } */
 }
 
 object QueryEntityMetadataResultSerializer
     extends QueryEntityMetadataProtoSerialization
     with ProtoSerializer[QueryEntityMetadataResult, QueryEntityMetadataResultProto] {
-  override def serialize(metaResult: QueryEntityMetadataResult): QueryEntityMetadataResultProto = {
+  override def serialize(metaResult: QueryEntityMetadataResult): QueryEntityMetadataResultProto = ??? /* {
     val b = QueryEntityMetadataResultProto.newBuilder
     if (metaResult.entityMetadata ne null)
       b.setEntityMetadata(toProto(metaResult.entityMetadata))
     b.build
-  }
+  } */
 
-  override def deserialize(proto: QueryEntityMetadataResultProto): QueryEntityMetadataResult = {
+  override def deserialize(proto: QueryEntityMetadataResultProto): QueryEntityMetadataResult = ??? /* {
     if (proto.hasEntityMetadata)
       QueryEntityMetadataResult(fromProto(proto.getEntityMetadata))
     else
       QueryEntityMetadataResult(null)
-  }
+  } */
 }
 
 object EntityMetadataSerializer
     extends QueryEntityMetadataProtoSerialization
     with ProtoSerializer[EntityMetadata, EntityMetadataProto] {
-  override def serialize(meta: EntityMetadata): EntityMetadataProto = {
+  override def serialize(meta: EntityMetadata): EntityMetadataProto = ??? /* {
     EntityMetadataProto.newBuilder
       .setEntityRef(toProto(meta.entityRef))
       .setClassName(meta.className)
       .addAllTypes(meta.types.asJava)
       .build
-  }
+  } */
 
-  override def deserialize(proto: EntityMetadataProto): EntityMetadata = {
+  override def deserialize(proto: EntityMetadataProto): EntityMetadata = ??? /* {
     val types = proto.getTypesList.asScala.map(_.intern()).toIndexedSeq
     EntityMetadata(fromProto(proto.getEntityRef), proto.getClassName.intern(), types)
-  }
+  } */
 }

@@ -18,9 +18,9 @@ import java.util.Base64
 
 object PersistentEntitiesWithTemporalContextImpl {
 
-  def apply(buf: String) = {
+  def apply(buf: String) = ??? /* {
     PersistentEntityWithTemporalContextProto.parseFrom(Base64.getDecoder.decode(buf))
-  }
+  } */
 
   def unapply(buf: PersistentEntityWithTemporalContextProto): String = {
     Base64.getEncoder.encodeToString(buf.toByteArray())
