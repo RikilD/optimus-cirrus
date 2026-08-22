@@ -26,7 +26,6 @@ import java.time.ZonedDateTime
 import optimus.utils.datetime._
 import optimus.platform.pickling.ImmutableByteArray
 import optimus.platform.dsi.bitemporal.proto.Dsi.FieldProto
-import optimus.platform.dsi.bitemporal.proto.Dsi.PeriodProto
 import optimus.platform.dsi.bitemporal.DateTimeSerialization
 import optimus.platform.storable._
 
@@ -56,7 +55,7 @@ object ProtoPickleSerializer {
   // arguments depending on the calling context:
   //     serialize normal values <=> associatedKey == None
   //     serialize Map values    <=> associatedKey == the associated key of that value
-  def propertiesToProto(o: Any, associatedKey: Option[String] = None): FieldProto = {
+  def propertiesToProto(o: Any, associatedKey: Option[String] = None): FieldProto = ??? /* {
     val builder = FieldProto.newBuilder
     if (associatedKey.isDefined) {
       builder.setAssociatedKey(associatedKey.get)
@@ -156,7 +155,7 @@ object ProtoPickleSerializer {
     }
 
     builder.build
-  }
+  } */
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // ProtoBuf -> Proto Section
@@ -180,8 +179,8 @@ object ProtoPickleSerializer {
   //
   private final case class MapEntry(key: String, value: Any)
 
-  private def compareTypes(o1: FieldProto.Type, o2: FieldProto.Type) = {
-    def mappedType(t: FieldProto.Type) = {
+  private def compareTypes(o1: FieldProto.Type, o2: FieldProto.Type) = ??? /* {
+    def mappedType(t: FieldProto.Type) = ??? /* {
       t match {
         case FieldProto.Type.INT     => 0
         case FieldProto.Type.DOUBLE  => 1
@@ -192,13 +191,13 @@ object ProtoPickleSerializer {
         case FieldProto.Type.BYTE    => 6
         case _                       => 7
       }
-    }
+    } */
     mappedType(o1).compare(mappedType(o2))
-  }
+  } */
 
   // Takes a MAP or SEQ FieldProto instance and creates a SlottedBufferAsMap or SlottedBufferAsSeq
   // with it.
-  private def protoToSlottedBuffer(proto: FieldProto, isMap: Boolean): Any = {
+  private def protoToSlottedBuffer(proto: FieldProto, isMap: Boolean): Any = ??? /* {
     val rawValues: util.List[FieldProto] = proto.getChildrenList
     val sortedList = new util.ArrayList(rawValues)
     var tag: String = Shape.NoTag
@@ -230,7 +229,7 @@ object ProtoPickleSerializer {
       }
 
       // Fill in keys (if applicable), types to create the shape
-      def getValueFor(field: FieldProto, tpe: Class[_]): Any = {
+      def getValueFor(field: FieldProto, tpe: Class[_]): Any = ??? /* {
         if (tpe.isPrimitive) {
           // [SEE_FIELDPROTO_FOR_PRIMITIVES]
           // The generated SlottedBuffer classes take an Object[] as we need a somewhat generic ctor signature
@@ -248,7 +247,7 @@ object ProtoPickleSerializer {
             case other          => other
           }
         }
-      }
+      } */
 
       val types = new Array[Class[_]](valuesSize)
       val values = new Array[Any](valuesSize)
@@ -281,13 +280,13 @@ object ProtoPickleSerializer {
       else
         shape.createInstanceAsMap(values)
     }
-  }
+  } */
 
   // Takes a SEQ FieldProto and creates a ArraySeq with it. Implementation is quite
   // repetitive because we want to use the ArraySeq.of* classes to avoid boxing
   // of primitive types and uses while loops to avoid closure allocations in hot code
   // like this.
-  private def protoToArraySeq(proto: FieldProto): ArraySeq[_] = {
+  private def protoToArraySeq(proto: FieldProto): ArraySeq[_] = ??? /* {
     // We'll walk the values once to see if they are homogenous primitive types...
     var fType: FieldProto.Type = null
     var i = 0
@@ -369,7 +368,7 @@ object ProtoPickleSerializer {
         new ArraySeq.ofRef(values)
     }
     seq
-  }
+  } */
 
   // The following methods are used to get values of primitive types from the proto
   // These methods are called from generated SlottedBuffer classes and deal with the
@@ -390,7 +389,7 @@ object ProtoPickleSerializer {
   // noinspection ScalaWeakerAccess - used from generated code
   def getByteValue(proto: FieldProto): Byte = proto.getIntValue.toByte
 
-  def protoToProperties(proto: FieldProto): Any = {
+  def protoToProperties(proto: FieldProto): Any = ??? /* {
     val value = proto.getType match {
       case FieldProto.Type.INT     => getIntValue(proto)
       case FieldProto.Type.STRING  => proto.getStringValue
@@ -453,5 +452,5 @@ object ProtoPickleSerializer {
       MapEntry(proto.getAssociatedKey, value)
     else
       value
-  }
+  } */
 }
