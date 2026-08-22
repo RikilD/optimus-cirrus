@@ -23,6 +23,7 @@ import optimus.platform.relational.persistence.protocol._
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import com.google.protobuf.ByteString
+import optimus.scala212.DefaultSeq._
 
 object EntityProviderPersistence extends ProviderPersistence {
   override def createRelationElementBuilder(provider: ProviderRelation, encodeType: TypeInfoEncoder): RelBuilder = {

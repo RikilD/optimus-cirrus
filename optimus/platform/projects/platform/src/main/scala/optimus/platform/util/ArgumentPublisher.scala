@@ -25,6 +25,7 @@ import org.kohsuke.args4j.CmdLineParser
 import org.kohsuke.args4j.NamedOptionDef
 
 import java.lang.management.ManagementFactory
+import optimus.scala212.DefaultSeq._
 
 object ArgumentPublisher {
   // make sure we publish each id exactly once

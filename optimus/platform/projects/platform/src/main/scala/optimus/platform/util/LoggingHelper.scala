@@ -17,6 +17,7 @@ import optimus.platform.PackageAliases
 import org.slf4j.LoggerFactory
 
 import scala.jdk.CollectionConverters._
+import optimus.scala212.DefaultSeq._
 
 private[optimus] /*[platform]*/ object LoggingHelper {
   private val toleratedSyncLoggers: Set[String] = Set("com.msdw.dpg.eticket.infra.util.logging.back.C2AsyncAppender")

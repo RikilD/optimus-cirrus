@@ -11,6 +11,8 @@
  */
 package optimus.graph.diagnostics.gridprofiler
 
+import optimus.scala212.DefaultSeq._
+
 import msjava.tools.util.MSProcess
 import optimus.breadcrumbs.Breadcrumbs
 import optimus.breadcrumbs.ChainedID

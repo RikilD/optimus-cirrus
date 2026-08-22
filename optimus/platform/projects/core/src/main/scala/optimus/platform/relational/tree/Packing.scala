@@ -11,6 +11,8 @@
  */
 package optimus.platform.relational.tree
 
+import optimus.scala212.DefaultSeq._
+
 import scala.collection.mutable.{ListBuffer, ArrayBuffer}
 import java.nio.ByteBuffer
 

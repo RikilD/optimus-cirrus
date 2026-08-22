@@ -11,6 +11,7 @@
  */
 package optimus.stratosphere.history
 import com.typesafe.config.Config
+import optimus.scala212.DefaultSeq._
 import optimus.stratosphere.bootstrap.StratosphereException
 import optimus.stratosphere.config.StratoWorkspaceCommon
 import optimus.stratosphere.history.HistoryStitch.failedFetchMessage

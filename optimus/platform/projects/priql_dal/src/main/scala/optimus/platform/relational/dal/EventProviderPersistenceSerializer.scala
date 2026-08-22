@@ -23,6 +23,7 @@ import optimus.platform.relational.persistence.protocol.{RelExpr, _}
 import optimus.platform.relational.tree.{ProviderRelation, TypeInfo}
 
 import scala.jdk.CollectionConverters._
+import optimus.scala212.DefaultSeq._
 
 object EventProviderPersistence extends ProviderPersistence {
   override def createRelationElementBuilder(provider: ProviderRelation, encodeType: TypeInfoEncoder): RelBuilder = {

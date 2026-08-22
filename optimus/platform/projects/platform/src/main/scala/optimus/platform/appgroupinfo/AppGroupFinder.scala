@@ -17,6 +17,7 @@ import optimus.platform.installcommonpath.MetaProjectRelease
 
 import java.io._
 import scala.jdk.CollectionConverters._
+import optimus.scala212.DefaultSeq._
 
 object AppGroupFinder {
   val notSetPlaceHolder: String = "NotSet"

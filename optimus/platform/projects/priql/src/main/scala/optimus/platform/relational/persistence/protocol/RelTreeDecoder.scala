@@ -11,6 +11,8 @@
  */
 package optimus.platform.relational.persistence.protocol
 
+import optimus.scala212.DefaultSeq._
+
 import java.lang.reflect.Proxy
 import optimus.platform._
 import optimus.platform.relational.RelationalException

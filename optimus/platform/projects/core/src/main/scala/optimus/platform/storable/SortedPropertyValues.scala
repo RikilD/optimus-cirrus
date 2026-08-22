@@ -11,6 +11,8 @@
  */
 package optimus.platform.storable
 
+import optimus.scala212.DefaultSeq._
+
 import optimus.platform.pickling.PickledProperties
 
 import java.util.{Arrays => JArrays}

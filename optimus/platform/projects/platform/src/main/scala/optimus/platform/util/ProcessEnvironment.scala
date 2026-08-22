@@ -25,6 +25,7 @@ import java.nio.file.Path
 import scala.collection.compat._
 import scala.jdk.CollectionConverters._
 import scala.util.Try
+import optimus.scala212.DefaultSeq._
 
 final case class OptimusAppInfo(
     main: String,

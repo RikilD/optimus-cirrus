@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import msjava.slf4jutils.scalalog.getLogger
 import optimus.platform.dsi.bitemporal.DalPrcRedirectionResult
 import optimus.platform.internal.SimpleGlobalStateHolder
+import optimus.scala212.DefaultSeq._
 import org.kohsuke.args4j
 
 import scala.collection.mutable.ListBuffer

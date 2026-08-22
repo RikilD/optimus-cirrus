@@ -11,6 +11,8 @@
  */
 package optimus.graph.diagnostics.gridprofiler
 
+import optimus.scala212.DefaultSeq._
+
 import com.opencsv.CSVWriter
 import optimus.dist.DistPluginTags.JobTaskIdTag
 import optimus.dist.gsfclient.JobClientMetrics

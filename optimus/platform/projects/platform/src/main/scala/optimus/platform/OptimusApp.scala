@@ -112,6 +112,7 @@ import scala.util.Properties
 import scala.util.Success
 import scala.util.Try
 import scala.util.control.NonFatal
+import optimus.scala212.DefaultSeq._
 
 class OptimusAppCmdLine {
   import org.kohsuke.args4j

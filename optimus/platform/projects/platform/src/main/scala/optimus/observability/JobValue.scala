@@ -29,6 +29,7 @@ import java.time.Duration
 import java.time.Instant
 import java.util
 import scala.jdk.CollectionConverters._
+import optimus.scala212.DefaultSeq._
 
 class JobNotSerializableException(msg: String) extends Exception(msg) with RTExceptionTrait
 class JobNotDeserializableException(msg: String) extends Exception(msg) with RTExceptionTrait

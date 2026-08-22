@@ -11,6 +11,8 @@
  */
 package optimus.platform.relational.namespace
 
+import optimus.scala212.DefaultSeq._
+
 import optimus.platform.relational.persistence.protocol._
 import optimus.platform.relational.persistence.protocol.RelExpr
 import optimus.platform.relational.tree.ProviderRelation

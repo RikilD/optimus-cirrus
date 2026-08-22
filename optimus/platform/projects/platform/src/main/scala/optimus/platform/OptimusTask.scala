@@ -50,6 +50,7 @@ import java.util.concurrent.atomic.AtomicReference
 import scala.io.Source
 import scala.jdk.CollectionConverters._
 import scala.util.control.NonFatal
+import optimus.scala212.DefaultSeq._
 
 object OptimusTask extends InitSession {
   sealed trait FinalizationBehavior
