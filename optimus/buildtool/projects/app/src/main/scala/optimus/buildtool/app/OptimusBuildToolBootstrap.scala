@@ -105,52 +105,65 @@ object OptimusBuildToolBootstrap extends Log {
       additionalBenchmarkData: Seq[Properties.Elem[_]] = Nil
   ): Seq[String] = {
     if (enableCrumbs) {
-      BreadcrumbsSetup.initializeBreadcrumbsEnv(ZkEnv.qa, "obt", "OptimusBuildTool", Flags.DoNotInitializeEnv)
+      try {
+        BreadcrumbsSetup.initializeBreadcrumbsEnv(ZkEnv.qa, "obt", "OptimusBuildTool", Flags.DoNotInitializeEnv)
 
-      val possiblyUseful = Seq(
-        "BUILD_ID",
-        "BUILD_NUMBER",
-        "BUILD_URL",
-        "STRATOSPHERE_INFRA",
-        "JAVA_HOME",
-        "JOB_BASE_NAME",
-        "BUILD_TAG",
-        "JENKINS_INSTANCE",
-        "BRANCH_TO_BUILD",
-        "PROFILE",
-        "PULL_REQUEST_ID",
-        "ID_KVM",
-        "SYS_LOC",
-        "SYS_CAMPUS",
-        "SYS_ENVIRONMENT",
-        // these might exist on windows
-        "COMPUTERTYPE",
-        "OS"
-      ) ++ StaticConfig.stringSeq("breadcrumbProperties")
-      val niceEnv = for {
-        k <- possiblyUseful
-        v <- Option(System.getenv(k))
-      } yield k -> v
+        val possiblyUseful = Seq(
+          "BUILD_ID",
+          "BUILD_NUMBER",
+          "BUILD_URL",
+          "STRATOSPHERE_INFRA",
+          "JAVA_HOME",
+          "JOB_BASE_NAME",
+          "BUILD_TAG",
+          "JENKINS_INSTANCE",
+          "BRANCH_TO_BUILD",
+          "PROFILE",
+          "PULL_REQUEST_ID",
+          "ID_KVM",
+          "SYS_LOC",
+          "SYS_CAMPUS",
+          "SYS_ENVIRONMENT",
+          // these might exist on windows
+          "COMPUTERTYPE",
+          "OS"
+        ) ++ StaticConfig.stringSeq("breadcrumbProperties")
+        val niceEnv = for {
+          k <- possiblyUseful
+          v <- Option(System.getenv(k))
+        } yield k -> v
 
-      val elems =
-        Seq(Properties.sysEnv -> niceEnv.toMap, Properties.obtCategory -> "BuildEnvironment") ++ obtBenchmarkScenario
-          .map(Properties.obtBenchmarkScenario -> _) ++ additionalBenchmarkData
+        val elems =
+          Seq(Properties.sysEnv -> niceEnv.toMap, Properties.obtCategory -> "BuildEnvironment") ++ obtBenchmarkScenario
+            .map(Properties.obtBenchmarkScenario -> _) ++ additionalBenchmarkData
 
-      val sent = Breadcrumbs.info(
-        ChainedID.root,
-        PropertiesCrumb(
-          _,
-          ObtCrumbSource,
-          if (sendLongTermBreadcrumbs) CrumbHints.LongTerm else Set.empty[CrumbHint],
-          elems: _*))
+        val sent = Breadcrumbs.info(
+          ChainedID.root,
+          PropertiesCrumb(
+            _,
+            ObtCrumbSource,
+            if (sendLongTermBreadcrumbs) CrumbHints.LongTerm else Set.empty[CrumbHint],
+            elems: _*))
 
-      Seq(
-        s"enableCrumbs: $enableCrumbs",
-        s"obtBenchmarkScenario: $obtBenchmarkScenario",
-        s"sendLongTermBreadcrumbs: $sendLongTermBreadcrumbs",
-        s"ChainedID.root: ${ChainedID.root}",
-        s"Breadcrumbs sent: $sent"
-      )
+        Seq(
+          s"enableCrumbs: $enableCrumbs",
+          s"obtBenchmarkScenario: $obtBenchmarkScenario",
+          s"sendLongTermBreadcrumbs: $sendLongTermBreadcrumbs",
+          s"ChainedID.root: ${ChainedID.root}",
+          s"Breadcrumbs sent: $sent"
+        )
+      } catch {
+        case NonFatal(t) =>
+          // Publishing needs infrastructure (ZooKeeper, Splunk) that is not reachable from every workspace.
+          // A build must not fail because we were unable to report on it.
+          log.warn("Failed to initialize breadcrumbs", t)
+          Seq(
+            s"enableCrumbs: $enableCrumbs",
+            s"obtBenchmarkScenario: $obtBenchmarkScenario",
+            s"sendLongTermBreadcrumbs: $sendLongTermBreadcrumbs",
+            s"Breadcrumbs not sent: $t"
+          )
+      }
     } else {
       Seq(
         s"enableCrumbs: $enableCrumbs",

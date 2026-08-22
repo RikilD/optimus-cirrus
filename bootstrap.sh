@@ -138,34 +138,6 @@ fi
 DEPCOPY="$WORKSPACE/depcopy"
 mkdir -p "$DEPCOPY/https"
 
-# The protobuf source generator resolves its executable as the relative path
-# "protoc-<version>-<classifier>.exe" against the working directory -- see
-# PortableAfsExecutable.AfsExecutable.file(), which stands in for the internal
-# AFS lookup. Fetch that exact binary (the version matches protobuf-java in
-# dependencies/jvm-dependencies.obt) and link it where the generator will look.
-# The classifier must match AfsExecutable.hostClassifier: a binary for the wrong
-# platform fails the build with "cannot execute binary file".
-PROTOC_VERSION=3.21.1
-case "$(uname -s)" in
-  Darwin) PROTOC_OS=osx ;;
-  MINGW*|MSYS*|CYGWIN*) PROTOC_OS=windows ;;
-  *) PROTOC_OS=linux ;;
-esac
-case "$(uname -m)" in
-  arm64|aarch64) PROTOC_ARCH=aarch_64 ;;
-  *) PROTOC_ARCH=x86_64 ;;
-esac
-PROTOC_EXE="protoc-$PROTOC_VERSION-$PROTOC_OS-$PROTOC_ARCH.exe"
-PROTOC_CACHED="$WORKSPACE/tools/$PROTOC_EXE"
-if [[ ! -x "$PROTOC_CACHED" ]]; then
-  echo ">> Fetching $PROTOC_EXE" >&2
-  mkdir -p "$WORKSPACE/tools"
-  curl -fsSL -o "$PROTOC_CACHED" \
-    "https://repo1.maven.org/maven2/com/google/protobuf/protoc/$PROTOC_VERSION/$PROTOC_EXE"
-  chmod +x "$PROTOC_CACHED"
-fi
-ln -sfn "$PROTOC_CACHED" "$ROOT/$PROTOC_EXE"
-
 # The --add-exports flags open the JDK internals the graph runtime reaches into;
 # without them OBT dies during scheduler startup.
 # -e none is OptimusApp's DAL environment flag -- run without a DAL.

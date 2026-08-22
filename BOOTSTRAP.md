@@ -23,7 +23,7 @@ Stage 2 succeeding is the self-hosting check: OBT compiled by sbt rebuilds OBT.
 | JDK 21 (`21.0.5-tem`) | Pinned in `.sdkmanrc`; `bootstrap.sh` puts it on `PATH` when installed via sdkman. A newer JDK breaks entity-agent class loading. |
 | sbt | Any recent 1.x; the launcher picks up `project/build.properties`. |
 | Network access to Maven Central | Both stages resolve everything anonymously from `repo1.maven.org` — see `resolvers.obt`. |
-| Linux, macOS or Windows on x86_64/aarch64 | Stage 2 needs a protoc binary for the host (below); the five platforms protoc publishes to Maven Central are covered. |
+| Linux or Windows on x86_64 | Stage 2 resolves a protoc binary by platform classifier (below), and only these two are covered. |
 
 Roughly 2 GB of build output: two ~600 MB assembly jars under `optimus/**/target`,
 plus ~200 MB in the OBT workspace.
@@ -68,8 +68,7 @@ the script builds the expected shape with a symlink:
 ├── src -> <repo>
 ├── build_obt/          # artifacts
 ├── depcopy/
-├── logs/obt/           # logs and timing reports
-└── tools/
+└── logs/obt/           # logs and timing reports
 ```
 
 `OBT_WORKSPACE` defaults to `<repo>/../.obt-workspace`. It deliberately sits
@@ -97,21 +96,15 @@ and then resolves through coursier as usual.
 
 ### protoc
 
-`PortableAfsExecutable.AfsExecutable.file()` is hardcoded on this branch to
-`Paths.get(s"protoc-3.21.1-${AfsExecutable.hostClassifier}.exe").toAbsolutePath`
-— the internal AFS lookup it replaced is not available here. The script
-downloads that exact binary (the version matches `protobuf-java` in
-`dependencies/jvm-dependencies.obt`) into `<workspace>/tools` and symlinks it
-into the source root, where the generator resolves it relative to the working
-directory. The symlink is gitignored.
+`ProtobufGenerator` resolves protoc as an ordinary maven dependency
+(`PortableMavenExecutable`), so it needs no help from the script — only the
+`protoc` entry in `dependencies/jvm-dependencies.obt`, whose version tracks
+`protobuf-java` beside it. The per-platform classifier comes from
+`Platforms.current`, which covers `windows-x86_64` and `linux-x86_64`; other
+hosts resolve the linux binary and will fail with `cannot execute binary file`.
 
-`hostClassifier` is protoc's Maven Central classifier for the host, e.g.
-`osx-aarch_64`; `bootstrap.sh` derives the same name from `uname`, and the two
-must stay in step — a binary for the wrong platform fails the build with
-`cannot execute binary file`.
-
-Stage 1 is unaffected either way: sbt gets protoc from `sbt-protobuf` instead,
-at a different version (3.25.5).
+Stage 1 is independent: sbt gets protoc from `sbt-protobuf` instead, at a
+different version (3.25.5).
 
 ### Running OBT
 
@@ -185,11 +178,10 @@ Three things had to be wired up for any of this to run:
 
 Things this branch knowingly leaves broken or stubbed:
 
-- **Debug hacks in product code**, all from commit `bdf3e31` and not yet cleaned up:
-  - `format/.../Message.scala` — `println` on every `Error` construction.
-  - `app/.../OptimusBuildTool.scala` — `initializeCrumbs` commented out.
-  - `app/.../TimingsRecorder.scala` — `buildReport` body commented out, returns `""`.
-  - `app/.../PortableAfsExecutable.scala` and friends — the protoc hardcoding above.
+- **No breadcrumbs, no timings report.** Both need infrastructure this workspace
+  has no access to, so `OptimusBuildToolBootstrap.initializeCrumbs` logs a warning
+  and carries on, and `TimingsRecorder.buildReport` returns an empty report when
+  its assets are not on the classpath. Neither fails a build.
 - **Disabled modules.** `msnet-ssl`, `talks` and `tls` are commented out in
   `bundles.obt`, and individual `.obt` files carry commented-out `libs` entries
   (mostly internal `msjava.*` dependencies with no open-source equivalent).

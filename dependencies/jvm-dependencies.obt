@@ -300,6 +300,19 @@ dependencies {
     noAfs = true
     maven."com.google.protobuf"."protobuf-java".version = "3.21.1"
   }
+  // The protoc binary ProtobufGenerator runs. Its version tracks protobuf-java above, and the
+  // per-platform classifier is supplied by the generator, not here.
+  protoc {
+    noAfs = true
+    maven."com.google.protobuf"."protoc" {
+      version = "3.21.1"
+      transitive = false
+      publicationSettings {
+        tpe = "executable"
+        ext = "exe"
+      }
+    }
+  }
   scala-collection-compat {
     noAfs = true
     maven."org.scala-lang.modules"."scala-collection-compat_2.13".version = 2.12.0

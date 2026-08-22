@@ -219,35 +219,44 @@ class TimingsRecorder(outputTo: Directory) extends DefaultObtTraceListener {
   }
 
   def buildReport: String = {
-    /*log.debug("building timings report")
-    def loadResource(path: String): String = {
-      val s = Source.fromResource(path)
-      try s.mkString
-      finally s.close()
+    log.debug("building timings report")
+    def loadResource(path: String): Option[String] =
+      Option(getClass.getClassLoader.getResourceAsStream(path)).map { stream =>
+        val s = Source.fromInputStream(stream)
+        try s.mkString
+        finally s.close()
+      }
+
+    // The report assets live outside this repository, so a workspace that does not ship them gets no timings
+    // report. Timings are not worth failing a build over.
+    val assets = for {
+      template <- loadResource("optimus.buildtool.trace/template.html")
+      jsTiming <- loadResource("optimus.buildtool.trace/timings.js")
+    } yield (template, jsTiming)
+
+    assets match {
+      case None =>
+        log.debug("no timings report assets on the classpath; skipping the report")
+        ""
+      case Some((template, jsTiming)) =>
+        val end = Instant.now()
+        val (jsUnitData, buildDuration) = getJsData(end)
+        val jsCpuUsage = getSamplerJsData(end)
+
+        val beginJs = s"""
+                         |<script>
+                         |DURATION = ${buildDuration};""".stripMargin
+        val jsData = s"""|
+                         |const UNIT_DATA = ${jsUnitData};
+                         |const CPU_USAGE = ${jsCpuUsage};
+                         |""".stripMargin
+        val endJs = """
+                      |</script>
+                      |</body>
+                      |</html>""".stripMargin
+
+        template.replace("{ROOTS}", "some scope or something") ++ beginJs ++ jsData ++ jsTiming ++ endJs
     }
-
-    val template = loadResource("optimus.buildtool.trace/template.html")
-    val jsTiming = loadResource("optimus.buildtool.trace/timings.js")
-
-    val end = Instant.now()
-    val (jsUnitData, buildDuration) = getJsData(end)
-    val jsCpuUsage = getSamplerJsData(end)
-
-    val beginJs = s"""
-                     |<script>
-                     |DURATION = ${buildDuration};""".stripMargin
-    val jsData = s"""|
-                     |const UNIT_DATA = ${jsUnitData};
-                     |const CPU_USAGE = ${jsCpuUsage};
-                     |""".stripMargin
-    val endJs = """
-                  |</script>
-                  |</body>
-                  |</html>""".stripMargin
-
-    template.mkString.replace("{ROOTS}", "some scope or something") ++ beginJs ++ jsData ++ jsTiming.mkString ++ endJs
-    */
-    ""
   }
 
   def writeReport(): Unit = {}

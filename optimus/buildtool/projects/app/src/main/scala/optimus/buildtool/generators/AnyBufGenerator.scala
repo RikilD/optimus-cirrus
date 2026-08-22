@@ -134,13 +134,9 @@ import scala.sys.process.ProcessLogger
       templates: SandboxedInputs,
       configuration: Map[String, String],
       scope: CompilationScope
-  ): Inputs = {
-    val generator = generatorDefaults.configured(configuration)
-//    val execDep = generator.dependencyDefinition(scope)
-    val executable = generator.file()
-
-    // we don't want the platform-specific execDir to be part of the fingerprint
-    val execFingerprint = generatorDefaults.linux.file()
+  ): AnyBufGenerator.Inputs = {
+    val executable = generatorDefaults.resolve(configuration, scope)
+    val execFingerprint = generatorDefaults.fingerprint(configuration, scope)
 
     val allTemplatePaths = templates.content().keySet.map(_.path)
 
