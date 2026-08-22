@@ -265,7 +265,7 @@ object EmbeddablePicklers extends StorableSerializer {
 
     @nodeSync def unpickle(pickled: Any, is: PickledInputStream): Embeddable = unpickle$queued(pickled, is).get$
 
-    override def unpickle$queued(pickled: Any, is: PickledInputStream): NodeFuture[Embeddable] = pickled match {
+    override def unpickle$queued(pickled: Any, is: PickledInputStream): NodeFuture[Embeddable] = ??? /* pickled match {
       case e: Embeddable => new AlreadyCompletedNode(e)
       case _ =>
         new CompletableNodeM[Embeddable] {
@@ -341,7 +341,7 @@ object EmbeddablePicklers extends StorableSerializer {
             }
           }
         }
-    }
+    } */
   }
 
   // @embeddable objects are written simply as the classname (unwrapped, NOT inside a "_tag" field)
