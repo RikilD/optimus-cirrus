@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import com.typesafe.config.Config;
-import optimus.platform.partial.rollout.PartialRollout;
+// import optimus.platform.partial.rollout.PartialRollout; // internal-only, no OSS equivalent
 
 /*
 Example channel format
@@ -45,6 +45,6 @@ public record Channel(
   }
 
   public boolean checkUserIsAutoIncluded(String userId) {
-    return PartialRollout.isEligible(userId, name, autoIncludePercent);
+    return false; // PartialRollout is internal-only, no OSS equivalent
   }
 }
