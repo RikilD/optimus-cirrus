@@ -1,0 +1,23 @@
+all {
+  sources = [java, scala, "scala-2.13"]
+  resources = [resources]
+  javac {
+    options = []
+    release = 21
+  }
+  scalac {
+    options = [
+      "-language:dynamics"
+    ]
+  }
+
+  
+}
+
+main {
+  root = "src/main"
+}
+
+test {
+  root = "src/test"
+}

@@ -1,0 +1,31 @@
+// Bundle definitions. Modules live in config/module-sets.obt.
+
+optimus.buildtool {
+  modulesRoot = "optimus/buildtool/projects"
+  eonId = 0
+}
+
+optimus.dht {
+  modulesRoot = "optimus/dht/projects"
+  eonId = 0
+}
+
+optimus.gsf {
+  modulesRoot = "optimus/gsf/projects"
+  eonId = 0
+}
+
+optimus.platform {
+  modulesRoot = "optimus/platform/projects"
+  eonId = 0
+}
+
+optimus.silverking {
+  modulesRoot = "optimus/silverking/projects"
+  eonId = 0
+}
+
+optimus.stratosphere {
+  modulesRoot = "optimus/stratosphere"
+  eonId = 0
+}
