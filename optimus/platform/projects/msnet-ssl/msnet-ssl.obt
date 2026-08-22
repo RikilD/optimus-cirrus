@@ -9,12 +9,15 @@
 // limitations under the License.
 main {
   compile {
+    modules = [
+      optimus.platform.missing
+    ]
     libs = [
-      msjava.rr-msnet
-      netty-afscompat.handler
+      // msjava.msnet
+//      netty-afscompat.handler
     ]
     mavenLibs = [
-      com.ms.infra.rr.msnet
+//      com.ms.infra.rr.msnet
       io.netty.netty-handler
       javax.inject.javax.inject
     ]
@@ -23,12 +26,12 @@ main {
 }
 
 // would used by interop which is used by Java 8 clients
-all.javac.release = 8
+// all.javac.release = 8
 
 test {
   compile {
     libs = [
-      ossjava.junit
+      junit
     ]
   }
 }

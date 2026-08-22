@@ -1,0 +1,23 @@
+// all.javac.release = 11
+main {
+  compile {
+    modules = [
+      optimus.platform.entityagent-ext
+    ]
+    libs = [
+      asm-commons
+      asm-util
+    ]
+  }
+  agent {
+    agentClass = optimus.EntityAgent
+  }
+  jar {
+    manifest {
+      "Can-Retransform-Classes" = true
+      "Can-Set-Native-Method-Prefix" = true
+      "Premain-Class" = optimus.EntityAgent
+    }
+  }
+
+}

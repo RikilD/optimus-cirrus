@@ -7,14 +7,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = 11
+// all.javac.release = 11
 
 main {
   compile {
     libs = [
-      ossscala.scala-collection-compat,
-      ossscala.scala.tools
+      org.scala-lang.modules.scala-collection-compat_2.13,
+      scala-parallel-collections
     ]
   }
-  installIvy = true
+  // installIvy publishes an ivy artifact, which requires every maven dependency to have an
+  // AFS equivalent. There is no AFS here and nothing is installed, so leave it off.
+  // installIvy = true
 }

@@ -10,15 +10,41 @@
 // all.javac.release = 11
 
 main {
-  hasMacros = true
-  implementsMacros = true
   compile {
     modules = [
-      optimus.platform.alarms
+      optimus.buildtool.core
+      optimus.buildtool.format
+      optimus.buildtool.rest
+      optimus.buildtool.runconf
+      optimus.dht.client3
+//      optimus.dht.server3
+      optimus.platform.git-utils
+      optimus.platform.platform
+      optimus.platform.platform_profiler
+//      optimus.platform.testplan_utils
+      optimus.stratosphere.bootstrap
+      optimus.stratosphere.common
+//      optimus.workflow.build_common
     ]
     libs = [
-      ch.qos.logback.logback-classic,
-      org.slf4j.slf4j-api
+      avro-compiler
+      bsp4j
+      coursier
+      cxf-tools
+      cxf-tools-wsdlto
+      jgit
+      jmustache
+      jsoniter-scala-core
+      jsoniter-scala-macros
+      jsonschema2pojo-core
+      scalaxb
+      scala-xml
+      zinc
+    ]
+  }
+  runtime {
+    libs = [
+
     ]
   }
 }

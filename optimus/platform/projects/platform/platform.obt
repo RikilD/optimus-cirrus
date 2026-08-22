@@ -31,52 +31,53 @@ main {
       optimus.platform.versioning_runtime
     ]
     libs = [
-      fsf.zookeeper,
-      msjava.rr-base,
-      msjava.rr-hdom,
-      msjava.rr-logbackutils,
-      msjava.rr-mqjms,
-      msjava.rr-msnet,
-      msjava.rr-pool,
-      msjava.rr-tools,
-      msjava.rr-zkapi,
-      ossjava.args4j,
-      ossjava.commons-lang3,
-      ossjava.curator,
-      ossjava.freemarker,
-      ossjava.guava,
-      ossjava.jackson2,
-      ossjava.jackson2.jsr310,
-      ossjava.jackson2.module-scala,
-      ossjava.javassist,
-      ossjava.javax.mail,
-      ossjava.jsr305-annotations,
-      ossjava.logback,
-      ossjava.poi,
-      ossjava.protobuf-java,
-      ossjava.scannotation,
-      ossjava.slf4j.bridges,
-      ossjava.spring,
-      ossscala.spray-json,
-      sam.zookeeper
+      zookeeper,
+      // msjava.base,
+      // msjava.hdom,
+      // // msjava.logbackutils,
+      // msjava.mqjms,
+      // msjava.msnet,
+      // msjava.pool,
+      // msjava.tools,
+      // msjava.zkapi,
+      args4j,
+      commons-lang3,
+      curator-client,
+      freemarker,
+      guava,
+      iharder-base64,
+//      jackson2,
+      jackson-datatype-jsr310,
+      javax-mail-api,
+//      javassist,
+//      jsr305-annotations,
+      logback,
+      poi,
+      protobuf-java,
+//      scannotation,
+//      slf4j.bridges,
+//      spring,
+      jackson-module-scala,
+      spray-json,
+      // sam.zookeeper
     ]
   }
-  compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.attach
+  //  compileOnly.modules += optimus.platform.legacy-jdk-api-stubs.attach
   runtime {
     modules = [
       optimus.platform.platform_profiler
     ]
     libs = [
-      msjava.rr-dbpool,
-      msjava.rr-directory,
-      msjava.rr-directory-testing,
-      msjava.rr-integrations,
-      msjava.rr-protobufutils,
-      mskdb.rr-kjava,
-      ossjava.commons-io,
-      ossjava.dom4j,
-      ossjava.javassist,
-      ossjava.reflections
+      // msjava.dbpool,
+      // msjava.directory,
+      // msjava.directory.testutils,
+      // msjava.integrations,
+      // msjava.protobufutils,
+//      mskdb.kjava,
+      commons-io,
+//      dom4j,
+//      javassist,
+//      reflections
     ]
   }
 }

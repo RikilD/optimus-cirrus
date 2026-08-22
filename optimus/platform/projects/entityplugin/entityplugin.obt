@@ -26,8 +26,8 @@ main {
       optimus.platform.stagingplugin
     ]
     libs = [
-      ossjava.typesafeconfig,
-      ossscala.scala.tools
+      typesafe-config,
+//      scala.tools
     ]
   }
 

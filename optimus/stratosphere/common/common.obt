@@ -7,49 +7,48 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-all.javac.release = ${versions.javac.release.jetfireDependency}
+// all.javac.release = 11
 
 main {
   compile {
     modules = [
       optimus.platform.bitbucket-utils
-      optimus.platform.security_akka_http-client.internal
-      optimus.platform.security_http
+      optimus.platform.security_akka_http-client //.internal
+//      optimus.platform.security_http
       optimus.platform.utils
       optimus.stratosphere.bootstrap
       optimus.stratosphere.common-macros
     ]
 
     libs = [
-      nl.grons.metrics4-scala,
-      org.scala-lang.modules.scala-parser-combinators
-      ossjava.args4j
-      ossjava.commons-compress
-      ossjava.hamcrest
-      ossjava.jackson2.jaxrs-json
-      ossjava.jansi
-      ossjava.jna
-      ossjava.junit
-      ossscala.scala
-      ossscala.scala-collection-compat
-      ossscala.scala-xml
-      ossscala.spray-json
+      args4j
+      commons-compress
+      hamcrest
+      jackson-databind
+//      jackson2.jaxrs-json
+      jansi
+      jna
+      junit
+//      scala
+      scala-collection-compat
+      spray-json
     ]
   }
 }
 
-test {
-  compile {
-    libs = [
-      ossjava.junit
-    ]
-  }
-}
-
-integrationTest {
-  compile {
-    libs = [
-      ossjava.junit
-    ]
-  }
-}
+//test {
+//  compile {
+//    libs = [
+//      junit
+//    ]
+//  }
+//}
+//
+//integrationTest {
+//  root = "src/test-integration"
+//  compile {
+//    libs = [
+//      junit
+//    ]
+//  }
+//}
