@@ -15,10 +15,10 @@ main {
     modules = [
       optimus.gsf.gsf_breadcrumbs,
       optimus.platform.breadcrumbs,
-      optimus.platform.breadcrumbs.internal, // TODO (OPTIMUS-36426): this will need dealt with soon but not now
+//      optimus.platform.breadcrumbs.internal, // TODO (OPTIMUS-36426): this will need dealt with soon but not now
       optimus.platform.core_config,
       optimus.platform.core_macro,
-      optimus.platform.cppagent,
+//      optimus.platform.cppagent,
       optimus.platform.debugger,
       optimus.platform.entityagent,
       optimus.platform.inputs,
@@ -27,55 +27,51 @@ main {
       optimus.platform.utils
     ]
     libs = [
-      msjava.rr-base,
-      msjava.rr-tools,
-      msjava.rr-zkapi,
-      optimus.async-profiler,
-      ossjava.args4j,
-      ossjava.caffeine,
-      ossjava.commons-lang3,
-      ossjava.commons-math3,
-      ossjava.commons-text,
-      ossjava.eaio-uuid-stephenc,
-      ossjava.fastutil,
-      ossjava.guava,
-      ossjava.iharder-base64,
-      ossjava.jackson2,
-      ossjava.jackson2.jsr310,
-      ossjava.jackson2.module-scala,
-      ossjava.jna,
-      ossjava.jodatime,
-      ossjava.jsr305-annotations,
-      ossjava.junit,
-      ossjava.logback,
-      ossjava.opencsv,
-      ossjava.slf4j,
-      ossjava.spring,
-      ossscala.scala-collection-compat,
-      ossscala.scala-xml,
-      ossscala.scala.tools,
-      sam.zookeeper
+      // msjava.base,
+      // msjava.tools,
+      // msjava.zkapi,
+//      optimus.async-profiler,
+      args4j,
+      caffeine,
+      commons-lang3,
+      commons-math3,
+      commons-text,
+      eaio-uuid,
+      fastutil,
+      guava,
+      iharder-base64,
+//      jackson2,
+      jna,
+      jodatime,
+//      jsr305-annotations,
+      logback,
+      opencsv,
+      slf4j,
+      spring-context,
+      jackson-module-scala,
+      scala-collection-compat,
+      typesafe-config,
+//      scala.tools,
+//      sam.zookeeper
     ]
   }
   compileOnly.modules = [
-    optimus.platform.legacy-jdk-api-stubs.mbeans,
-    optimus.platform.legacy-jdk-api-stubs.unsafe
+    // optimus.platform.legacy-jdk-api-stubs.mbeans,
+    // optimus.platform.legacy-jdk-api-stubs.unsafe
   ]
   runtime {
 
     modules = [
-      optimus.platform.breadcrumbs.auth, // ideally this would be an "internal" runtime dep of o.p.breadcrumbs.main but we can't do that so this instead
-      optimus.platform.dal_environment.internal
-      optimus.platform.java21compat
-      optimus.platform.java25compat
+//      optimus.platform.breadcrumbs.auth, // ideally this would be an "internal" runtime dep of o.p.breadcrumbs.main but we can't do that so this instead
+//      optimus.platform.dal_environment.internal
     ]
     libs = [
-      ossjava.commons-io,
-      ossjava.jackson2.module-scala
+      commons-io,
+      jackson-module-scala
     ]
   }
 }
-test {
-  open = true
-  compile {}
-}
+//test {
+//  open = true
+//  compile {}
+//}

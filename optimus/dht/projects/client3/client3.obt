@@ -7,7 +7,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = 11
+// Dependencies (digest, platform.missing) build at the default release, so
+// pinning 11 here makes them ineligible as dependencies.
+// all.javac.release = 11
 main {
   compile {
     modules = [
@@ -16,28 +18,28 @@ main {
     ]
     libs = [
       io.netty.netty-resolver-dns
-      ossjava.google-guice.assistedinject
+      guice-assistedinject
     ]
   }
   runtime {
     modules = [
-      optimus.dht.common3.internal
+      optimus.dht.common3 // .internal
     ]
   }
 }
 
-test {
-  open = true
-  compile.libs += ossjava.junit
-}
-
-testJmh {
-  jmh = true
-  includeInClassBundle = false // prevent file collisions with other JMH scopes
-  jar {
-    // TODO (OPTIMUS-31636): Remove once fixed in buildtool-format
-    // includeClasspath = true
-    manifest."Main-Class" = "org.openjdk.jmh.Main"
-  }
-}
+//test {
+//  open = true
+//  compile.libs += junit
+//}
+//
+//testJmh {
+//  jmh = true
+//  includeInClassBundle = false // prevent file collisions with other JMH scopes
+//  jar {
+//    // TODO (OPTIMUS-31636): Remove once fixed in buildtool-format
+//    // includeClasspath = true
+//    manifest."Main-Class" = "org.openjdk.jmh.Main"
+//  }
+//}
 

@@ -7,7 +7,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = 11
+// Dependencies (digest, platform.missing) build at the default release, so
+// pinning 11 here makes them ineligible as dependencies.
+// all.javac.release = 11
 main {
   generators {
     protobuf {
@@ -15,31 +17,35 @@ main {
     }
   }
 
-
-  compile.libs = [
-    io.netty.netty-handler
-    io.netty.netty-tcnative-boringssl-static
-    io.netty.netty-transport-native-epoll
-    msjava.jpe-zookeeper-utils-curator
-    msjava.rr-msnet
-    ossjava.google-guice
-    ossjava.guava
-    ossjava.hdrhistogram
-    ossjava.jctools
-    ossjava.protobuf-java
-    sam.zookeeper
-  ]
+  compile {
+    modules = [optimus.platform.missing]
+    libs = [
+      commons-lang3
+      io.netty.netty-handler
+      //    io.netty.netty-tcnative-boringssl-static
+      //    io.netty.netty-transport-native-epoll
+      // msjava.msnet
+      // msjava.zkapi
+      guice
+      guava
+      hdrhistogram
+      jctools
+      protobuf-java
+      slf4j
+      // sam.zookeeper
+    ]
+  }
 
 }
 
-test.compile.libs = [
-  ossjava.jol
-  ossjava.junit
-  ossjava.mockito
-]
-
-internal {
-  root = "src/internal"
-  open = true
-  compile.modules += optimus.dht.common3.main
-}
+//test.compile.libs = [
+//  jol
+//  junit
+//  mockito
+//]
+//
+//internal {
+//  root = "src/internal"
+//  open = true
+//  compile.modules += optimus.dht.common3.main
+//}

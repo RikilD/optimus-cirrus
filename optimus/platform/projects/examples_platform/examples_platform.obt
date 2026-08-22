@@ -7,26 +7,31 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+all.scalac.options += "-P:entity:enableStaging:true"
+
 main {
-  // javac.release
-  isCompilerPlugin = true
-  compile.modules = [
-    optimus.platform.alarms,
-    optimus.platform.scala_compat,
-    optimus.platform.spray_json
-  ]
-  // Nothing is installed from this workspace, and installIvy would require every
-  // transitive maven dependency to have an AFS equivalent.
-  // installIvy = true
+  compile {
+    modules = [
+      optimus.platform.core,
+      optimus.platform.core_macro,
+      optimus.platform.entityagent,
+      optimus.platform.entityplugin,
+      optimus.platform.platform,
+      optimus.platform.utils
+    ]
+    libs = [
+      args4j,
+      guava,
+      poi,
+      poi-ooxml // xssf, used by the relational Excel examples
+    ]
+  }
 }
 
-//test {
-//  compile.modules = [
-//    optimus.platform.compiler-test-utils
-//    optimus.platform.utils
-//  ]
-//  compile.libs = [
-//    junit
-//    scala-collection-compat
-//  ]
-//}
+test {
+  compile {
+    libs = [
+      junit
+    ]
+  }
+}

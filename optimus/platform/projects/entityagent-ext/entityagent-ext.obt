@@ -1,0 +1,5 @@
+// all.javac.release = 11
+main {
+  compile {
+  }
+}

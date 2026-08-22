@@ -7,36 +7,32 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = ${versions.javac.release.jetfireDependency}
+// all.javac.release = 11
 
 main {
   compile {
     // Do not depend on any other modules to avoid impacting classpath on dependent projects
     libs = [
-      ossscala.akka-http.json,
-      ossscala.akka.stream
+      akka-http-spray-json,
+      akka-stream
     ]
   }
 }
 
-internal {
-  root = "src/internal"
-  open = true
-  compile {
-    modules = [
-      optimus.platform.security_akka_http-client
-    ]
-    // Do not depend on any other modules to avoid impacting classpath on dependent projects
-    libs = [
-      com.ms.infra.rr.kerberos
-      ossjava.guava,
-      ossjava.httpcomponents-core,
-      ossjava.slf4j,
-      ossscala.akka-http.json,
-      ossscala.akka.stream
-    ]
-  }
-}
-
-// required temporarly so we can compile jvm_shutdown_agent with Java 11, as Jenkins does not support 12+ yet
-all.javac.release = 11
+//internal {
+//  root = "src/internal"
+//  open = true
+//  compile {
+//    modules = [
+//      optimus.platform.security_akka_http-client
+//    ]
+//    // Do not depend on any other modules to avoid impacting classpath on dependent projects
+//    libs = [
+//      guava,
+//      httpcomponents-core,
+//      slf4j,
+//      akka-http.json,
+//      akka.stream
+//    ]
+//  }
+//}

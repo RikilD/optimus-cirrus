@@ -12,8 +12,8 @@ main {
     optimus.platform.scala_compat
   ]
   compile.libs = [
-    ossjava.slf4j,
-    ossscala.scala.tools
+    slf4j,
+    #scala.tools
   ]
   scalac.options = [
     "-opt:l:inline",

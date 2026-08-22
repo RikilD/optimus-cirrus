@@ -1,0 +1,57 @@
+// OBT resolves modules through module sets. This declares a single set holding every
+// module in the workspace; modules commented out here are the ones that do not build
+// open source (see BOOTSTRAP.md).
+
+module-sets {
+  main {
+    public {
+      optimus.buildtool.app { owner = x, group = y }
+      optimus.buildtool.core { owner = x, group = y }
+      optimus.buildtool.format { owner = x, group = y }
+      optimus.buildtool.htmlreport { owner = x, group = y }
+      optimus.buildtool.rest { owner = x, group = y }
+      optimus.buildtool.runconf { owner = x, group = y }
+      optimus.dht.client3 { owner = x, group = y }
+      optimus.dht.common3 { owner = x, group = y }
+      optimus.dht.digest { owner = x, group = y }
+      optimus.gsf.gsf_breadcrumbs { owner = x, group = y }
+      optimus.platform.alarms { owner = x, group = y }
+      optimus.platform.annotations { owner = x, group = y }
+      optimus.platform.bitbucket-utils { owner = x, group = y }
+      optimus.platform.breadcrumbs { owner = x, group = y }
+      optimus.platform.collections { owner = x, group = y }
+      optimus.platform.core { owner = x, group = y }
+      optimus.platform.core_config { owner = x, group = y }
+      optimus.platform.core_macro { owner = x, group = y }
+      optimus.platform.dal_client { owner = x, group = y }
+      optimus.platform.dal_core { owner = x, group = y }
+      optimus.platform.dal_environment { owner = x, group = y }
+      optimus.platform.debugger { owner = x, group = y }
+      optimus.platform.entityagent { owner = x, group = y }
+      optimus.platform.entityagent-ext { owner = x, group = y }
+      optimus.platform.entityplugin { owner = x, group = y }
+      optimus.platform.examples_platform { owner = x, group = y }
+      optimus.platform.git-utils { owner = x, group = y }
+      optimus.platform.inputs { owner = x, group = y }
+      optimus.platform.instrumentation { owner = x, group = y }
+      optimus.platform.missing { owner = x, group = y }
+      optimus.platform.platform { owner = x, group = y }
+      optimus.platform.platform_profiler { owner = x, group = y }
+      optimus.platform.priql { owner = x, group = y }
+      optimus.platform.priql_dal { owner = x, group = y }
+      optimus.platform.priql_dal_persistence { owner = x, group = y }
+      optimus.platform.rest-utils { owner = x, group = y }
+      optimus.platform.scala_compat { owner = x, group = y }
+      optimus.platform.security_akka_http-client { owner = x, group = y }
+      optimus.platform.spray_json { owner = x, group = y }
+      optimus.platform.stagingplugin { owner = x, group = y }
+      optimus.platform.utils { owner = x, group = y }
+      optimus.platform.versioning_runtime { owner = x, group = y }
+      optimus.silverking.silverking { owner = x, group = y }
+      optimus.silverking.silverking_utils { owner = x, group = y }
+      optimus.stratosphere.bootstrap { owner = x, group = y }
+      optimus.stratosphere.common { owner = x, group = y }
+      optimus.stratosphere.common-macros { owner = x, group = y }
+    }
+  }
+}

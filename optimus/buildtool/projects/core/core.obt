@@ -7,27 +7,29 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-all.javac.release = ${versions.javac.release.jetfireDependency}
+// all.javac.release = 11
 
 main {
   compile.libs = [
+//    jackson2,
+    typesafe-config,
+    jackson-module-scala,
     jsoniter-scala-core,
     jsoniter-scala-macros,
-    ossjava.jackson2,
-    ossjava.jackson2.module-scala,
-    ossjava.typesafeconfig,
-    ossscala.scala-parser-combinators
+    scala-collection-compat,
+    scala-parser-combinators,
+    spray-json,
   ]
 
-  tokens {
-    // replacing the version in src/main/resources/versions.properties
-    JEMALLOC_VERSION = ${versions.jeMalloc}
-    GOOGLE_PERF_TOOLS_VERSION = ${versions.googlePerfTools}
-  }
+//  tokens {
+//    // replacing the version in src/main/resources/versions.properties
+//    JEMALLOC_VERSION = ${versions.jeMalloc}
+//    GOOGLE_PERF_TOOLS_VERSION = ${versions.googlePerfTools}
+//  }
 }
 
-test.compile.libs = [
-  hamcrest,
-  ossjava.junit,
-  ossscala.scalatest
-]
+//test.compile.libs = [
+//  hamcrest,
+//  junit,
+//  scalatest
+//]
