@@ -374,7 +374,7 @@ object GitLog {
     }
   }
 
-  @async @impure private def isMovingForward(tagName: String): Boolean = {
+  @async @impure private def isMovingForward(tagName: String): Boolean = ??? /* {
     // git ls-remote --tags
     val currentRemoteHash: Option[String] = utils.git
       .lsRemote()
@@ -391,5 +391,5 @@ object GitLog {
       log.info(s"Tag $tagName is currently pointing to $remoteHash")
       utils.repo.getObjectDatabase.has(ObjectId.fromString(remoteHash))
     }
-  }
+  } */
 }

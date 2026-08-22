@@ -107,22 +107,22 @@ abstract class BatchedDalBrokerClient(
     requestBatcher.start()
     optionalWriteRequestBatcher.foreach(_.start())
     timeoutDetector.start()
-    state.startIfNotRunning()
+    // state.startIfNotRunning()
   }
 
   override final private[optimus] def sendBatch(batch: BatchContext): Unit = {
     requestSender.assertConnected
-    requestSender.sendBatch(batch)
+    // requestSender.sendBatch(batch)
   }
 
-  override final def isRunning: Boolean = state.isRunning
+  override final def isRunning: Boolean = ??? // state.isRunning
 
   @async override def request(
       commands: Seq[Command],
       requestType: DSIRequestProto.Type,
       clientSessionCtx: ClientSessionContext,
       redirectionInfo: Option[VersioningRedirectionInfo] = None,
-      separateWriteBatcher: Boolean = true): Response = {
+      separateWriteBatcher: Boolean = true): Response = ??? /* {
     def lastWitnessedTxTimeOpt = EvaluationContext.entityResolver match {
       case hlwt: HasLastWitnessedTime =>
         Some(hlwt.lastWitnessedTime(writeServingPartitionOpt.getOrElse(DefaultPartition)))
@@ -146,7 +146,7 @@ abstract class BatchedDalBrokerClient(
       case DSIRequestProto.Type.MESSAGES =>
         throw new IllegalArgumentException("Do not expect messages command type here.")
     }
-  }
+  } */
 
   def shutdown(cause: Option[DalBrokerClient.ShutdownCause]): Unit = {
     if (isRunning) {
@@ -155,7 +155,7 @@ abstract class BatchedDalBrokerClient(
         if (isRunning) {
           // to make sure we do not execute the shutdown logic multiple times
           // we do this stopIfRunning and have this whole method body wrapped in isRunning check
-          state.stopIfRunning()
+          // state.stopIfRunning()
           log.info(s"Shutting down $clientName")
           requestSender.shutdown()
           optionalWriteRequestBatcher.foreach(_.stop())
@@ -180,7 +180,7 @@ abstract class BatchedDalBrokerClient(
         }
       } finally {
         wShutdownLock.unlock()
-        state.destroyIfNotDestroyed()
+        // state.destroyIfNotDestroyed()
       }
     }
   }

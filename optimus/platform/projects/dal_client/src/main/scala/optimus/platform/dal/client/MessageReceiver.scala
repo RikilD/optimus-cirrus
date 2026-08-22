@@ -176,7 +176,7 @@ private[platform] abstract class MessageReceiver[Message <: DalServiceResponseMe
       now: Long,
       elapsed: => Long,
       batchContext: BatchContext,
-      response: VersioningResponseProto): Unit = {
+      response: VersioningResponseProto): Unit = ??? /* {
     val versioningResult = response.getResult
 
     batchContext.synchronized {
@@ -192,7 +192,7 @@ private[platform] abstract class MessageReceiver[Message <: DalServiceResponseMe
     }
 
     completeBatch(requestUuid, seqId, now, elapsed, batchContext, isPartial = false, response = None)
-  }
+  } */
 
   private def completeBatch(
       requestUuid: String,
@@ -201,7 +201,7 @@ private[platform] abstract class MessageReceiver[Message <: DalServiceResponseMe
       elapsed: => Long,
       batchContext: BatchContext,
       isPartial: Boolean,
-      response: Option[DalServiceResponse]): Unit = {
+      response: Option[DalServiceResponse]): Unit = ??? /* {
     // lazy to avoid deserializing if not used
     lazy val timings =
       response.flatMap(_.timings).map(_.getEntriesList.asScala.map(entry => (entry.getKey, entry.getValue)).toMap)
@@ -234,7 +234,7 @@ private[platform] abstract class MessageReceiver[Message <: DalServiceResponseMe
       log.info(s"${logPrefix(requestUuid, seqId)} batch completed in $elapsed ms, got ${batchContext.numResults} " +
         s"results, on connection $connectionDescription$timingLogs, env=${dalEnv}, appId=${client.clientCtx.appId}, zoneId=${client.clientCtx.zoneId}, remaining=$nRemaining")
     }
-  }
+  } */
 
   // Entry-point when a message is received
   def messageCallback(response: Message): Unit = {
