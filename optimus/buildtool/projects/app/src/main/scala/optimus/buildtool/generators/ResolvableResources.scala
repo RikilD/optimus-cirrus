@@ -30,7 +30,22 @@ object Platforms {
   final case class Platform(classifier: String)
   val Windows: Platform = Platform("windows-x86_64")
   val Linux: Platform = Platform("linux-x86_64")
-  def current: Platform = if (Utils.isWindows) Windows else Linux
+
+  private def arch: String = sys.props.getOrElse("os.arch", "").toLowerCase match {
+    case "aarch64" | "arm64" => "aarch_64"
+    case _                   => "x86_64"
+  }
+  private def isMac: Boolean = sys.props.getOrElse("os.name", "").toLowerCase.contains("mac")
+
+  /**
+   * Maven classifier for the host. Executables published to maven central (protoc, say) carry one
+   * artifact per os/arch pair, so this has to match the machine actually running the build rather
+   * than assuming linux-x86_64.
+   */
+  def current: Platform =
+    if (Utils.isWindows) Platform(s"windows-$arch")
+    else if (isMac) Platform(s"osx-$arch")
+    else Platform(s"linux-$arch")
 }
 
 trait DependencyReference {

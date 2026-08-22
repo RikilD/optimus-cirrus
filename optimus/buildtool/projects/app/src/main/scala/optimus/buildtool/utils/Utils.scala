@@ -37,7 +37,6 @@ import optimus.platform._
 import optimus.scalacompat.collection._
 import optimus.stratosphere.bootstrap.WorkspaceRoot
 import optimus.utils.ErrorIgnoringFileVisitor
-import optimus.workflow.utils.BuildCommonUtils
 import xsbti.VirtualFile
 
 import java.io._
@@ -352,9 +351,16 @@ import scala.util.control.NonFatal
     }
   }
 
-  def writeStringsToFile(p: Path, strs: Iterable[String]): Unit = BuildCommonUtils.writeStringsToFile(p, strs)
+  // optimus.workflow.utils.BuildCommonUtils is not part of the open-source tree; these are
+  // its two line-oriented file helpers, written out here.
+  def writeStringsToFile(p: Path, strs: Iterable[String]): Unit = {
+    Files.createDirectories(p.getParent)
+    Files.write(p, strs.asJava, UTF_8)
+    ()
+  }
 
-  def readStringsFromFile(p: Path): Seq[String] = BuildCommonUtils.readStringsFromFile(p)
+  def readStringsFromFile(p: Path): Seq[String] =
+    if (Files.exists(p)) Files.readAllLines(p, UTF_8).asScala.toList else Nil
 
   /**
    * Like Seq#distinct except that it preserves only the last occurrence of each entry rather than only the first.

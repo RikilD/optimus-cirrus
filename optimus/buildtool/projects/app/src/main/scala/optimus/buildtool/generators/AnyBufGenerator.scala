@@ -54,10 +54,12 @@ import scala.sys.process.ProcessLogger
         organisation = "com.google.protobuf",
         project = "protoc",
         classifier = Some(Platforms.Windows.classifier)),
+      // Platforms.current rather than Linux: this slot is used for every non-windows host,
+      // including macOS, and protoc publishes a separate artifact per os/arch.
       linux = MavenExecutable(
         organisation = "com.google.protobuf",
         project = "protoc",
-        classifier = Some(Platforms.Linux.classifier))
+        classifier = Some(Platforms.current.classifier))
     )
 
   override val generatorExecutableNameForLog = "protoc"

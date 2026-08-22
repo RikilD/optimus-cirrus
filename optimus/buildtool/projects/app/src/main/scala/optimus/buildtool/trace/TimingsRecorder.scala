@@ -219,7 +219,7 @@ class TimingsRecorder(outputTo: Directory) extends DefaultObtTraceListener {
   }
 
   def buildReport: String = {
-    log.debug("building timings report")
+    /*log.debug("building timings report")
     def loadResource(path: String): String = {
       val s = Source.fromResource(path)
       try s.mkString
@@ -246,6 +246,8 @@ class TimingsRecorder(outputTo: Directory) extends DefaultObtTraceListener {
                   |</html>""".stripMargin
 
     template.mkString.replace("{ROOTS}", "some scope or something") ++ beginJs ++ jsData ++ jsTiming.mkString ++ endJs
+    */
+    ""
   }
 
   def writeReport(): Unit = {}

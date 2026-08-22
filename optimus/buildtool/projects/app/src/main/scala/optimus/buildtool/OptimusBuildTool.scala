@@ -70,10 +70,10 @@ private[buildtool] object OptimusBuildTool
     val errorReporter = new ErrorReporter(cmdLine.errorsDir)
     try {
       log.info(s"Starting OptimusBuildTool with args: ${args.mkString("[", ", ", "]")}")
-      OptimusBuildToolBootstrap.initializeCrumbs(
-        cmdLine.breadcrumbs,
-        if (cmdLine.obtBenchmarkScenario != NoneArg) Some(cmdLine.obtBenchmarkScenario) else None,
-        cmdLine.sendLongTermBreadcrumbs)
+      // OptimusBuildToolBootstrap.initializeCrumbs(
+      //  cmdLine.breadcrumbs,
+      //  if (cmdLine.obtBenchmarkScenario != NoneArg) Some(cmdLine.obtBenchmarkScenario) else None,
+      //  cmdLine.sendLongTermBreadcrumbs)
       val buildOk =
         if (cmdLine.scopesToBuild == Set("nobuild")) true
         else {
