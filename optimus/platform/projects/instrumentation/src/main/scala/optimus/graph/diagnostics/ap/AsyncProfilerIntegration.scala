@@ -44,7 +44,7 @@ object AsyncProfilerIntegration extends Log {
     private[AsyncProfilerIntegration] val offset = customOffsets.getAndIncrement()
     // must be lazy, since we can't save strings until after AP is initialized
     lazy val eventNamePtr: Long = saveString(s"${name}.${valueType}")
-    private[AsyncProfilerIntegration] def add(): Unit = profiler.addCustomEventType(offset, name, valueType)
+    private[AsyncProfilerIntegration] def add(): Unit = () // profiler.addCustomEventType(offset, name, valueType)
   }
 
   val TestingEvent: CustomEventType = CustomEventType("Testing", "TestValue")
@@ -106,7 +106,7 @@ object AsyncProfilerIntegration extends Log {
   private val deferThread = new Thread {
     override def run(): Unit = {
       while (profiler ne null) {
-        profiler.recordDeferred(10, 10);
+        Thread.sleep(10) // profiler.recordDeferred(10, 10) is unavailable in this ap-loader-all build
       }
     }
   }
@@ -125,7 +125,7 @@ object AsyncProfilerIntegration extends Log {
             // One of the next two lines will likely throw if the native library is broken (so we'll catch
             // below and disable AP).
             p.getSamples()
-            p.saveString("test")
+            // p.saveString("test")
             if (p ne null) {
               log.info(s"asyncProfiler initialized")
               profiler = p
@@ -463,54 +463,50 @@ object AsyncProfilerIntegration extends Log {
     profiler.execute(cmd)
 
   def recordCustomEvent(etype: CustomEventType, valueD: Double, valueL: Long, ptr: Long): Unit = {
-    if (ensureLoadedIfEnabled())
-      profiler.recordCustomEvent(etype.offset, valueD, valueL, ptr)
+    // profiler.recordCustomEvent(etype.offset, valueD, valueL, ptr) is unavailable in this ap-loader-all build
   }
 
   private val savedStrings = new ConcurrentHashMap[String, Long]()
 
   // Get pointer to string in C-land
-  def saveString(name: String): Long =
-    if (!ensureLoadedIfEnabled()) 0L else savedStrings.computeIfAbsent(name, profiler.saveString)
+  def saveString(name: String): Long = 0L
+  // if (!ensureLoadedIfEnabled()) 0L else savedStrings.computeIfAbsent(name, profiler.saveString)
 
-  def getMethodID(cls: Class[_], method: String, sig: String): Long =
-    if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0L
-    else profiler.getMethodID(cls, method, sig, false)
+  def getMethodID(cls: Class[_], method: String, sig: String): Long = 0L
+  // if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0L
+  // else profiler.getMethodID(cls, method, sig, false)
 
-  def getStaticMethodID(cls: Class[_], method: String, sig: String): Long =
-    if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0L
-    else profiler.getMethodID(cls, method, sig, true)
+  def getStaticMethodID(cls: Class[_], method: String, sig: String): Long = 0L
+  // if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0L
+  // else profiler.getMethodID(cls, method, sig, true)
 
-  def getAwaitDataAddress(): Long =
-    if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0
-    else
-      profiler.getAwaitDataAddress()
+  def getAwaitDataAddress(): Long = 0L
+  // if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0
+  // else profiler.getAwaitDataAddress()
 
-  def initAwaitData(slots: Int): Int =
-    if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0 else profiler.initAwaitData(slots)
+  def initAwaitData(slots: Int): Int = 0
+  // if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0 else profiler.initAwaitData(slots)
 
-  def saveAwaitFrames(ids: Array[Long], nids: Int): Long =
-    if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0L else profiler.saveAwaitFrames(2, ids, nids)
+  def saveAwaitFrames(ids: Array[Long], nids: Int): Long = 0L
+  // if (!DiagnosticSettings.awaitStacks || !ensureLoadedIfEnabled()) 0L else profiler.saveAwaitFrames(2, ids, nids)
 
-  def externalContext(ctx: Long, shmPath: String): Unit =
-    if (ensureLoadedIfEnabled()) profiler.externalContext(ctx, shmPath)
+  def externalContext(ctx: Long, shmPath: String): Unit = ()
+  // if (ensureLoadedIfEnabled()) profiler.externalContext(ctx, shmPath)
 
-  def internalStats(): Map[String, Double] = {
-    if (!ensureLoadedIfEnabled()) Map.empty
-    else
-      try {
-        val internals: Array[Long] = profiler.getInternals();
-        val allocMB = if (internals.size > 0) internals(0) * 1.0e-6 else -1.0
-        Map("alloc" -> allocMB)
-      } catch {
-        case t: Throwable => Map.empty
-      }
-  }
+  def internalStats(): Map[String, Double] = Map.empty
+  // if (!ensureLoadedIfEnabled()) Map.empty
+  // else
+  //   try {
+  //     val internals: Array[Long] = profiler.getInternals();
+  //     val allocMB = if (internals.size > 0) internals(0) * 1.0e-6 else -1.0
+  //     Map("alloc" -> allocMB)
+  //   } catch {
+  //     case t: Throwable => Map.empty
+  //   }
 
-  def testIgnoredMethod(count: Int): Double = {
-    if (!ensureLoadedIfEnabled()) Double.NaN
-    else AsyncProfiler.testIgnored(count);
-  }
+  def testIgnoredMethod(count: Int): Double = Double.NaN
+  // if (!ensureLoadedIfEnabled()) Double.NaN
+  // else AsyncProfiler.testIgnored(count);
 
   lazy val overflowMarker: Long = saveString("OverflowMarker")
   lazy val errorMarker: Long = saveString("ErrorMarker")

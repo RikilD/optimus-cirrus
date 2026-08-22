@@ -12,7 +12,6 @@
 package optimus.platform.debugger
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.scala.ClassTagExtensions
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 /**
@@ -21,7 +20,7 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 final case class OptimusCutPoint(className: String, methodName: String)
 
 object OptimusCutPoint {
-  private val mapper = new ObjectMapper() with ClassTagExtensions
+  private val mapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
 
   def write(elem: OptimusCutPoint): String =

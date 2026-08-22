@@ -11,11 +11,7 @@
  */
 package optimus.platform.utils
 
-import javax.security.auth.login.AppConfigurationEntry
-import javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag
-import com.ms.infra.kerberos.configuration.MSKerberosConfiguration
-
-import scala.jdk.CollectionConverters._
+// import com.ms.infra.kerberos.configuration.MSKerberosConfiguration // internal-only, no OSS equivalent
 
 //TODO (OPTIMUS-48905): merge KerberosSupport with this implementation
 trait KerberosAuthentication {
@@ -26,26 +22,6 @@ trait KerberosAuthentication {
   }
 
   protected def setupKerberosCredentials(clientNames: List[String] = List("KafkaClient", "Client")): Unit = {
-    if (isKerberized) {
-      MSKerberosConfiguration.getDefault.setClientConfiguration()
-      clientNames.foreach(clientName => registerAppConfigurationEntryFor(clientName))
-    }
-  }
-
-  private def registerAppConfigurationEntryFor(clientName: String): Unit = {
-    MSKerberosConfiguration.getDefault.getAppConfigEntryCache
-      .addEntries(
-        clientName,
-        new AppConfigurationEntry(
-          "com.sun.security.auth.module.Krb5LoginModule",
-          LoginModuleControlFlag.REQUIRED,
-          Map(
-            "useKeyTab" -> "false",
-            "storeKey" -> "false",
-            "useTicketCache" -> "true",
-            "principal" -> MSKerberosConfiguration.getDefault.getLibraryConfigurations.getUserPrincipal
-          ).asJava
-        )
-      )
+    // no-op: com.ms.infra.kerberos is internal-only, no OSS equivalent
   }
 }
