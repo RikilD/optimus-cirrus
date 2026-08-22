@@ -37,25 +37,19 @@ object StorablePayloadKey {
 
   def apply(sbe: SerializedBusinessEvent, cmdTt: Instant): StorablePayloadKey = {
     val className = sbe.className
-    val vrefOpt = sbe.vrefOpt.map { vf => SlottedVersionedReference(vf, sbe.slot) }
-    EventStorablePayloadKey(sbe.id, sbe.slot, sbe.versionId, className, sbe.tt, cmdTt, vrefOpt)
+    EventStorablePayloadKey(sbe.id, sbe.slot, sbe.versionId, className, sbe.tt, cmdTt)
   }
 
-  def apply(pe: PersistentEntityProto, cmdTt: Instant): StorablePayloadKey = {
+  def apply(pe: PersistentEntityProto, cmdTt: Instant): StorablePayloadKey = ??? /* {
     val se = pe.getSerializedEntity
     val vref = SlottedVersionedReference(VersionedReferenceSerializer.deserialize(pe.getVersionedReference), se.getSlot)
     val className = se.getClassName
     EntityStorablePayloadKey(vref, className, cmdTt)
-  }
+  } */
 
-  def apply(sbe: SerializedBusinessEventProto, cmdTt: Instant): StorablePayloadKey = {
+  def apply(sbe: SerializedBusinessEventProto, cmdTt: Instant): StorablePayloadKey = ??? /* {
     val bref = BusinessEventReferenceSerializer.deserialize(sbe.getEventRef)
     val slot = if (sbe.hasSlot) sbe.getSlot else 0
-    val vrefOpt = {
-      if (sbe.hasVersionedReference)
-        Some(SlottedVersionedReference(VersionedReferenceSerializer.deserialize(sbe.getVersionedReference), slot))
-      else None
-    }
     val className = sbe.getClassName
     EventStorablePayloadKey(
       bref,
@@ -63,16 +57,15 @@ object StorablePayloadKey {
       sbe.getVersionId,
       className,
       InstantSerializer.deserialize(sbe.getTxTime),
-      cmdTt,
-      vrefOpt)
-  }
+      cmdTt)
+  } */
 
-  def apply(sbett: SerializedBusinessEventWithTTToProto, cmdTt: Instant): StorablePayloadKey = {
+  def apply(sbett: SerializedBusinessEventWithTTToProto, cmdTt: Instant): StorablePayloadKey = ??? /* {
     val sbe = sbett.getBusinessEvent
     StorablePayloadKey(sbe, cmdTt)
-  }
+  } */
 
-  def extract(combo: EntityBusinessEventComboProto, cmdTt: Instant): Seq[StorablePayloadKey] = {
+  def extract(combo: EntityBusinessEventComboProto, cmdTt: Instant): Seq[StorablePayloadKey] = ??? /* {
     if (combo.hasPersistentEntity) {
       val sbe = combo.getBusinessEvent
       val pe = combo.getPersistentEntity
@@ -81,9 +74,9 @@ object StorablePayloadKey {
       val sbe = combo.getBusinessEvent
       Seq(StorablePayloadKey(sbe, cmdTt))
     }
-  }
+  } */
 
-  def extract(combott: EntityBusinessEventWithTTToComboProto, cmdTt: Instant): Seq[StorablePayloadKey] = {
+  def extract(combott: EntityBusinessEventWithTTToComboProto, cmdTt: Instant): Seq[StorablePayloadKey] = ??? /* {
     val peSeq = if (combott.hasPersistentEntity) {
       val pe = combott.getPersistentEntity
       Seq(StorablePayloadKey(pe, cmdTt))
@@ -93,9 +86,9 @@ object StorablePayloadKey {
       Seq(StorablePayloadKey(sbett, cmdTt))
     } else Seq.empty
     peSeq ++ sbettSeq
-  }
+  } */
 
-  def extract(gie: GetInitiatingEventResultProto, cmdTt: Instant): Seq[StorablePayloadKey] = {
+  def extract(gie: GetInitiatingEventResultProto, cmdTt: Instant): Seq[StorablePayloadKey] = ??? /* {
     val peSeq = if (gie.hasPersistentEntity) {
       val pe = gie.getPersistentEntity
       Seq(StorablePayloadKey(pe, cmdTt))
@@ -105,7 +98,7 @@ object StorablePayloadKey {
       Seq(StorablePayloadKey(sbe, cmdTt))
     } else Seq.empty
     peSeq ++ sbeSeq
-  }
+  } */
 }
 
 sealed trait StorablePayloadKey {
@@ -119,10 +112,8 @@ final case class EventStorablePayloadKey(
     vid: Long,
     className: String,
     tt: Instant,
-    override val cmdTt: Instant,
-    vrefOpt: Option[SlottedVersionedReference])
+    override val cmdTt: Instant)
     extends StorablePayloadKey
-
 final case class EntityStorablePayloadKey(
     vref: SlottedVersionedReference,
     className: String,
