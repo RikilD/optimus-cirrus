@@ -112,7 +112,7 @@ sealed trait BusinessEventSerializer extends StorableSerializer {
       _.asInstanceOf[IndexInfo[BusinessEvent, _]].entityToSerializedKey(evt, entityReferences)
     }
 
-    val cmref = cmid.map(c => CmReference(c.asBytes))
+    val cmref = cmid.map(c => CmReference(c.asBytes()))
 
     // TODO (OPTIMUS-13716): slot support for events, should not hard-code slot 0
     SerializedBusinessEvent(

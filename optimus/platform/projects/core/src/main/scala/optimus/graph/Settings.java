@@ -115,7 +115,8 @@ public class Settings {
 
   public static boolean livePGO_GivenNodes = getBoolProperty("optimus.graph.livePGO.given", false);
 
-  public static final boolean useVirtualThreads = DiagnosticSettings.useVirtualThreads;
+  public static final boolean useVirtualThreads =
+      getBoolProperty("optimus.graph.useVirtualThreads", false);
   public static final boolean limitThreads =
       getBoolProperty("optimus.graph.limitThreads", !useVirtualThreads);
 

@@ -20,7 +20,7 @@ import java.awt.RenderingHints
 import javax.swing.JPanel
 
 class NodeTimeBar(tline: NodeTimeLine) extends JPanel {
-  private[this] var _width = getWidth
+  private var _width = getWidth
   private val headerHeight = 40
 
   private val counterValueFont = new Font("Consolas", Font.PLAIN, Math.round(10 * Fonts.multiplier))

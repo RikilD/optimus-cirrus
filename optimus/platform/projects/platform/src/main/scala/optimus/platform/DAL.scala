@@ -111,7 +111,7 @@ object DAL
       .loadTemporalCoordinatesForEntityClass(klass, loadContext)
       .asInstanceOf[EntityTemporalInformation]
     val at = QueryTemporality.At(entityTemporalInfo.vt, entityTemporalInfo.tt)
-    val pe = resolver.getByCmReferenceWithTemporalityAt(klass, CmReference(cmid.asBytes), at)
+    val pe = resolver.getByCmReferenceWithTemporalityAt(klass, CmReference(cmid.asBytes()), at)
     pe.headOption.map(resolver.deserializeOne(loadContext)(_).asInstanceOf[E])
   }
 
@@ -123,7 +123,7 @@ object DAL
   // TODO (OPTIMUS-7364): can be public once removal of SelectBusinessEventResult reaches all envs
   @node private[optimus] def getBusinessEventOptionByCmid[E <: BusinessEvent: Manifest](cmid: MSUuid): Option[E] = {
     val klass = implicitly[Manifest[E]].runtimeClass.asInstanceOf[Class[E]]
-    val evt = resolver.getBusinessEventByCmReference(klass, CmReference(cmid.asBytes), loadContext)
+    val evt = resolver.getBusinessEventByCmReference(klass, CmReference(cmid.asBytes()), loadContext)
     evt.map(_.asInstanceOf[E])
   }
 

@@ -13,6 +13,7 @@ package optimus.tools.scalacplugins.entity
 
 import optimus.tools.scalacplugins.entity.reporter._
 
+import scala.collection.compat._
 import scala.collection.mutable
 import scala.reflect.internal.Flags.ABSTRACT
 import scala.tools.nsc.Global
