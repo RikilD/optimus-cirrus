@@ -49,6 +49,12 @@ public class StratosphereChannelsConfig {
   }
 
   public static List<Channel> selectAllChannels(Config stratosphereConfig) {
+    // This is also reached with configs that carry no workspace settings at all, where the
+    // whole 'internal' tree is absent rather than just one key. No channel config means no
+    // channels; every read below would otherwise throw.
+    if (!stratosphereConfig.hasPath(channelsListKey)) {
+      return List.of();
+    }
     Map<String, Integer> autoIncludeMapping = loadAutoIncludeMappings(stratosphereConfig);
     List<Channel> allChannels =
         stratosphereConfig.getConfigList(channelsListKey).stream()
