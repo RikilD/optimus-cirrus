@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# The public checkout has no runnable OBT bootstrap or resolvable dependency
+# lockfile. Prepare standalone compilers, not a replacement build system.
+# Scala matches the checked-in OBT external dependency inventory. JDK 17 is a
+# Debian-supported baseline for standalone checks, not a repository-wide pin.
+scala_version=2.12.20
+scala_sha256=cc29d91ad390dc8e9a68d1e2ec6892711b64116f549fecd67a928361d33a39c0
+scala_home="/opt/scala-$scala_version"
+java_home="/usr/lib/jvm/java-17-openjdk-$(dpkg --print-architecture)"
+started=$SECONDS
+
+echo '[orb setup] Checking system packages'
+missing=()
+for package in ca-certificates curl openjdk-17-jdk-headless; do
+  if [[ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null || true)" != 'install ok installed' ]]; then
+    missing+=("$package")
+  fi
+done
+if ((${#missing[@]})); then
+  sudo env DEBIAN_FRONTEND=noninteractive apt-get update -qq
+  sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${missing[@]}"
+fi
+echo "[orb setup] System packages ready ($((SECONDS - started))s)"
+
+step=$SECONDS
+if [[ ! -x "$scala_home/bin/scalac" ]]; then
+  echo "[orb setup] Installing Scala $scala_version"
+  staging=$(mktemp -d)
+  trap 'rm -rf -- "$staging"' EXIT
+  curl --fail --location --silent --show-error --retry 2 \
+    --connect-timeout 15 --max-time 120 \
+    "https://github.com/scala/scala/releases/download/v$scala_version/scala-$scala_version.tgz" \
+    -o "$staging/scala.tgz"
+  printf '%s  %s\n' "$scala_sha256" "$staging/scala.tgz" | sha256sum --check --status
+  tar -xzf "$staging/scala.tgz" -C "$staging"
+  sudo mkdir -p /opt
+  sudo cp -a "$staging/scala-$scala_version" /opt/
+fi
+for tool in scala scalac scaladoc scalap; do
+  sudo ln -sfn "$scala_home/bin/$tool" "/usr/local/bin/$tool"
+done
+echo "[orb setup] Scala ready ($((SECONDS - step))s)"
+
+# Login shells used by Amp and supervised services read /etc/profile.d. Binaries
+# also live on the standard PATH, so they work in non-login shells too.
+printf 'export JAVA_HOME=%q\nexport SCALA_HOME=%q\n' "$java_home" "$scala_home" \
+  | sudo tee /etc/profile.d/optimus-cirrus.sh >/dev/null
+sudo chmod 644 /etc/profile.d/optimus-cirrus.sh
+
+"$java_home/bin/javac" -version
+JAVA_HOME="$java_home" "$scala_home/bin/scalac" -version
+echo "[orb setup] Standalone toolchain ready ($((SECONDS - started))s total)"
+echo '[orb setup] Full builds/tests remain unavailable: see .agents/README.md.'

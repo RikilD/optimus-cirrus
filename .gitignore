@@ -10,6 +10,9 @@
 *.orig
 *.hprof
 
+# Amp orb portal metadata
+/.amp/portals/*
+
 # IntelliJ IDEA
 .attach_pid*
 .idea

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# No authentication, databases, or services are configured by the public repo.
+# Installed compilers survive snapshots and pause/resume; never install here.
+for tool in java javac scala scalac; do
+  command -v "$tool" >/dev/null || {
+    echo "[orb resume] Missing $tool; run .agents/setup to repair the toolchain." >&2
+    exit 1
+  }
+done
+echo '[orb resume] Standalone Java/Scala toolchain available.'
